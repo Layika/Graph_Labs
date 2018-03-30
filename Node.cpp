@@ -9,6 +9,15 @@ Node::~Node()
     delete[] adj;
 }
 
+bool Node::isAdj(Node* _node)
+{
+    for(int i=0; i<adjNum; i++)
+    {
+        if((int)(*adj[i]) == (int)(*_node)) return true;
+    }
+    return false;
+}
+
 void Node::addAdj(Node* _node, bool viceVersa)
 {
     for (int i=0; i<adjNum; i++)

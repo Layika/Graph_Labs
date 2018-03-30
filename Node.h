@@ -1,5 +1,4 @@
-#ifndef H_NODE
-#define H_NODE
+#pragma once
 
 #include <iostream>
 
@@ -15,8 +14,7 @@ public:
     operator int() {return ID;} //operator int zeby wygodnie odczytywac ID wezla
     int operator[] (int i) {return adj[i]->ID;} //operator [i] zwraca ID i-tego przyleglego (sasiedniego) wezla
     int getAdjNum() {return adjNum;}
+    bool isAdj(Node* _node); //zwraca true gdy _node jest sasiadem (sprawdza tylko w jedna strone)
     void addAdj(Node* _node, bool viceVersa); //przylacza wezel _node. Jesli viceVersa == true to polaczenie jest dwustronne
     void print();
 };
-
-#endif // H_NODE

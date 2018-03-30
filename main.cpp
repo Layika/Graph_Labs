@@ -59,7 +59,7 @@ int main()
     graf2->generateFromAdjList(fileContent.str());
     inFile.close();
     graf2->print();
-    cout << graf2->generateAdjList() << endl;//utworzenie listy sasiedztwa z nodes
+    cout << graf2->generateAdjList() << endl;//utworzenie i wyswietlenie listy sasiedztwa z nodes
 
     //tu jest wczytywanie grafu z pliku z macierza sasiedztwa i wyswietlenie go
     Graph* graf3 = new Graph;
@@ -69,4 +69,29 @@ int main()
     graf3->generateFromAdjMatrix(fileContent2.str());
     inFile.close();
     graf3->print();
+    cout << graf3->generateAdjMatrix() << endl;//utworzenie i wyswietlenie mecierzy sasiedztwa z nodes
+
+    //tu jest wczytywanie grafu z pliku z macierza incydencji i wyswietlenie go
+    Graph* graf4 = new Graph;
+    inFile.open("macierz incydencji.txt", ios::in);
+    stringstream fileContent3;
+    fileContent3 << inFile.rdbuf();
+    graf4->generateFromIncMatrix(fileContent3.str());
+    inFile.close();
+    graf4->print();
+    cout << graf4->generateIncMatrix() << endl;//utworzenie i wyswietlenie mecierzy incydencji z nodes
+
+    //generowanie losowego grafu wedlug prawdopodobienstwa G(n, p) i wyswietlenie go we wszystkich mozliwych postaciach
+    cout << "Losowy graf G(n, p):" << endl << endl;
+    Graph* graf5 = new Graph;
+    graf5->generateRandomByProbability(5, 0.2);
+    graf5->print();
+    cout << graf5->generateAdjList() << endl << graf5->generateAdjMatrix() << endl << graf5->generateIncMatrix() << endl;
+
+    //generowanie losowego grafu wedlug liczby krawedzi G(n, l) i wyswietlenie go we wszystkich mozliwych postaciach
+    cout << "Losowy graf G(n, l):" << endl << endl;
+    Graph* graf6 = new Graph;
+    graf6->generateRandomByAdjaciencies(5, 20);
+    graf6->print();
+    cout << graf6->generateAdjList() << endl << graf6->generateAdjMatrix() << endl << graf6->generateIncMatrix() << endl;
 }
