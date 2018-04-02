@@ -6,92 +6,131 @@
 
 using namespace std;
 
-/*
-ZAZNACZAM ZE TEN CALY PLIK SLUZYL MI TYLKO DO TESTOW, WIEC NIE ZWRACAJCIE UWAGI NA POLSKIE NAZWY ZMIENNYCH/OBIEKTOW
-BO W FINALNM PROGRAMIE ICH NIE BEDZIE.
-*/
+void genRandomNL(Graph* _graph)
+{
+    int n, l;
+    cout << "Liczba wierzcholkow n: ";
+    cin >> n;
+    cout << "Liczba krawedzi l: ";
+    cin >> l;
+    _graph->buildRandomByAdjaciencies(n, l);
+    cout << endl;
+    _graph->print();
+}
+
+void genRandomNP(Graph* _graph)
+{
+    int n;
+    float p;
+    cout << "Liczba wierzcholkow n: ";
+    cin >> n;
+    cout << "Prawdopodobienstwo sasiedztwa [0 - 1]: ";
+    cin >> p;
+    _graph->buildRandomByProbability(n, p);
+    cout << endl;
+    _graph->print();
+}
+
+void readFromFile(Graph* _graph)
+{
+    string fileName;
+    cout << "Nazwa pliku: ";
+    cin.ignore();
+    getline(cin, fileName);
+    if(fileName.length() == 0) {cout << "Nie mozna odczytac pliku" << endl; return;}
+    ifstream inFile;
+    inFile.open(fileName, ios::in);
+    stringstream fileContent;
+    fileContent << inFile.rdbuf();
+    string fileData = fileContent.str();
+    if(fileData.length() == 0) cout << "Nie mozna odczytac pliku" << endl;
+    else if(fileData.substr(0, 7) == "AdjList") _graph->buildFromAdjList(fileData);
+    else if(fileData.substr(0, 9) == "AdjMatrix") _graph->buildFromAdjMatrix(fileData);
+    else if(fileData.substr(0, 9) == "IncMatrix") _graph->buildFromIncMatrix(fileData);
+    else cout << "Nieznany typ pliku" << endl;
+    cout << endl;
+    _graph->print();
+    inFile.close();
+}
+
+void saveAdjList(Graph* _graph)
+{
+    string saveData = _graph->generateAdjList();
+    FILE* file = fopen("ls.txt", "w");
+    fprintf(file, "%s", saveData.c_str());
+    cout << "Zapisano do \"ls.txt\"" << endl;
+    fclose(file);
+}
+
+void saveAdjMatrix(Graph* _graph)
+{
+    string saveData = _graph->generateAdjMatrix();
+    FILE* file = fopen("ms.txt", "w");
+    fprintf(file, "%s", saveData.c_str());
+    cout << "Zapisano do \"ms.txt\"" << endl;
+    fclose(file);
+}
+
+void saveIncMatrix(Graph* _graph)
+{
+    string saveData = _graph->generateIncMatrix();
+    FILE* file = fopen("mi.txt", "w");
+    fprintf(file, "%s", saveData.c_str());
+    cout << "Zapisano do \"mi.txt\"" << endl;
+    fclose(file);
+}
+
+void genGnuplotScript(Graph* _graph)
+{
+    _graph->generateGnuplotScript("graf.plt");
+    cout << "Zapisano do \"graf.plt\"" << endl;
+    cout << "Po uruchomieniu skryptu zostanie utworzony plik \"graf.png\"" << endl;
+}
 
 int main()
 {
-    //tworzymy wezly
-    Node* wezel1 = new Node(1);
-    Node* wezel2 = new Node(2);
-    Node* wezel3 = new Node(3);
-
-    //wypisujemy ich identyfikatury i wezly do nich przylegle (obecnie brak)
-    wezel1->print();
-    wezel2->print();
-    wezel3->print();
-    cout << endl;
-
-    //tworzymy graf i umieszczamy w nim wezly
-    Graph* graf = new Graph;
-    graf->addNode(wezel1);
-    graf->addNode(wezel2);
-    graf->addNode(wezel3);
-    graf->addNode(wezel1); //ten wezel juz jest w grafie, wiec nie zostaje dodany
-
-    //tworzymy jednostronne polaczenie z wezla 1 do 2
-    wezel1->addAdj(wezel2, false);
-
-    //Sprawdzamy stany wezlow
-    graf->print();
-
-    //tworzymy dwustronne polaczenie wezla 1 i 3
-    wezel3->addAdj(wezel1, true);
-
-    //Sprawdzamy stany wezlow
-    graf->print();
-
-    cout << "Lista sasiadow wezla 1: " << endl;
-    int liczbaSasiadow = wezel1->getAdjNum();
-    int* sasiedzi = new int[liczbaSasiadow]; //przygotowujemy array w ktorym znajda sie identyfikatory wszystkich sasiadow wezla 1
-    for(int i=0; i<liczbaSasiadow; i++) sasiedzi[i] = (*wezel1)[i];
-    for(int i=0; i<liczbaSasiadow; i++) cout << sasiedzi[i] << " "; //wypisujemy powstala liste
-    cout <<endl;
-
-    //tu jest wczytywanie grafu z pliku z lista sasiedztwa i wyswietlenie go
-    Graph* graf2 = new Graph;
-    ifstream inFile;
-    inFile.open("lista sasiedztwa.txt", ios::in);
-    stringstream fileContent;
-    fileContent << inFile.rdbuf();
-    graf2->generateFromAdjList(fileContent.str());
-    inFile.close();
-    graf2->print();
-    cout << graf2->generateAdjList() << endl;//utworzenie i wyswietlenie listy sasiedztwa z nodes
-
-    //tu jest wczytywanie grafu z pliku z macierza sasiedztwa i wyswietlenie go
-    Graph* graf3 = new Graph;
-    inFile.open("macierz sasiedztwa.txt", ios::in);
-    stringstream fileContent2;
-    fileContent2 << inFile.rdbuf();
-    graf3->generateFromAdjMatrix(fileContent2.str());
-    inFile.close();
-    graf3->print();
-    cout << graf3->generateAdjMatrix() << endl;//utworzenie i wyswietlenie mecierzy sasiedztwa z nodes
-
-    //tu jest wczytywanie grafu z pliku z macierza incydencji i wyswietlenie go
-    Graph* graf4 = new Graph;
-    inFile.open("macierz incydencji.txt", ios::in);
-    stringstream fileContent3;
-    fileContent3 << inFile.rdbuf();
-    graf4->generateFromIncMatrix(fileContent3.str());
-    inFile.close();
-    graf4->print();
-    cout << graf4->generateIncMatrix() << endl;//utworzenie i wyswietlenie mecierzy incydencji z nodes
-
-    //generowanie losowego grafu wedlug prawdopodobienstwa G(n, p) i wyswietlenie go we wszystkich mozliwych postaciach
-    cout << "Losowy graf G(n, p):" << endl << endl;
-    Graph* graf5 = new Graph;
-    graf5->generateRandomByProbability(5, 0.2);
-    graf5->print();
-    cout << graf5->generateAdjList() << endl << graf5->generateAdjMatrix() << endl << graf5->generateIncMatrix() << endl;
-
-    //generowanie losowego grafu wedlug liczby krawedzi G(n, l) i wyswietlenie go we wszystkich mozliwych postaciach
-    cout << "Losowy graf G(n, l):" << endl << endl;
-    Graph* graf6 = new Graph;
-    graf6->generateRandomByAdjaciencies(5, 20);
-    graf6->print();
-    cout << graf6->generateAdjList() << endl << graf6->generateAdjMatrix() << endl << graf6->generateIncMatrix() << endl;
+    int answer;
+    Graph* graph = new Graph();
+    do
+    {
+        cout << endl << "Menu: " << endl
+        << "[1] Wygeneruj losowy graf G(n, l)" << endl
+        << "[2] Wygeneruj losowy graf G(n, p)" << endl
+        << "[3] Wczytaj graf z pliku" << endl
+        << "[4] Zapisz liste sasiedztwa do pliku" << endl
+        << "[5] Zapisz macierz sasiedztwa do pliku" << endl
+        << "[6] Zapisz macierz incydencji do pliku" << endl
+        << "[7] Wygeneruj skrypt gnuplot" << endl
+        << "[0] Zakoncz" << endl << endl << "Wybor: ";
+        cin >> answer;
+        switch(answer)
+        {
+        case 0:
+            break;
+        case 1:
+            genRandomNL(graph);
+            break;
+        case 2:
+            genRandomNP(graph);
+            break;
+        case 3:
+            readFromFile(graph);
+            break;
+        case 4:
+            saveAdjList(graph);
+            break;
+        case 5:
+            saveAdjMatrix(graph);
+            break;
+        case 6:
+            saveIncMatrix(graph);
+            break;
+        case 7:
+            genGnuplotScript(graph);
+            break;
+        default:
+            cout << "Nie ma takiej opcji" << endl;
+            break;
+        }
+    } while (answer != 0);
 }

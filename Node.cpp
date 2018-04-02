@@ -2,10 +2,6 @@
 
 Node::~Node()
 {
-    for(int i=0; i<adjNum; i++)
-    {
-        delete adj[i];
-    }
     delete[] adj;
 }
 
