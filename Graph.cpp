@@ -1,5 +1,7 @@
 #include "Graph.h"
 
+#define PI 3.141592
+
 Graph::~Graph()
 {
     for(int i=0; i<nodeNum; i++)
@@ -36,19 +38,29 @@ Node* Graph::getNodeByID(int _ID)
 
 void Graph::print()
 {
-    std::cout << "Wszystkie wezly w grafie:" << std::endl;
-    for (int i=0; i<nodeNum; i++)
-        nodes[i]->print();
-    std::cout << std::endl;
+    if(nodeNum > 0)
+    {
+        std::cout << "Wszystkie wezly w grafie:" << std::endl;
+        for (int i=0; i<nodeNum; i++)
+            nodes[i]->print();
+        std::cout << std::endl;
+    }
+    else std::cout << "Graf jest pusty" << std::endl;
 }
 
-void Graph::generateFromAdjList(std::string _data)
+void Graph::buildFromAdjList(std::string _data)
 {
     int curNodeID;
     bool isIDKnown = false;
     if(_data.length() <= 6) {std::cout << "Niepoprawne dane" << std::endl; return;}
     std::string header = _data.substr(0, 7);
     if(header != "AdjList") {std::cout << "Niepoprawne dane (zly naglowek)" << std::endl; return;}
+    for(int i=0; i<nodeNum; i++)
+    {
+        delete nodes[i];
+    }
+    nodeNum = 0;
+    nodes = new Node*[0];
     _data = _data.substr(7);
     //int whileCount = 0;
     while(_data.length() > 0) // && whileCount < 20
@@ -112,11 +124,17 @@ std::string Graph::generateAdjList()
     return result.str();
 }
 
-void Graph::generateFromAdjMatrix(std::string _data)
+void Graph::buildFromAdjMatrix(std::string _data)
 {
     if(_data.length() <= 8) {std::cout << "Niepoprawne dane" << std::endl; return;}
     std::string header = _data.substr(0, 9);
     if(header != "AdjMatrix") {std::cout << "Niepoprawne dane (zly naglowek)" << std::endl; return;}
+    for(int i=0; i<nodeNum; i++)
+    {
+        delete nodes[i];
+    }
+    nodeNum = 0;
+    nodes = new Node*[0];
     _data = _data.substr(9);
     int nodeCount;
     int lineCount = -2;
@@ -177,11 +195,17 @@ std::string Graph::generateAdjMatrix()
     return result.str();
 }
 
-void Graph::generateFromIncMatrix(std::string _data)
+void Graph::buildFromIncMatrix(std::string _data)
 {
     if(_data.length() <= 8) {std::cout << "Niepoprawne dane" << std::endl; return;}
     std::string header = _data.substr(0, 9);
     if(header != "IncMatrix") {std::cout << "Niepoprawne dane (zly naglowek)" << std::endl; return;}
+    for(int i=0; i<nodeNum; i++)
+    {
+        delete nodes[i];
+    }
+    nodeNum = 0;
+    nodes = new Node*[0];
     _data = _data.substr(9);
     int nodeCount;
     int lineCount = -2;
@@ -248,7 +272,6 @@ std::string Graph::generateIncMatrix()
     int k = 0;
     for(int i=0; i<nodeNum; i++)
     {
-        //result << (*nodes[i]) << "\t";
         int adjNum = nodes[i]->getAdjNum();
         for(int j=0; j<adjNum; j++)
         {
@@ -271,8 +294,12 @@ std::string Graph::generateIncMatrix()
     return result.str();
 }
 
-void Graph::generateRandomByProbability(int _n, float _p)
+void Graph::buildRandomByProbability(int _n, float _p)
 {
+    for(int i=0; i<nodeNum; i++)
+    {
+        delete nodes[i];
+    }
     nodes = new Node*[_n];
     nodeNum = _n;
     float randResult;
@@ -290,13 +317,17 @@ void Graph::generateRandomByProbability(int _n, float _p)
     }
 }
 
-void Graph::generateRandomByAdjaciencies(int _n, int _l)
+void Graph::buildRandomByAdjaciencies(int _n, int _l)
 {
     int maxAdj = (_n - 3) * _n + 2 * _n;
     if(_l > maxAdj)
     {
         std::cout << "BLAD: Za duza liczba krawedzi" << std::endl;
         return;
+    }
+    for(int i=0; i<nodeNum; i++)
+    {
+        delete nodes[i];
     }
     nodes = new Node*[_n];
     nodeNum = _n;
@@ -309,4 +340,40 @@ void Graph::generateRandomByAdjaciencies(int _n, int _l)
         else if(nodes[source]->isAdj(nodes[destination])) i--;
         else nodes[source]->addAdj(nodes[destination], false);
     }
+}
+
+void Graph::generateGnuplotScript(std::string fileName)
+{
+    FILE* file;
+    file = fopen(fileName.c_str(), "w");
+    fprintf(file, "set term png\nset output \'graf.png\'\nset macro\n");
+    fprintf(file, "labelMacro(i,x,y,l) = sprintf('set obj %%d circle at %%f,%%f size char 2, char 1 front; set label %%d at %%f,%%f \"%%s\" front center', i, x, y, i, x, y, l)\n");
+    for(int i=0; i<nodeNum; i++)
+    {
+        int adjNum = nodes[i]->getAdjNum();
+        for(int j=0; j<adjNum; j++)
+        {
+            int i2 = -1;
+            for(int k=0; k<nodeNum; k++)
+            {
+                if((int)(*nodes[k]) == (int)(*nodes[i])[j]) i2 = k;
+            }
+            if (i2 != -1)
+            {
+                double x1, y1, x2, y2, x2temp, y2temp;
+                x1 = 50+40*cos(0 - 2*PI * (float)i/(float)nodeNum);
+                y1 = 50+40*sin(0 - 2*PI * (float)i/(float)nodeNum);
+                x2temp = 50+40*cos(0 - 2*PI * (float)i2/(float)nodeNum);
+                y2temp = 50+40*sin(0 - 2*PI * (float)i2/(float)nodeNum);
+                x2 = x2temp - 4*((x2temp-x1)/sqrt((x2temp-x1)*(x2temp-x1)+(y2temp-y1)*(y2temp-y1)));
+                y2 = y2temp - 5*((y2temp-y1)/sqrt((x2temp-x1)*(x2temp-x1)+(y2temp-y1)*(y2temp-y1)));
+                fprintf(file, "set arrow from %f,%f to %f,%f lw 2 back\n", x1, y1, x2, y2);
+            }
+        }
+    }
+    fprintf(file, "set style fill solid 1.0 border -1\n");
+    for(int i=0; i<nodeNum; i++) fprintf(file, "l%d = labelMacro(%d, %f, %f, \"%d\")\n", i+1, i+1, 50+40*cos(0 - 2*PI * (float)i/(float)nodeNum), 50+40*sin(0 - 2*PI * (float)i/(float)nodeNum), (int)(*nodes[i]));
+    for(int i=0; i<nodeNum; i++) fprintf(file, "@l%d;", i+1);
+    fprintf(file, "\nset xrange [0:100]\nset yrange [0:100]\nplot -1 notitle");
+    fclose(file);
 }
