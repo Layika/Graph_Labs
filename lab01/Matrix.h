@@ -16,41 +16,27 @@ public:
   // TODO: Any matrix will be converted to adjacency list because Python script uses this format
   void saveAdjList(std::string fileName);
 
-  void print() const;
-
+  // Getters for matrix
   RepresentationType getRepresentationType() { return type; }
-
   unsigned int getRows() const { return data.size(); }
   unsigned int getColumns(unsigned int row) const { return data[row].size(); }
   int getElement(unsigned int row, unsigned int col) const { return data[row][col]; }
+
+  // Setters for matrix
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
   void setType(RepresentationType newType) { type = newType; }
   void setElement(std::vector<int> idx, int el) { data[idx[0]][idx[1]] = el; }
 
+  // Helper function used in converter functions
+  // Might be useful for future operations on matrices
   // adjListToAdjMat
   bool isInRow(unsigned int row, int el) { return std::find(data[row].begin(),data[row].end(), el) != data[row].end(); }
-
   // incMatToAdjMat
-  std::vector<unsigned int> findElement(int el) {
-    std::vector<unsigned int> v;
-    for(unsigned int row = 0; row < getRows(); ++row) {
-      auto column = std::find(data[row].begin(),data[row].end(), el);
-      if (column !=  data[row].end()){
-        v.push_back(row);
-        v.push_back(column);
-        return v;
-      }
-    }
+  std::vector<unsigned int> findElement(int el);
+  unsigned int findInCol(unsigned int col, int el);
 
-    return v;
-  }
-  unsigned int findInCol(unsigned int col, int el) {
-    unsigned int idx = 0;
-    for (unsigned int row=0; row<getRows(); ++row) {
-      if (data[row][col] == el) idx=row;
-    }
-    return idx;
-  }
+  // Debug printing function for matrices
+  void print() const;
 
 private:
   std::vector<std::vector<int>> data;
