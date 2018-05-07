@@ -18,14 +18,13 @@ public:
 
   void print() const;
 
-  void clearData() { data.clear(); }
   RepresentationType getRepresentationType() { return type; }
 
   unsigned int getRows() const { return data.size(); }
   unsigned int getColumns(unsigned int row) const { return data[row].size(); }
   int getElement(unsigned int row, unsigned int col) const { return data[row][col]; }
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
-  void saveType(RepresentationType newType) { type = newType; }
+  void setType(RepresentationType newType) { type = newType; }
   void setElement(std::vector<int> idx, int el) { data[idx[0]][idx[1]] = el; }
 
   // adjListToAdjMat

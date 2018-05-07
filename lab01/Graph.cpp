@@ -2,32 +2,39 @@
 #include <vector>
 
 void Graph::readFile(std::string fileName) {
-  matrix->clearData();
 
   // Open file with a matrix
   // Throw an exception if file fails to open
   std::ifstream dataFile(fileName);
   if (dataFile.fail()) { /* TODO: exception */ }
 
-  // Now we need to be able to tell what matrix are we reading from file
+  // Create a new data matrix where we can store new data
   std::vector<std::vector<int>> newData;
+
+  // Now we need to be able to tell what matrix are we reading from file
+  // TODO: Make it a bit better than using -1 and -2
   size_t rowWidth = -1;
 
+  // Read the file line by line and store each line in line variable
   std::string line;
   while(getline(dataFile, line)) {
+
+    // Change line variable (string) to stream because we need a stream to iterate through it
     std::istringstream lineStream(line);
 
+    // Change data to ints and add it to newData matrix
     newData.emplace_back(std::istream_iterator<int>(lineStream), std::istream_iterator<int>());
 
+    // Update type symbols in case they need to be changed because we got a different
+    // line length etc. We can use it later to determine data type
     if(rowWidth == -1) rowWidth = newData.back().size();
     else if(rowWidth != newData.back().size()) rowWidth = -2;
-
   }
 
-  // Save type and new data matrix
-  if (rowWidth == newData.size()) matrix->saveType(AdjacencyMatrix);
-  else if (rowWidth == -2) matrix->saveType(AdjacencyList);
-  else matrix->saveType(IncidenceMatrix);
+  // Save the new type and new data matrix
+  if (rowWidth == newData.size()) matrix->setType(AdjacencyMatrix);
+  else if (rowWidth == -2) matrix->setType(AdjacencyList);
+  else matrix->setType(IncidenceMatrix);
   matrix->setData(newData);
 
   // Close the read file
@@ -35,16 +42,25 @@ void Graph::readFile(std::string fileName) {
 }
 
 // TODO: fix shitty code
+// Wrapper function converting any type to the type we want
+// It handles calling the right function (see private functions)
 void Graph::convertMatrix(RepresentationType to) {
+  // Get current representation type
   RepresentationType currentType = matrix->getRepresentationType();
+
+  // If the type is different than the one we want to convert to
+  // then use convertion functions
   if (currentType != to) {
     switch (currentType) {
+
       case AdjacencyList:
         if (to == AdjacencyMatrix) adjListToAdjMat();
         else adjListToIncMat();
+
       case AdjacencyMatrix:
         if (to == AdjacencyList) adjMatToAdjList();
         else adjMatToIncMat();
+        
       case IncidenceMatrix:
         if (to == AdjacencyList) incMatToAdjList();
         else incMatToAdjMat();
@@ -64,7 +80,7 @@ void Graph::adjMatToAdjList() {
     }
 
   matrix->saveData(newData);
-  matrix->saveType(AdjacencyList);
+  matrix->setType(AdjacencyList);
 }
 
 void Graph::adjListToAdjMat() {
@@ -81,7 +97,7 @@ void Graph::adjListToAdjMat() {
   }
 
   matrix->saveData(newData);
-  matrix->saveType(AdjacencyMatrix);
+  matrix->setType(AdjacencyMatrix);
 }
 
 
@@ -109,7 +125,7 @@ void Graph::incMatToAdjMat() {
   }
 
   matrix->saveData(newData);
-  matrix->saveType(AdjacencyMatrix);
+  matrix->setType(AdjacencyMatrix);
 }
 
 void Graph::incMatToAdjList() {}
