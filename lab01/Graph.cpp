@@ -1,6 +1,39 @@
 #include "Graph.h"
 #include <vector>
 
+void Graph::readFile(std::string fileName) {
+  matrix->clearData();
+
+  // Open file with a matrix
+  // Throw an exception if file fails to open
+  std::ifstream dataFile(fileName);
+  if (dataFile.fail()) { /* TODO: exception */ }
+
+  // Now we need to be able to tell what matrix are we reading from file
+  std::vector<std::vector<int>> newData;
+  size_t rowWidth = -1;
+
+  std::string line;
+  while(getline(dataFile, line)) {
+    std::istringstream lineStream(line);
+
+    newData.emplace_back(std::istream_iterator<int>(lineStream), std::istream_iterator<int>());
+
+    if(rowWidth == -1) rowWidth = newData.back().size();
+    else if(rowWidth != newData.back().size()) rowWidth = -2;
+
+  }
+
+  // Save type and new data matrix
+  if (rowWidth == newData.size()) matrix->saveType(AdjacencyMatrix);
+  else if (rowWidth == -2) matrix->saveType(AdjacencyList);
+  else matrix->saveType(IncidenceMatrix);
+  matrix->setData(newData);
+
+  // Close the read file
+  dataFile.close();
+}
+
 // TODO: fix shitty code
 void Graph::convertMatrix(RepresentationType to) {
   RepresentationType currentType = matrix->getRepresentationType();

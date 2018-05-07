@@ -13,13 +13,12 @@ enum RepresentationType {
 
 class Matrix {
 public:
-  void readFile(std::string fileName);
-
   // TODO: Any matrix will be converted to adjacency list because Python script uses this format
   void saveAdjList(std::string fileName);
 
   void print() const;
 
+  void clearData() { data.clear(); }
   RepresentationType getRepresentationType() { return type; }
 
   unsigned int getRows() const { return data.size(); }
