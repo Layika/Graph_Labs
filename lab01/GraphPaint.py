@@ -4,14 +4,17 @@ import matplotlib.pyplot as plt
 
 plt.figure(figsize=(6,6))
 
-G = nx.DiGraph(directed=True)
+G = nx.MultiDiGraph(directed=True)
 
+# TODO: not the prettiest way, but works... also find a way to
+# draw to arrows instead of one
 with open("out.txt") as f:
     lines = f.readlines()
-    
-G.add_edges_from(
-    [('1', '5'), ('1', '2'), ('5', '2'), ('5', '4'), ('2', '4'),
-     ('2', '3'), ('3', '4')])
+    for i in range(len(lines)):
+        line = lines[i].split()
+        for j in range(len(line)):
+            G.add_edge(str(i+1), line[j])
+
 
 options = {
     'node_color': 'green',
