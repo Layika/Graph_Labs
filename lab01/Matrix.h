@@ -25,7 +25,9 @@ public:
   // Setters for matrix
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
   void setType(RepresentationType newType) { type = newType; }
+  // TODO: make this std::pair
   void setElement(std::vector<unsigned int> idx, int el) { data[idx[0]][idx[1]] = el; }
+  void setElement(unsigned int x, unsigned int y, int el) { data[x][y] = el; }
 
   // Helper function used in converter functions
   // Might be useful for future operations on matrices
@@ -34,6 +36,9 @@ public:
   unsigned int findInCol(unsigned int col, int el);
   long numberOfOccurences(int el);
   unsigned int numberOfElements();
+
+  // Function creating an empty adjacency matrix
+  void createEmptyAdjacencyMat(unsigned int vertices);
 
   // Debug printing function for matrices
   void print() const;

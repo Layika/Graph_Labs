@@ -30,7 +30,8 @@ options = {
 }
 
 # Draw a graph in a circular layout with arrows
-nx.draw(G, pos=nx.circular_layout(G), arrows=True, with_labels=True, **options)
+# For directed graph change arrows parameter to True
+nx.draw(G, pos=nx.circular_layout(G), arrows=False, with_labels=True, **options)
 
 # Display chart with the graph
 plt.show()

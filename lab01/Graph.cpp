@@ -182,3 +182,30 @@ void Graph::incMatToAdjList() {
     matrix->saveData(newData);
     matrix->setType(AdjacencyList);
 }
+
+
+// Function for generating a random G(n,l) graph
+void Graph::generateRandomNL(unsigned int minVertices, unsigned int maxVertices, unsigned int minEdges, unsigned int maxEdges) {
+  // TODO: better initialization
+  int vertices = -1;
+  int edges = 0;
+
+  while (vertices <= 0 || edges <= 0 || edges > (vertices-1)/2) {
+    vertices = intRand(minVertices, maxVertices);
+    edges = intRand(minEdges, maxEdges);
+  }
+
+  this->matrix->createEmptyAdjacencyMat(vertices);
+
+  int counter = 0;
+  while (counter < edges) {
+    int i = intRand(0, vertices);
+    int j = intRand(0, vertices);
+
+    if (i != j && matrix->getElement(i,j) == 0) {
+      matrix->setElement(i, j, 1);
+      matrix->setElement(j, i, 1);
+      counter++;
+    }
+  }
+}

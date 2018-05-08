@@ -68,3 +68,12 @@ unsigned int Matrix::numberOfElements() {
 
     return number;
 }
+
+// Function creating an empty adjacency matrix
+void Matrix::createEmptyAdjacencyMat(unsigned int vertices) {
+  std::vector<std::vector<int>> emptyMatrix(vertices, std::vector<int>(vertices));
+
+  for (unsigned int i=0; i<vertices; ++i) std::fill(emptyMatrix[i].begin(), emptyMatrix[i].end(), 0);
+
+  saveData(emptyMatrix);
+}
