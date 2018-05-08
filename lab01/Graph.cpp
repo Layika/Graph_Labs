@@ -131,6 +131,19 @@ void Graph::adjMatToIncMat() {
 }
 
 void Graph::adjListToIncMat() {
+    std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>(matrix->numberOfElements()));
+    unsigned int numberOfEdge = 0;
+    for (unsigned int row=0; row<matrix->getRows(); ++row) {
+
+        for (unsigned int col=0; col<matrix->getColumns(row); ++col) {
+            newData[row][numberOfEdge] = 1;
+            newData[matrix->getElement(row, col) - 1][numberOfEdge] = -1;
+            ++numberOfEdge;
+        }
+    }
+
+    matrix->saveData(newData);
+    matrix->setType(IncidenceMatrix);
 }
 
 void Graph::incMatToAdjMat() {
