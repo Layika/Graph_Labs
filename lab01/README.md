@@ -68,6 +68,7 @@ Below you can find more detailed description how it all works and how to navigat
 This is the default class for handling graphs. Below you can find a few useful methods. 
 <p><p>
 To create a graph write:
+ 
 ```
 Graph g;
 ```
