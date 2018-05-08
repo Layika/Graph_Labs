@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
+from sys import argv
 
 # Set size for plt window, same dimensions because we want to get a cricle in it
 plt.figure(figsize=(6,6))
@@ -12,7 +13,7 @@ G = nx.MultiDiGraph(directed=True)
 # Then add it to the graph
 # TODO: not the prettiest way, but works... also find a way to
 # draw to arrows instead of one
-with open("graph_al.txt") as f:
+with open(argv[1]) as f:
     lines = f.readlines()
     for i in range(len(lines)):
         line = lines[i].split()
