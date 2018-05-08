@@ -58,7 +58,15 @@ You can save generated picture if you like, just press saving icon.
 
 ### Graph implementation
 
+Below you can find more detailed description how it all works and how to navigate.
 
+#### Class Graph
+
+This is the default class for handling graphs. Below you can find a few useful methods. 
+
+#### Class Matrix
+
+Unless you want to add something new don't use this class.
 
 
 ## Authors
