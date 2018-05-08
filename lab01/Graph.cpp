@@ -162,15 +162,34 @@ void Graph::incMatToAdjMat() {
   matrix->setType(AdjacencyMatrix);
 }
 
-void Graph::incMatToAdjList() {}
+void Graph::incMatToAdjList() {
+    std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>());
+
+    std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
+    while(indexesOfOne.size() == 2) {
+        unsigned int rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+        newData[indexesOfOne[0]].push_back(rowOfMinusOne + 1);
+
+        matrix->setElement(indexesOfOne, 0);
+        indexesOfOne = matrix->findElement(1);
+    }
+
+    matrix->saveData(newData);
+    matrix->setType(AdjacencyList);
+}
 
 int main() {
   Graph g;
   g.readFile("adjmatrix.txt");
+//  g.convertMatrix(IncidenceMatrix);
+//  g.print();
+//  std::cout << std::endl << std::endl;
+  g.convertMatrix(AdjacencyList);
+    g.print();
   g.convertMatrix(IncidenceMatrix);
   g.print();
-//  g.convertMatrix(AdjacencyMatrix);
-//  g.print();
+  g.convertMatrix(AdjacencyList);
+    g.print();
 
 //  g.readFile("incmatrix.txt");
 //  g.print();
