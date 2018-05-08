@@ -37,8 +37,9 @@ unsigned int Matrix::findInCol(unsigned int col, int el) {
 std::vector<unsigned int> Matrix::findElement(int el) {
   std::vector<unsigned int> v;
   for(unsigned int row = 0; row < getRows(); ++row) {
-    auto column = std::find(data[row].begin(),data[row].end(), el);
-    if (column !=  data[row].end()){
+    auto colIter = std::find(data[row].begin(),data[row].end(), el);
+    int column = std::distance(data[row].begin(), colIter);
+    if (column <  data[row].size()){
       v.push_back(row);
       v.push_back(column);
       return v;
