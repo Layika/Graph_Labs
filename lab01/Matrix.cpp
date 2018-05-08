@@ -4,10 +4,11 @@
 #include <iterator>
 
 void Matrix::saveAdjList(std::string fileName) {
+  // Open out file
   std::ofstream outfile(fileName);
 
+  // Write there formated data
   for (unsigned int i=0; i<data.size(); ++i) {
-
     for (unsigned int j=0; j<data[i].size(); ++j) {
       outfile << data[i][j];
       if (j!=data[i].size()-1) outfile << " ";
@@ -16,6 +17,7 @@ void Matrix::saveAdjList(std::string fileName) {
     outfile << std::endl;
   }
 
+  // Close the file
   outfile.close();
 }
 
