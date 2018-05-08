@@ -13,7 +13,7 @@ public:
   Graph() { matrix = new Matrix; }
 
   // Reads matrix from file. After a read matrix will be updated
-  void readFile(std::string fileName) { matrix->readFile(fileName); }
+  void readFile(std::string fileName);
 
   // Wrapper function converting any type to the type we want
   // It handles calling the right function (see private functions)

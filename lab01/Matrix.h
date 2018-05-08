@@ -25,7 +25,7 @@ public:
   // Setters for matrix
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
   void setType(RepresentationType newType) { type = newType; }
-  void setElement(std::vector<int> idx, int el) { data[idx[0]][idx[1]] = el; }
+  void setElement(std::vector<unsigned int> idx, int el) { data[idx[0]][idx[1]] = el; }
 
   // Helper function used in converter functions
   // Might be useful for future operations on matrices
@@ -34,6 +34,7 @@ public:
   // incMatToAdjMat
   std::vector<unsigned int> findElement(int el);
   unsigned int findInCol(unsigned int col, int el);
+  long numberOfOccurences(int el);
 
   // Debug printing function for matrices
   void print() const;
