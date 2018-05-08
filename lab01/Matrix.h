@@ -35,7 +35,7 @@ public:
   std::vector<unsigned int> findElement(int el);
   unsigned int findInCol(unsigned int col, int el);
   long numberOfOccurences(int el);
-
+  unsigned int numberOfElements();
   // Debug printing function for matrices
   void print() const;
 

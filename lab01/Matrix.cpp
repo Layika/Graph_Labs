@@ -57,3 +57,12 @@ long Matrix::numberOfOccurences(int el) {
 
   return count;
 }
+
+unsigned int Matrix::numberOfElements() {
+    unsigned int number = 0;
+    for(auto &row: data) {
+        number += row.size();
+    }
+
+    return number;
+}
