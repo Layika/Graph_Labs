@@ -22,8 +22,8 @@ int main() {
   adjacencyListGraph.print();
   std::cout << std::endl;
 
-  std::cout << "Saving graph to file graph.txt..." << std::endl;
-  adjacencyListGraph.saveGraph("graph.txt");
+  std::cout << "Saving graph to file graph_al.txt..." << std::endl;
+  adjacencyListGraph.saveGraph("graph_al.txt");
   std::cout << "Graph ready to plot" << std::endl;
   std::cout << std::endl << std::endl;
 
@@ -48,8 +48,8 @@ int main() {
   adjacencyMatrixGraph.print();
   std::cout << std::endl;
 
-  std::cout << "Saving graph to file graph.txt..." << std::endl;
-  adjacencyMatrixGraph.saveGraph("graph.txt");
+  std::cout << "Saving graph to file graph_am.txt..." << std::endl;
+  adjacencyMatrixGraph.saveGraph("graph_am.txt");
   std::cout << "Graph ready to plot" << std::endl;
   std::cout << std::endl << std::endl;
 
@@ -74,8 +74,8 @@ int main() {
   incidenceMatrixGraph.print();
   std::cout << std::endl;
 
-  std::cout << "Saving graph to file graph.txt..." << std::endl;
-  incidenceMatrixGraph.saveGraph("graph.txt");
+  std::cout << "Saving graph to file graph_im.txt..." << std::endl;
+  incidenceMatrixGraph.saveGraph("graph_im.txt");
   std::cout << "Graph ready to plot" << std::endl;
   std::cout << std::endl << std::endl;
 
