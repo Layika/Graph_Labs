@@ -48,3 +48,12 @@ std::vector<unsigned int> Matrix::findElement(int el) {
 
   return v;
 }
+
+long Matrix::numberOfOccurences(int el) {
+  long count = 0;
+  for(unsigned int row = 0; row < getRows(); ++row) {
+    count += std::count(data[row].begin(), data[row].end(), el);
+  }
+
+  return count;
+}
