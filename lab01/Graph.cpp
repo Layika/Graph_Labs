@@ -71,6 +71,7 @@ void Graph::convertMatrix(RepresentationType to) {
   }
 }
 
+// Algorithm converting adjacency matrix to adjacency list
 void Graph::adjMatToAdjList() {
   std::vector<std::vector<int>> newData;
 
@@ -86,6 +87,7 @@ void Graph::adjMatToAdjList() {
   matrix->setType(AdjacencyList);
 }
 
+// Algorithm converting adjacency list to adjacency matrix
 void Graph::adjListToAdjMat() {
   std::vector<std::vector<int>> newData;
 
@@ -103,8 +105,7 @@ void Graph::adjListToAdjMat() {
   matrix->setType(AdjacencyMatrix);
 }
 
-
-
+// Algorithm converting adjacency matrix to incidence matrix
 void Graph::adjMatToIncMat() {
   long numberOfEdges = matrix->numberOfOccurences(1);
   std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>(numberOfEdges));
@@ -113,7 +114,6 @@ void Graph::adjMatToIncMat() {
     matrix->saveData(newData);
     return;
   }
-
 
   std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
   unsigned int onesCounter = 0;
@@ -130,6 +130,8 @@ void Graph::adjMatToIncMat() {
   matrix->setType(IncidenceMatrix);
 }
 
+
+// Algorithm converting adjacency list to incidence matrix
 void Graph::adjListToIncMat() {
     std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>(matrix->numberOfElements()));
     unsigned int numberOfEdge = 0;
@@ -146,6 +148,7 @@ void Graph::adjListToIncMat() {
     matrix->setType(IncidenceMatrix);
 }
 
+// Algorithm converting incidence matrix to adjacency matrix
 void Graph::incMatToAdjMat() {
   std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>(matrix->getRows()));
 
@@ -162,6 +165,7 @@ void Graph::incMatToAdjMat() {
   matrix->setType(AdjacencyMatrix);
 }
 
+// Algorithm converting incidence matrix to adjacency list
 void Graph::incMatToAdjList() {
     std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>());
 
@@ -176,25 +180,4 @@ void Graph::incMatToAdjList() {
 
     matrix->saveData(newData);
     matrix->setType(AdjacencyList);
-}
-
-int main() {
-  Graph g;
-  g.readFile("adjmatrix.txt");
-//  g.convertMatrix(IncidenceMatrix);
-//  g.print();
-//  std::cout << std::endl << std::endl;
-  g.convertMatrix(AdjacencyList);
-    g.print();
-  g.convertMatrix(IncidenceMatrix);
-  g.print();
-  g.convertMatrix(AdjacencyList);
-    g.print();
-
-//  g.readFile("incmatrix.txt");
-//  g.print();
-//  g.convertMatrix(AdjacencyMatrix);
-//  g.print();
-//  g.convertMatrix(IncidenceMatrix);
-//  g.print();
 }

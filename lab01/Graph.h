@@ -29,6 +29,8 @@ public:
 private:
   Matrix* matrix;
 
+  // Functions for conversions. All of them create new data and then use Matrix method
+  // saveData to change old matrix to a new one
   void adjMatToAdjList();
   void adjMatToIncMat();
 
