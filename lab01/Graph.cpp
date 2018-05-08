@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <iterator>
 
 void Graph::readFile(std::string fileName) {
 
