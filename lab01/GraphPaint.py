@@ -12,7 +12,7 @@ G = nx.MultiDiGraph(directed=True)
 # Then add it to the graph
 # TODO: not the prettiest way, but works... also find a way to
 # draw to arrows instead of one
-with open("out.txt") as f:
+with open("graph.txt") as f:
     lines = f.readlines()
     for i in range(len(lines)):
         line = lines[i].split()
