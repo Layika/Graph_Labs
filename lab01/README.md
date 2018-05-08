@@ -1,6 +1,6 @@
 # Graph labs 01
 
-Repository contains solution to tasks listed [here] (http://home.agh.edu.pl/~ewach/grafy/Zestaw_1.pdf) (in Polish).
+Repository contains solution to tasks listed [here](http://home.agh.edu.pl/~ewach/grafy/Zestaw_1.pdf) (in Polish).
 These are as follows:
 1. Implement a graph, use adjacency matrix, adjacency list and incidence matrix. Implement translating from one type to another
 2. Write a program to visualize a graph
