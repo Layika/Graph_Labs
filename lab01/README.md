@@ -85,7 +85,27 @@ And this is what you can do to read a file (this project comes with three exampl
 g.readFile("adjlist.txt");
 ```
 
+To convert your graph's representation to other representations you can do as follows:
+
+```
+g.convertMatrix(AdjacencyMatrix);
+
+// or
+g.convertMatrix(AdjacencyList);
+
+// or
+g.convertMatrix(IncidenceMatrix);
+```
+
 This method can read three types of files: adjacency matrices, adjacency lists and incidence matrices. Then it saves read matrix. For detailed description how it does it look in `Graph.cpp` file. 
+<p><p>
+You can also save you graph to file in order to display it later using `GraphPaint.py`. To do this simply write:
+ 
+```
+g.saveGraph("file.txt");
+```
+
+This method converts any type of matrix into adjacency list because this is data type python script uses, so you don't have to convert anything manually in case you used anything else than adjacency list.
 
 
 #### Class Matrix
