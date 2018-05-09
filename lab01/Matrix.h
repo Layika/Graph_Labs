@@ -32,7 +32,7 @@ public:
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
   void setRepresentationType(RepresentationType newType) { representationType = newType; }
   void setGraphType(GraphType newType) { graphType = newType; }
-  
+
   // TODO: make this std::pair
   void setElement(std::vector<unsigned int> idx, int el) { data[idx[0]][idx[1]] = el; }
   void setElement(unsigned int x, unsigned int y, int el) { data[x][y] = el; }
@@ -55,4 +55,41 @@ private:
   std::vector<std::vector<int>> data;
   RepresentationType representationType;
   GraphType graphType;
+};
+
+class AbstractConverter {
+  public:
+    virtual void convertRepresentation(Matrix* matrix, RepresentationType to)=0;
+    virtual ~AbstractConverter() {};
+};
+
+class AdjacencyListConverter: public AbstractConverter {
+public:
+    void convertRepresentation(Matrix* matrix, RepresentationType to) override;
+    ~AdjacencyListConverter() override= default;
+
+private:
+    void adjListToAdjMat(Matrix *matrix);
+    void adjListToIncMat(Matrix* matrix);
+};
+
+
+class AdjacencyMatrixConverter: public AbstractConverter {
+public:
+    void convertRepresentation(Matrix* matrix, RepresentationType to) override;
+    ~AdjacencyMatrixConverter() override= default;
+
+private:
+    void adjMatToAdjList(Matrix* matrix);
+    void adjMatToIncMat(Matrix* matrix);
+};
+
+class IncidenceMatrixConverter: public AbstractConverter {
+public:
+    void convertRepresentation(Matrix* matrix, RepresentationType to) override;
+    ~IncidenceMatrixConverter() override= default;
+
+private:
+    void incMatToAdjMat(Matrix* matrix);
+    void incMatToAdjList(Matrix* matrix);
 };
