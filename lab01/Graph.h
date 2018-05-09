@@ -11,7 +11,7 @@ class Graph {
 public:
   // Conctructor for graphs, only creates a new matrix, but doesn't fill it
   // In order to get a matrix we need to read from file or create a random matrix
-  Graph() { matrix = new Matrix; }
+  Graph(GraphType type) { matrix = new Matrix; matrix->setGraphType(type); }
 
   // Reads matrix from file. After a read matrix will be updated
   void readFile(std::string fileName);

@@ -35,9 +35,9 @@ void Graph::readFile(std::string fileName) {
   }
 
   // Save the new type and new data matrix
-  if (rowWidth == newData.size()) matrix->setType(AdjacencyMatrix);
-  else if (rowWidth == -2) matrix->setType(AdjacencyList);
-  else matrix->setType(IncidenceMatrix);
+  if (rowWidth == newData.size()) matrix->setRepresentationType(AdjacencyMatrix);
+  else if (rowWidth == -2) matrix->setRepresentationType(AdjacencyList);
+  else matrix->setRepresentationType(IncidenceMatrix);
   matrix->saveData(newData);
 
   // Close the read file
@@ -85,7 +85,7 @@ void Graph::adjMatToAdjList() {
   }
 
   matrix->saveData(newData);
-  matrix->setType(AdjacencyList);
+  matrix->setRepresentationType(AdjacencyList);
 }
 
 // Algorithm converting adjacency list to adjacency matrix
@@ -103,7 +103,7 @@ void Graph::adjListToAdjMat() {
   }
 
   matrix->saveData(newData);
-  matrix->setType(AdjacencyMatrix);
+  matrix->setRepresentationType(AdjacencyMatrix);
 }
 
 // Algorithm converting adjacency matrix to incidence matrix
@@ -120,7 +120,8 @@ void Graph::adjMatToIncMat() {
   unsigned int onesCounter = 0;
   while(indexesOfOne.size() == 2) {
     newData[indexesOfOne[0]][onesCounter] = 1;
-    newData[indexesOfOne[1]][onesCounter] = -1;
+    if (matrix->getGraphType() == Directed) newData[indexesOfOne[1]][onesCounter] = -1;
+    else newData[indexesOfOne[1]][onesCounter] = 1;
 
     matrix->setElement(indexesOfOne, 0);
     indexesOfOne = matrix->findElement(1);
@@ -128,7 +129,7 @@ void Graph::adjMatToIncMat() {
   }
 
   matrix->saveData(newData);
-  matrix->setType(IncidenceMatrix);
+  matrix->setRepresentationType(IncidenceMatrix);
 }
 
 
@@ -140,13 +141,14 @@ void Graph::adjListToIncMat() {
 
         for (unsigned int col=0; col<matrix->getColumns(row); ++col) {
             newData[row][numberOfEdge] = 1;
-            newData[matrix->getElement(row, col) - 1][numberOfEdge] = -1;
+            if (matrix->getGraphType() == Directed) newData[matrix->getElement(row, col) - 1][numberOfEdge] = -1;
+            else newData[matrix->getElement(row, col) - 1][numberOfEdge] = 1;
             ++numberOfEdge;
         }
     }
 
     matrix->saveData(newData);
-    matrix->setType(IncidenceMatrix);
+    matrix->setRepresentationType(IncidenceMatrix);
 }
 
 // Algorithm converting incidence matrix to adjacency matrix
@@ -155,7 +157,9 @@ void Graph::incMatToAdjMat() {
 
   std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
   while(indexesOfOne.size() == 2) {
-    unsigned int rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+    unsigned int rowOfMinusOne;
+    if (matrix->getGraphType() == Directed) rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+    else rowOfMinusOne = matrix->findInCol(indexesOfOne[1], 1);
     newData[indexesOfOne[0]][rowOfMinusOne] = 1;
 
     matrix->setElement(indexesOfOne, 0);
@@ -163,7 +167,7 @@ void Graph::incMatToAdjMat() {
   }
 
   matrix->saveData(newData);
-  matrix->setType(AdjacencyMatrix);
+  matrix->setRepresentationType(AdjacencyMatrix);
 }
 
 // Algorithm converting incidence matrix to adjacency list
@@ -172,15 +176,28 @@ void Graph::incMatToAdjList() {
 
     std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
     while(indexesOfOne.size() == 2) {
-        unsigned int rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+        unsigned int rowOfMinusOne;
+        if (matrix->getGraphType() == Directed) rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+        else {
+          rowOfMinusOne = matrix->findInCol(indexesOfOne[1], 1);
+          matrix->setElement(indexesOfOne, 0);
+        }
+
         newData[indexesOfOne[0]].push_back(rowOfMinusOne + 1);
 
-        matrix->setElement(indexesOfOne, 0);
+        if (matrix->getGraphType() == Undirected) {
+          std::vector<unsigned int> indexes;
+          indexes.push_back(rowOfMinusOne);
+          indexes.push_back(indexesOfOne[1]);
+          matrix->setElement(indexes, 0);
+        }
+
+        else matrix->setElement(indexesOfOne, 0);
         indexesOfOne = matrix->findElement(1);
     }
 
     matrix->saveData(newData);
-    matrix->setType(AdjacencyList);
+    matrix->setRepresentationType(AdjacencyList);
 }
 
 
@@ -207,7 +224,7 @@ void Graph::generateRandomNL(unsigned int minVertices, unsigned int maxVertices,
 
     if (i != j && matrix->getElement(i,j) == 0) {
       matrix->setElement(i, j, 1);
-      matrix->setElement(j, i, 1);
+      if (matrix->getGraphType() == Undirected) matrix->setElement(j, i, 1);
       counter++;
     }
   }
@@ -235,7 +252,7 @@ void Graph::generateRandomNP(unsigned int minVertices, unsigned int maxVertices,
                 randomValue = intRand(1, 100);
                 if(randomValue <= probability) {
                     matrix->setElement(i, j, 1);
-                    matrix->setElement(j, i, 1);
+                    if (matrix->getGraphType() == Undirected) matrix->setElement(j, i, 1);
                 }
             }
         }

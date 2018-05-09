@@ -11,20 +11,28 @@ enum RepresentationType {
   IncidenceMatrix
 };
 
+enum GraphType {
+  Undirected,
+  Directed
+};
+
 class Matrix {
 public:
   // Any matrix will be converted to adjacency list because Python script uses this format
   void saveAdjList(std::string fileName);
 
   // Getters for matrix
-  RepresentationType getRepresentationType() { return type; }
+  RepresentationType getRepresentationType() { return representationType; }
+  GraphType getGraphType() { return graphType; }
   unsigned int getRows() const { return data.size(); }
   unsigned int getColumns(unsigned int row) const { return data[row].size(); }
   int getElement(unsigned int row, unsigned int col) const { return data[row][col]; }
 
   // Setters for matrix
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
-  void setType(RepresentationType newType) { type = newType; }
+  void setRepresentationType(RepresentationType newType) { representationType = newType; }
+  void setGraphType(GraphType newType) { graphType = newType; }
+  
   // TODO: make this std::pair
   void setElement(std::vector<unsigned int> idx, int el) { data[idx[0]][idx[1]] = el; }
   void setElement(unsigned int x, unsigned int y, int el) { data[x][y] = el; }
@@ -45,5 +53,6 @@ public:
 
 private:
   std::vector<std::vector<int>> data;
-  RepresentationType type;
+  RepresentationType representationType;
+  GraphType graphType;
 };

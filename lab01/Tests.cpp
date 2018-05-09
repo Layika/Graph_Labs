@@ -7,10 +7,10 @@ int main() {
   // ADJACENCY LIST GRAPH
   std::cout << "ADJACENCY LIST GRAPH" << std::endl << std::endl;
   std::cout << "Creating adjacency list graph..." << std::endl;
-  Graph adjacencyListGraph;
+  Graph adjacencyListGraph(Undirected);
 
   std::cout << "Reading adjacency list from file:" << std::endl;
-  adjacencyListGraph.readFile("adjlist.txt");
+  adjacencyListGraph.readFile("adjlist_simple.txt");
   adjacencyListGraph.print();
   std::cout << std::endl;
 
@@ -33,10 +33,10 @@ int main() {
   // ADJACENCY MATRIX GRAPH
   std::cout << "ADJACENCY MATRIX GRAPH" << std::endl << std::endl;
   std::cout << "Creating adjacency matrix graph..." << std::endl;
-  Graph adjacencyMatrixGraph;
+  Graph adjacencyMatrixGraph(Undirected);
 
   std::cout << "Reading adjacency matrix from file:" << std::endl;
-  adjacencyMatrixGraph.readFile("adjmatrix.txt");
+  adjacencyMatrixGraph.readFile("adjmatrix_simple.txt");
   adjacencyMatrixGraph.print();
   std::cout << std::endl;
 
@@ -59,10 +59,10 @@ int main() {
   // INCIDENCE MATRIX GRAPH
   std::cout << "INCIDENCE MATRIX GRAPH" << std::endl << std::endl;
   std::cout << "Creating incidence matrix graph..." << std::endl;
-  Graph incidenceMatrixGraph;
+  Graph incidenceMatrixGraph(Undirected);
 
   std::cout << "Reading incidence matrix from file:" << std::endl;
-  incidenceMatrixGraph.readFile("incmatrix.txt");
+  incidenceMatrixGraph.readFile("incmatrix_simple.txt");
   incidenceMatrixGraph.print();
   std::cout << std::endl;
 
@@ -86,7 +86,7 @@ int main() {
 
   int vertices, edges, probability;
   std::cout << "Generating random G(n,l) graph..." << std::endl << std::endl;
-  Graph randomGraphNL;
+  Graph randomGraphNL(Undirected);
   randomGraphNL.generateRandomNL(6, 10, 5, 10, vertices, edges);
   std::cout << "Vertices: " << vertices << ", edges: " << edges << std::endl;
   randomGraphNL.print();
@@ -96,7 +96,7 @@ int main() {
   std::cout << "Graph ready to plot" << std::endl << std::endl;
 
   std::cout << "Generating random G(n,p) graph..." << std::endl << std::endl;
-  Graph randomGraphNP;
+  Graph randomGraphNP(Undirected);
   randomGraphNP.generateRandomNP(6, 10, 20, 80, vertices, probability);
   std::cout << "Vertices: " << vertices << ", probability: " << probability << "%" << std::endl;
   randomGraphNP.print();

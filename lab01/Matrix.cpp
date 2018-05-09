@@ -75,7 +75,7 @@ void Matrix::createEmptyAdjacencyMat(unsigned int vertices) {
 
   for (unsigned int i=0; i<vertices; ++i) std::fill(emptyMatrix[i].begin(), emptyMatrix[i].end(), 0);
 
-  type = AdjacencyMatrix;
+  representationType = AdjacencyMatrix;
 
   saveData(emptyMatrix);
 }
