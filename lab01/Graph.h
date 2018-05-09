@@ -25,11 +25,11 @@ public:
   void print() const { matrix->print(); }
 
   // Helper function for random graphs, returns a random int
-  static int intRand(const int min, const int max) { return rand() % max + min; }
+  static int intRand(const int min, const int max) { return rand() % (max-min+1) + min; }
   // Function for generating a random G(n,l) graph
-  void generateRandomNL(unsigned int minVertices, unsigned int maxVertices, unsigned int minEdges, unsigned int maxEdges);
+  void generateRandomNL(unsigned int minVertices, unsigned int maxVertices, unsigned int minEdges, unsigned int maxEdges,  int& generatedVertices, int& generatedEdges);
   // Function for generating a random G(n,p) graph
-  void generateRandomNP();
+  void generateRandomNP(unsigned int minVertices, unsigned int maxVertices, unsigned int minProbability, unsigned int maxProbability,  int& generatedVertices, int& generatedProbability);
 
 
 private:

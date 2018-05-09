@@ -185,22 +185,25 @@ void Graph::incMatToAdjList() {
 
 
 // Function for generating a random G(n,l) graph
-void Graph::generateRandomNL(unsigned int minVertices, unsigned int maxVertices, unsigned int minEdges, unsigned int maxEdges) {
+void Graph::generateRandomNL(unsigned int minVertices, unsigned int maxVertices, unsigned int minEdges, unsigned int maxEdges, int& generatedVertices, int& generatedEdges) {
   // TODO: better initialization
   int vertices = -1;
   int edges = 0;
 
-  while (vertices <= 0 || edges <= 0 || edges > (vertices-1)/2) {
+  while (vertices <= 0 || edges <= 0 || edges > (vertices*(vertices-1))/2) {
     vertices = intRand(minVertices, maxVertices);
     edges = intRand(minEdges, maxEdges);
   }
+
+  generatedVertices = vertices;
+  generatedEdges = edges;
 
   this->matrix->createEmptyAdjacencyMat(vertices);
 
   int counter = 0;
   while (counter < edges) {
-    int i = intRand(0, vertices);
-    int j = intRand(0, vertices);
+    int i = intRand(0, vertices-1);
+    int j = intRand(0, vertices-1);
 
     if (i != j && matrix->getElement(i,j) == 0) {
       matrix->setElement(i, j, 1);
@@ -208,4 +211,37 @@ void Graph::generateRandomNL(unsigned int minVertices, unsigned int maxVertices,
       counter++;
     }
   }
+}
+
+// Function for generating a random G(n,p) graph
+void Graph::generateRandomNP(unsigned int minVertices, unsigned int maxVertices, unsigned int minProbability, unsigned int maxProbability, int& generatedVertices, int& generatedProbability) {
+
+    int vertices = -1;
+    float probability = 0;
+    while (vertices <= 0 || probability < 0 || probability > 100) {
+        vertices = intRand(minVertices, maxVertices);
+        probability = intRand(minProbability, maxProbability);
+    }
+
+    generatedVertices = vertices;
+    generatedProbability = probability;
+
+    this->matrix->createEmptyAdjacencyMat(vertices);
+
+    int randomValue;
+    for(int i=0; i<vertices; i++) {
+        for(int j=0; j<vertices; j++) {
+            if( i != j) {
+                randomValue = intRand(1, 100);
+                if(randomValue <= probability) {
+                    matrix->setElement(i, j, 1);
+                    matrix->setElement(j, i, 1);
+                }
+                else {
+                    matrix->setElement(i, j, 0);
+                    matrix->setElement(j, i, 0);
+                }
+            }
+        }
+    }
 }
