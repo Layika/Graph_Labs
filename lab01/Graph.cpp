@@ -237,10 +237,6 @@ void Graph::generateRandomNP(unsigned int minVertices, unsigned int maxVertices,
                     matrix->setElement(i, j, 1);
                     matrix->setElement(j, i, 1);
                 }
-                else {
-                    matrix->setElement(i, j, 0);
-                    matrix->setElement(j, i, 0);
-                }
             }
         }
     }
