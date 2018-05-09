@@ -1,7 +1,9 @@
 #include "Graph.h"
 #include <iostream>
+#include <time.h>
 
 int main() {
+    srand(time(NULL));
   // ADJACENCY LIST GRAPH
   std::cout << "ADJACENCY LIST GRAPH" << std::endl << std::endl;
   std::cout << "Creating adjacency list graph..." << std::endl;
@@ -80,5 +82,26 @@ int main() {
   std::cout << std::endl << std::endl;
 
   // RANDOM GRAPHS
-  std::cout << "" << std::endl << std::endl;
+  std::cout << "RANDOM GRAPHS" << std::endl << std::endl;
+
+  int vertices, edges, probability;
+  std::cout << "Generating random G(n,l) graph..." << std::endl << std::endl;
+  Graph randomGraphNL;
+  randomGraphNL.generateRandomNL(6, 10, 5, 10, vertices, edges);
+  std::cout << "Vertices: " << vertices << ", edges: " << edges << std::endl;
+  randomGraphNL.print();
+
+  std::cout << std::endl << "Saving graph to file random_graph_nl.txt..." << std::endl;
+  randomGraphNL.saveGraph("random_graph_nl.txt");
+  std::cout << "Graph ready to plot" << std::endl << std::endl;
+
+  std::cout << "Generating random G(n,p) graph..." << std::endl << std::endl;
+  Graph randomGraphNP;
+  randomGraphNP.generateRandomNP(6, 10, 20, 80, vertices, probability);
+  std::cout << "Vertices: " << vertices << ", probability: " << probability << "%" << std::endl;
+  randomGraphNP.print();
+
+  std::cout << std::endl << "Saving graph to file random_graph_np.txt..." << std::endl;
+  randomGraphNP.saveGraph("random_graph_np.txt");
+  std::cout << "Graph ready to plot" << std::endl;
 }
