@@ -97,7 +97,7 @@ int main() {
 
   std::cout << "Generating random G(n,p) graph..." << std::endl << std::endl;
   Graph randomGraphNP(Undirected);
-  randomGraphNP.generateRandomNP(6, 10, 20, 80, vertices, probability);
+  randomGraphNP.generateRandomNP(6, 10, 5, 10, vertices, probability);
   std::cout << "Vertices: " << vertices << ", probability: " << probability << "%" << std::endl;
   randomGraphNP.print();
 
