@@ -35,9 +35,17 @@ void Graph::readFile(std::string fileName) {
   }
 
   // Save the new type and new data matrix
-  if (rowWidth == newData.size()) matrix->setType(AdjacencyMatrix);
-  else if (rowWidth == -2) matrix->setType(AdjacencyList);
-  else matrix->setType(IncidenceMatrix);
+  if (rowWidth == newData.size()) {
+      matrix->setType(AdjacencyMatrix);
+      matrixConverter = new AdjacencyMatrixConverter;
+  } else if (rowWidth == -2) {
+      matrix->setType(AdjacencyList);
+      matrixConverter = new AdjacencyListConverter;
+  } else {
+      matrix->setType(IncidenceMatrix);
+      matrixConverter = new IncidenceMatrixConverter;
+  }
+
   matrix->saveData(newData);
 
   // Close the read file
@@ -48,139 +56,17 @@ void Graph::readFile(std::string fileName) {
 // Wrapper function converting any type to the type we want
 // It handles calling the right function (see private functions)
 void Graph::convertMatrix(RepresentationType to) {
-  // Get current representation type
-  RepresentationType currentType = matrix->getRepresentationType();
-
-  // If the type is different than the one we want to convert to
-  // then use convertion functions
-  if (currentType != to) {
-    switch (currentType) {
-
-      case AdjacencyList:
-        if (to == AdjacencyMatrix) adjListToAdjMat();
-        else adjListToIncMat();
-        break;
-      case AdjacencyMatrix:
-        if (to == AdjacencyList) adjMatToAdjList();
-        else adjMatToIncMat();
-        break;
-      case IncidenceMatrix:
-        if (to == AdjacencyList) incMatToAdjList();
-        else incMatToAdjMat();
-        break;
-    }
-  }
+    matrixConverter->convertRepresentation(matrix, to);
+    setConverter(to);
 }
 
-// Algorithm converting adjacency matrix to adjacency list
-void Graph::adjMatToAdjList() {
-  std::vector<std::vector<int>> newData;
+void Graph::setConverter(const RepresentationType &forMatrixType) {
+    // clear previous pointer
+    delete matrixConverter;
 
-  for (unsigned int row=0; row<matrix->getRows(); ++row) {
-    std::vector<int> newRow;
-
-    for (unsigned int col=0; col<matrix->getColumns(row); ++col)
-      if (matrix->getElement(row,col) == 1) newRow.push_back(col+1);
-    newData.push_back(newRow);
-  }
-
-  matrix->saveData(newData);
-  matrix->setType(AdjacencyList);
-}
-
-// Algorithm converting adjacency list to adjacency matrix
-void Graph::adjListToAdjMat() {
-  std::vector<std::vector<int>> newData;
-
-  for (unsigned int row=0; row<matrix->getRows(); ++row) {
-    std::vector<int> newRow;
-
-    for (unsigned int col=0; col<matrix->getRows(); ++col) {
-      if (matrix->isInRow(row, col+1)) newRow.push_back(1);
-      else newRow.push_back(0);
-    }
-    newData.push_back(newRow);
-  }
-
-  matrix->saveData(newData);
-  matrix->setType(AdjacencyMatrix);
-}
-
-// Algorithm converting adjacency matrix to incidence matrix
-void Graph::adjMatToIncMat() {
-  long numberOfEdges = matrix->numberOfOccurences(1);
-  std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>(numberOfEdges));
-
-  if(numberOfEdges == 0) {
-    matrix->saveData(newData);
-    return;
-  }
-
-  std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
-  unsigned int onesCounter = 0;
-  while(indexesOfOne.size() == 2) {
-    newData[indexesOfOne[0]][onesCounter] = 1;
-    newData[indexesOfOne[1]][onesCounter] = -1;
-
-    matrix->setElement(indexesOfOne, 0);
-    indexesOfOne = matrix->findElement(1);
-    ++onesCounter;
-  }
-
-  matrix->saveData(newData);
-  matrix->setType(IncidenceMatrix);
-}
-
-
-// Algorithm converting adjacency list to incidence matrix
-void Graph::adjListToIncMat() {
-    std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>(matrix->numberOfElements()));
-    unsigned int numberOfEdge = 0;
-    for (unsigned int row=0; row<matrix->getRows(); ++row) {
-
-        for (unsigned int col=0; col<matrix->getColumns(row); ++col) {
-            newData[row][numberOfEdge] = 1;
-            newData[matrix->getElement(row, col) - 1][numberOfEdge] = -1;
-            ++numberOfEdge;
-        }
-    }
-
-    matrix->saveData(newData);
-    matrix->setType(IncidenceMatrix);
-}
-
-// Algorithm converting incidence matrix to adjacency matrix
-void Graph::incMatToAdjMat() {
-  std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>(matrix->getRows()));
-
-  std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
-  while(indexesOfOne.size() == 2) {
-    unsigned int rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
-    newData[indexesOfOne[0]][rowOfMinusOne] = 1;
-
-    matrix->setElement(indexesOfOne, 0);
-    indexesOfOne = matrix->findElement(1);
-  }
-
-  matrix->saveData(newData);
-  matrix->setType(AdjacencyMatrix);
-}
-
-// Algorithm converting incidence matrix to adjacency list
-void Graph::incMatToAdjList() {
-    std::vector<std::vector<int>> newData(matrix->getRows(), std::vector<int>());
-
-    std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
-    while(indexesOfOne.size() == 2) {
-        unsigned int rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
-        newData[indexesOfOne[0]].push_back(rowOfMinusOne + 1);
-
-        matrix->setElement(indexesOfOne, 0);
-        indexesOfOne = matrix->findElement(1);
-    }
-
-    matrix->saveData(newData);
-    matrix->setType(AdjacencyList);
+    if (forMatrixType == AdjacencyList) matrixConverter = new AdjacencyListConverter;
+    else if (forMatrixType == AdjacencyMatrix) matrixConverter = new AdjacencyMatrixConverter;
+    else matrixConverter = new IncidenceMatrixConverter;
 }
 
 
@@ -198,7 +84,8 @@ void Graph::generateRandomNL(unsigned int minVertices, unsigned int maxVertices,
   generatedVertices = vertices;
   generatedEdges = edges;
 
-  this->matrix->createEmptyAdjacencyMat(vertices);
+  matrix->createEmptyAdjacencyMat(vertices);
+  setConverter(AdjacencyMatrix);
 
   int counter = 0;
   while (counter < edges) {
@@ -226,7 +113,8 @@ void Graph::generateRandomNP(unsigned int minVertices, unsigned int maxVertices,
     generatedVertices = vertices;
     generatedProbability = probability;
 
-    this->matrix->createEmptyAdjacencyMat(vertices);
+    matrix->createEmptyAdjacencyMat(vertices);
+    setConverter(AdjacencyMatrix);
 
     int randomValue;
     for(int i=0; i<vertices; i++) {
@@ -241,3 +129,4 @@ void Graph::generateRandomNP(unsigned int minVertices, unsigned int maxVertices,
         }
     }
 }
+

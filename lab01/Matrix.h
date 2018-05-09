@@ -11,6 +11,7 @@ enum RepresentationType {
   IncidenceMatrix
 };
 
+
 class Matrix {
 public:
   // Any matrix will be converted to adjacency list because Python script uses this format
@@ -46,4 +47,41 @@ public:
 private:
   std::vector<std::vector<int>> data;
   RepresentationType type;
+};
+
+class AbstractConverter {
+  public:
+    virtual void convertRepresentation(Matrix* matrix, RepresentationType to)=0;
+    virtual ~AbstractConverter() {};
+};
+
+class AdjacencyListConverter: public AbstractConverter {
+public:
+    void convertRepresentation(Matrix* matrix, RepresentationType to) override;
+    ~AdjacencyListConverter() override= default;
+
+private:
+    void adjListToAdjMat(Matrix *matrix);
+    void adjListToIncMat(Matrix* matrix);
+};
+
+
+class AdjacencyMatrixConverter: public AbstractConverter {
+public:
+    void convertRepresentation(Matrix* matrix, RepresentationType to) override;
+    ~AdjacencyMatrixConverter() override= default;
+
+private:
+    void adjMatToAdjList(Matrix* matrix);
+    void adjMatToIncMat(Matrix* matrix);
+};
+
+class IncidenceMatrixConverter: public AbstractConverter {
+public:
+    void convertRepresentation(Matrix* matrix, RepresentationType to) override;
+    ~IncidenceMatrixConverter() override= default;
+
+private:
+    void incMatToAdjMat(Matrix* matrix);
+    void incMatToAdjList(Matrix* matrix);
 };
