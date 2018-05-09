@@ -103,7 +103,7 @@ void AdjacencyListConverter::adjListToAdjMat(Matrix *matrix) {
   }
 
   matrix->saveData(newData);
-  matrix->setType(AdjacencyMatrix);
+  matrix->setRepresentationType(AdjacencyList);
 }
 
 
@@ -112,15 +112,16 @@ void AdjacencyListConverter::adjListToIncMat(Matrix* matrix) {
   unsigned int numberOfEdge = 0;
   for (unsigned int row=0; row<matrix->getRows(); ++row) {
 
-    for (unsigned int col=0; col<matrix->getColumns(row); ++col) {
-      newData[row][numberOfEdge] = 1;
-      newData[matrix->getElement(row, col) - 1][numberOfEdge] = -1;
-      ++numberOfEdge;
-    }
+      for (unsigned int col=0; col<matrix->getColumns(row); ++col) {
+          newData[row][numberOfEdge] = 1;
+          if (matrix->getGraphType() == Directed) newData[matrix->getElement(row, col) - 1][numberOfEdge] = -1;
+          else newData[matrix->getElement(row, col) - 1][numberOfEdge] = 1;
+          ++numberOfEdge;
+      }
   }
 
   matrix->saveData(newData);
-  matrix->setType(IncidenceMatrix);
+  matrix->setRepresentationType(IncidenceMatrix);
 }
 
 void AdjacencyMatrixConverter::convertRepresentation(Matrix* matrix, RepresentationType to) {
@@ -143,7 +144,7 @@ void AdjacencyMatrixConverter::adjMatToAdjList(Matrix* matrix) {
   }
 
   matrix->saveData(newData);
-  matrix->setType(AdjacencyList);
+  matrix->setRepresentationType(AdjacencyList);
 }
 
 void AdjacencyMatrixConverter::adjMatToIncMat(Matrix* matrix) {
@@ -159,7 +160,8 @@ void AdjacencyMatrixConverter::adjMatToIncMat(Matrix* matrix) {
   unsigned int onesCounter = 0;
   while(indexesOfOne.size() == 2) {
     newData[indexesOfOne[0]][onesCounter] = 1;
-    newData[indexesOfOne[1]][onesCounter] = -1;
+    if (matrix->getGraphType() == Directed) newData[indexesOfOne[1]][onesCounter] = -1;
+    else newData[indexesOfOne[1]][onesCounter] = 1;
 
     matrix->setElement(indexesOfOne, 0);
     indexesOfOne = matrix->findElement(1);
@@ -167,7 +169,7 @@ void AdjacencyMatrixConverter::adjMatToIncMat(Matrix* matrix) {
   }
 
   matrix->saveData(newData);
-  matrix->setType(IncidenceMatrix);
+  matrix->setRepresentationType(IncidenceMatrix);
 }
 
 
@@ -184,7 +186,9 @@ void IncidenceMatrixConverter::incMatToAdjMat(Matrix* matrix) {
 
   std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
   while(indexesOfOne.size() == 2) {
-    unsigned int rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+    unsigned int rowOfMinusOne;
+    if (matrix->getGraphType() == Directed) rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+    else rowOfMinusOne = matrix->findInCol(indexesOfOne[1], 1);
     newData[indexesOfOne[0]][rowOfMinusOne] = 1;
 
     matrix->setElement(indexesOfOne, 0);
@@ -192,7 +196,7 @@ void IncidenceMatrixConverter::incMatToAdjMat(Matrix* matrix) {
   }
 
   matrix->saveData(newData);
-  matrix->setType(AdjacencyMatrix);
+  matrix->setRepresentationType(AdjacencyMatrix);
 }
 
 void IncidenceMatrixConverter::incMatToAdjList(Matrix* matrix) {
@@ -200,13 +204,26 @@ void IncidenceMatrixConverter::incMatToAdjList(Matrix* matrix) {
 
   std::vector<unsigned int> indexesOfOne = matrix->findElement(1);
   while(indexesOfOne.size() == 2) {
-    unsigned int rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
-    newData[indexesOfOne[0]].push_back(rowOfMinusOne + 1);
+      unsigned int rowOfMinusOne;
+      if (matrix->getGraphType() == Directed) rowOfMinusOne = matrix->findInCol(indexesOfOne[1], -1);
+      else {
+        rowOfMinusOne = matrix->findInCol(indexesOfOne[1], 1);
+        matrix->setElement(indexesOfOne, 0);
+      }
 
-    matrix->setElement(indexesOfOne, 0);
-    indexesOfOne = matrix->findElement(1);
+      newData[indexesOfOne[0]].push_back(rowOfMinusOne + 1);
+
+      if (matrix->getGraphType() == Undirected) {
+        std::vector<unsigned int> indexes;
+        indexes.push_back(rowOfMinusOne);
+        indexes.push_back(indexesOfOne[1]);
+        matrix->setElement(indexes, 0);
+      }
+
+      else matrix->setElement(indexesOfOne, 0);
+      indexesOfOne = matrix->findElement(1);
   }
 
   matrix->saveData(newData);
-  matrix->setType(AdjacencyList);
+  matrix->setRepresentationType(AdjacencyList);
 }
