@@ -34,6 +34,7 @@ public:
 
 private:
   Matrix* matrix;
+  AbstractConverter* matrixConverter;
 
   // Functions for conversions. All of them create new data and then use Matrix method
   // saveData to change old matrix to a new one
@@ -45,4 +46,6 @@ private:
 
   void incMatToAdjMat();
   void incMatToAdjList();
+
+    void setConverter(const RepresentationType &forMatrixType);
 };
