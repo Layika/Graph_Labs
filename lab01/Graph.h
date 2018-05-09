@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "Matrix.h"
+#include "Converter.h"
 
 /* Class Graph has a matrix field where it can store any type of matrix as class Matrix *
  * Base class for oprating on graphs                                                    */
@@ -34,7 +35,7 @@ public:
 
 private:
   Matrix* matrix;
-  AbstractConverter* matrixConverter;
+  Converter* matrixConverter;
 
   void setConverter(const RepresentationType &forMatrixType);
 };
