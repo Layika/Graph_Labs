@@ -92,7 +92,7 @@ int main() {
   randomGraphNL.print();
 
   std::cout << std::endl << "Saving graph to file random_graph_nl.txt..." << std::endl;
-  randomGraphNL.saveGraph("random_graph_nl.txt");
+  randomGraphNL.saveGraph("graph_random_nl.txt");
   std::cout << "Graph ready to plot" << std::endl << std::endl;
 
   std::cout << "Generating random G(n,p) graph..." << std::endl << std::endl;
@@ -102,6 +102,6 @@ int main() {
   randomGraphNP.print();
 
   std::cout << std::endl << "Saving graph to file random_graph_np.txt..." << std::endl;
-  randomGraphNP.saveGraph("random_graph_np.txt");
+  randomGraphNP.saveGraph("graph_random_np.txt");
   std::cout << "Graph ready to plot" << std::endl;
 }

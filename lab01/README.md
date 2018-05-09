@@ -23,7 +23,7 @@ $ git clone https://github.com/Layika/Graph_Labs.gi
 
 and then simply run make:
 
-``` 
+```
 make
 ```
 
@@ -41,7 +41,7 @@ pip3 install matplotlib.pyplot
 
 To run very simple tests type:
 
-``` 
+```
 make run
 ```
 
@@ -65,10 +65,10 @@ Below you can find more detailed description how it all works and how to navigat
 
 #### Class Graph
 
-This is the default class for handling graphs. Below you can find a few useful methods. 
+This is the default class for handling graphs. Below you can find a few useful methods.
 <p><p>
 To create a graph write:
- 
+
 ```
 Graph g;
 ```
@@ -77,7 +77,19 @@ Graph's constructor creates a new matrix, but doesn't fill it. It's empty by def
 This is how you create a random graph:
 
 ```
-TODO
+// vertices and probability will have random value chosen by rand
+// first two numbers tell between how many vertices we want to getColumns
+// other two numbers tell the same about probability
+Graph randomGraphNP;
+randomGraphNP.generateRandomNP(6, 10, 20, 80, vertices, probability);
+
+// or
+
+// vertices and edges will have random value chosen by rand
+// first two numbers tell between how many vertices we want to getColumns
+// other two numbers tell the same about edges
+Graph randomGraphNL;
+randomGraphNL.generateRandomNL(6, 10, 5, 10, vertices, edges);
 ```
 
 And this is what you can do to read a file (this project comes with three example files):
@@ -98,10 +110,10 @@ g.convertMatrix(AdjacencyList);
 g.convertMatrix(IncidenceMatrix);
 ```
 
-This method can read three types of files: adjacency matrices, adjacency lists and incidence matrices. Then it saves read matrix. For detailed description how it does it look in `Graph.cpp` file. 
+This method can read three types of files: adjacency matrices, adjacency lists and incidence matrices. Then it saves read matrix. For detailed description how it does it look in `Graph.cpp` file.
 <p><p>
 You can also save you graph to file in order to display it later using `GraphPaint.py`. To do this simply write:
- 
+
 ```
 g.saveGraph("file.txt");
 ```
