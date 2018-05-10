@@ -147,6 +147,10 @@ void IncidenceMatrixConverter::incMatToAdjList(Matrix* matrix) {
   matrix->setRepresentationType(AdjacencyList);
 }
 
+void DegreeSequenceConverter::convertRepresentation(Matrix* matrix, RepresentationType to) {
+    
+}
+
 void DegreeSequenceConverter::degreeSeqToAdjList(Matrix* matrix) {
 
  }
