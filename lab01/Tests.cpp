@@ -3,7 +3,9 @@
 #include <time.h>
 
 int main() {
-    srand(time(NULL));
+
+  srand(time(NULL));
+  
   // ADJACENCY LIST GRAPH
   std::cout << "ADJACENCY LIST GRAPH" << std::endl << std::endl;
   std::cout << "Creating adjacency list graph..." << std::endl;
