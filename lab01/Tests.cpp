@@ -10,7 +10,7 @@ int main() {
   Graph adjacencyListGraph(Undirected);
 
   std::cout << "Reading adjacency list from file:" << std::endl;
-  adjacencyListGraph.readFile("adjlist_simple.txt");
+  adjacencyListGraph.readFile("sample_input_data/adjlist_simple.txt");
   adjacencyListGraph.print();
   std::cout << std::endl;
 
@@ -36,7 +36,7 @@ int main() {
   Graph adjacencyMatrixGraph(Undirected);
 
   std::cout << "Reading adjacency matrix from file:" << std::endl;
-  adjacencyMatrixGraph.readFile("adjmatrix_simple.txt");
+  adjacencyMatrixGraph.readFile("sample_input_data/adjmatrix_simple.txt");
   adjacencyMatrixGraph.print();
   std::cout << std::endl;
 
@@ -62,7 +62,7 @@ int main() {
   Graph incidenceMatrixGraph(Undirected);
 
   std::cout << "Reading incidence matrix from file:" << std::endl;
-  incidenceMatrixGraph.readFile("incmatrix_simple.txt");
+  incidenceMatrixGraph.readFile("sample_input_data/incmatrix_simple.txt");
   incidenceMatrixGraph.print();
   std::cout << std::endl;
 
