@@ -68,7 +68,8 @@ void Graph::convertMatrix(RepresentationType to) {
 void Graph::setConverter(const RepresentationType &forMatrixType) {
     if (forMatrixType == AdjacencyList) matrixConverter = new AdjacencyListConverter;
     else if (forMatrixType == AdjacencyMatrix) matrixConverter = new AdjacencyMatrixConverter;
-    else matrixConverter = new IncidenceMatrixConverter;
+    else if (forMatrixType == IncidenceMatrix) matrixConverter = new IncidenceMatrixConverter;
+    else matrixConverter = new DegreeSequenceConverter;
 }
 
 
@@ -169,7 +170,7 @@ bool Graph::isDegreeSequence(std::vector<unsigned int> sequence) {
 
     sequenceCopy[0] = 0;
 
-    // Sort vecotr again
-    std::sort(sequence.rbegin(), sequence.rend());
+    // Sort vector again
+    std::sort(sequenceCopy.rbegin(), sequenceCopy.rend());
   }
 }
