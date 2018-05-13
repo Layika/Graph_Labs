@@ -6,11 +6,11 @@
 #include "Converter.h"
 
 /* Class Graph has a matrix field where it can store any type of matrix as class Matrix *
- * Base class for oprating on graphs                                                    */
+ * Base class for operating on graphs                                                    */
 
 class Graph {
 public:
-  // Conctructor for graphs, only creates a new matrix, but doesn't fill it
+  // Constructor for graphs, only creates a new matrix, but doesn't fill it
   // In order to get a matrix we need to read from file or create a random matrix
   Graph(GraphType type) { matrix = new Matrix; matrix->setGraphType(type); }
 
@@ -36,7 +36,16 @@ public:
   static std::vector<unsigned int> makeRandomDegreeSequence(const unsigned int length);
   // Function checking if it's parameter is a degree sequence
   static bool isDegreeSequence(std::vector<unsigned int> sequence);
+  // Function for generating graph based on degree sequence
+  void generateFromDegreeSequence(std::vector<unsigned int> sequence);
 
+  // Function for finding connected components. Returns a vector which numbers every node according to
+  // which component they belong to
+  std::vector<unsigned int> findComponents();
+  // Helper function for finding components which performs recursive depth-first search
+  void depthFirstComponent(unsigned int counter, unsigned int node, std::vector<unsigned int>& components);
+  // Function that returns a vector of nodes belonging to the biggest component
+  std::vector<unsigned int> biggestComponent();
 
 private:
   Matrix* matrix;

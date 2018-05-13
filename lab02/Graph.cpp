@@ -174,3 +174,153 @@ bool Graph::isDegreeSequence(std::vector<unsigned int> sequence) {
     std::sort(sequenceCopy.rbegin(), sequenceCopy.rend());
   }
 }
+
+void Graph::generateFromDegreeSequence(std::vector<unsigned int> sequence) {
+
+    // Empty matrix
+    unsigned int nodes = sequence.size();
+    matrix->createEmptyAdjacencyMat(nodes);
+    setConverter(AdjacencyMatrix);
+
+    // For nodes 0 to nodes-2
+    /*for (unsigned int i = 0; i < nodes-1; i++) {
+        std::sort(sequence.rbegin(), sequence.rend());
+        // Check if there's enough adjacencies
+        while (matrix->getSumOfRow(i) < sequence[i]) {
+            // Add a new adjacency
+            unsigned int newAdjacency = i+1;
+            while (matrix->getElement(i, newAdjacency) != 0 || matrix->getSumOfRow(newAdjacency) >= sequence[newAdjacency]) newAdjacency++;
+            matrix->setElement(i, newAdjacency, 1);
+            matrix->setElement(newAdjacency, i, 1);
+            sequence[newAdjacency]--;
+        }
+    }*/
+    /*for (unsigned int i = 0; i < nodes; i++) {
+        for(int k = 0; k < sequence.size(); k++) {
+            if (sequence[k] == 0) {
+                sequence.erase(sequence.begin()+k);
+                k--;
+            }
+        }
+        for(int k = 0; k < sequence.size(); k++) std::cout << sequence[k] << " ";
+        std::sort(sequence.rbegin(), sequence.rend());
+        std::cout << std::endl;
+        for(int k = 0; k < sequence.size(); k++) std::cout << sequence[k] << " ";
+        std::cout <<std::endl;
+        int l = 0;
+        for (unsigned int j = i+1; j < sequence[i] + i + l + 1; j++) {
+            if(sequence[j] > 0) {
+                sequence[j]--;
+                matrix->setElement(i, j, 1);
+                matrix->setElement(j, i, 1);
+            }
+            else l++;
+            //std::cout << "przed: " << j << std::endl;
+            //while (sequence[j] <= 0 && j < 4) {j++; std::cout << j << std::endl;}
+            //if (sequence[j] > 0) sequence[j]--;
+            //std::cout << "po: " << j << std::endl;
+            std::cout << sequence[j] << std::endl;
+            if(sequence[j] > 0) sequence[j]--;
+            //while (sequence[j] <= 0) {j++; l++; std::cout << "blabla";}
+            //matrix->setElement(i, j, 1);
+            //matrix->setElement(j, i, 1);
+        }
+        for (unsigned int j = i+1; j < sequence[i] + i + 1; j++) {
+            while (sequence[j] <= 0 && j < nodes-1) {j++; std::cout << "ooo" << j << std::endl;}
+            matrix->setElement(i, j, 1);
+            matrix->setElement(j, i, 1);
+        }
+        for(int k = 0; k < sequence.size(); k++) std::cout << sequence[k] << " ";
+        std::cout << std::endl;
+        std::cout << std::endl;
+    }*/
+    std::sort(sequence.rbegin(), sequence.rend());
+    std::vector<int> nodeNumbers;
+    for (unsigned int i = 0; i < nodes; i++)
+        nodeNumbers.push_back(i);
+    for (unsigned int i=0; i<nodes; i++) {
+        //std::sort(sequence.rbegin(), sequence.rend());
+        int l = 0;
+        for( unsigned int j = i+1; j < sequence[i] + i + l + 1; j++) {
+            if(sequence[j] == 0) {l++; continue;}
+            sequence[j]--;
+            matrix->setElement(i, j, 1);
+            matrix->setElement(j, i, 1);
+        }
+    }
+
+}
+
+std::vector<unsigned int> Graph::findComponents() {
+    // Counter value will be different for every component
+    unsigned int counter = 0;
+    convertMatrix(AdjacencyList);
+
+    // Initialize components with -1 for every node
+    unsigned int nodes = matrix->getRows();
+    std::vector<unsigned int> components(nodes);
+    std::fill(components.begin(), components.end(), -1);
+
+    // For every node
+    for(unsigned int i = 0; i < nodes; i++) {
+        if (components[i] == -1) {
+            // Mark the i-th node as part of a component numbered with counter
+            components[i] = ++counter;
+            // Depth-first search
+            depthFirstComponent(counter, i, components);
+        }
+    }
+
+    return components;
+}
+
+void Graph::depthFirstComponent(unsigned int counter, unsigned int node, std::vector<unsigned int>& components) {
+    unsigned int adjacentNodes = matrix->getColumns(node);
+
+    // For every adjacent node
+    for (unsigned int i = 0; i < adjacentNodes; i++){
+        // Get ID of i-th adjacent node
+        unsigned int nodeID = matrix->getElement(node, i) - 1;
+        if (components[nodeID] == -1) {
+            // Mark the i-th node as part of a component numbered with counter
+            components[nodeID] = counter;
+            // Perform further depth-first search
+            depthFirstComponent(counter, nodeID, components);
+        }
+    }
+}
+
+std::vector<unsigned int> Graph::biggestComponent() {
+    convertMatrix(AdjacencyList);
+    // Find every component and store it in "components"
+    std::vector<unsigned int> components = findComponents();
+
+    // nodeCount will store the amount of nodes per component
+    unsigned int totalNodes = components.size();
+    std::vector<unsigned int> nodeCount(totalNodes);
+
+    // Count nodes per component, starting from 0
+    std::fill(nodeCount.begin(), nodeCount.end(), 0);
+    for (unsigned int i = 0; i < totalNodes; i++) {
+        nodeCount[components[i]]++;
+    }
+
+    // Find the component with the biggest node count
+    unsigned int biggestNodeCount = 0;
+    unsigned int currentBiggestComponent = 0;
+    for (unsigned int i = 0; i < totalNodes; i++) {
+        if (nodeCount[i] > biggestNodeCount) {
+            biggestNodeCount = nodeCount[i];
+            currentBiggestComponent = i;
+        }
+    }
+
+    // Build vector of nodes belonging to the biggest component
+    std::vector<unsigned int> result;
+    for(unsigned int i = 0; i < totalNodes; i++) {
+        if (components[i] == currentBiggestComponent)
+            result.push_back(i+1);
+    }
+
+    return result;
+}
