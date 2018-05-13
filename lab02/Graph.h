@@ -36,8 +36,6 @@ public:
   static std::vector<unsigned int> makeRandomDegreeSequence(const unsigned int length);
   // Function checking if it's parameter is a degree sequence
   static bool isDegreeSequence(std::vector<unsigned int> sequence);
-  // Function for generating graph based on degree sequence
-  void generateFromDegreeSequence(std::vector<unsigned int> sequence);
 
   // Function for finding connected components. Returns a vector which numbers every node according to
   // which component they belong to
