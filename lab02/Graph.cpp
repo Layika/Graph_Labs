@@ -275,18 +275,11 @@ void Graph::generateRandomRegular(unsigned int minVertices, unsigned int maxVert
       }
 
       // (Check if both of them don't have enough neighbours)
-      if (newList[randomVertex].size() < neighbours) {
+      if (newList[randomVertex-1].size() < neighbours) {
         // And add it as a neighbour
         newList[v].push_back(randomVertex);
-        newList[randomVertex].push_back(v+1);
+        newList[randomVertex-1].push_back(v+1);
 
-        std::cout << v+1 << ": ";
-        for (unsigned int i=0; i<newList[v].size(); ++i) std::cout << newList[v][i] << " ";
-        std::cout << std::endl;
-
-        std::cout << randomVertex << ": ";
-        for (unsigned int i=0; i<newList[randomVertex].size(); ++i) std::cout << newList[randomVertex][i] << " ";
-        std::cout << std::endl;
       }
     }
   }
