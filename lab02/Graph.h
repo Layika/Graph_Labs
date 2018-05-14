@@ -44,12 +44,17 @@ public:
   void depthFirstComponent(unsigned int counter, unsigned int node, std::vector<unsigned int>& components);
   // Function that returns a vector of nodes belonging to the biggest component
   std::vector<unsigned int> biggestComponent();
-  
+
   // Function for generating random k-regular graphs
   // It generates a new adjacency list
   // Changes type to undirected graph
   void generateRandomRegular(unsigned int minVertices, unsigned int maxVertices, unsigned int neighbours);
 
+  // Hamiltonian cycle functions.
+  bool checkHamiltonianCycle();
+  bool hamiltonianCycleUtil(std::vector<unsigned int> path, unsigned int pos);
+  bool hamiltonianCanAdd(unsigned int vertex, std::vector<unsigned int> path, unsigned int pos);
+  void printHamiltonianCycle(std::vector<unsigned int> cycle);
 
 private:
   Matrix* matrix;

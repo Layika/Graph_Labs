@@ -293,3 +293,84 @@ void Graph::generateRandomRegular(unsigned int minVertices, unsigned int maxVert
 
   matrix->saveData(newList);
 }
+
+
+/* This function solves the Hamiltonian Cycle problem using Backtracking.
+  It mainly uses hamiltonianCycleUtil() to solve the problem. It returns false
+  if there is no Hamiltonian Cycle possible, otherwise return true and
+  prints the path. Please note that there may be more than one solutions,
+  this function prints one of the feasible solutions. */
+
+bool Graph::checkHamiltonianCycle() {
+
+  // We need adjacency matrix so first convert whatever we have to this type
+  convertMatrix(AdjacencyMatrix);
+
+  // Prepare path variable and fill it with 0 (smallest number of a vertex is 1)
+  std::vector<unsigned int> path;
+  std::fill(path.begin(), path.end(), 0);
+
+  // Lets put vertex 1 as the first vertex in the path
+  // If there is a Hamiltonian Cycle, then the path can be started
+  // from any point of the cycle as the graph is undirected
+  path.push_back(1);
+
+  if (hamiltonianCycleUtil(path, 1) == false) {
+    std::cout << "Solution does not exist" << std::endl;
+    return false;
+  }
+
+  printHamiltonianCycle(path);
+  return true;
+}
+
+
+// A recursive utility function to solve hamiltonian cycle problem
+bool Graph::hamiltonianCycleUtil(std::vector<unsigned int> path, unsigned int pos) {
+
+  // base case: If all vertices are included in Hamiltonian Cycle
+  if (pos == matrix->getRows()) {
+      // And if there is an edge from the last included vertex to the first vertex
+      if (matrix->getElement(pos-1, 0) == 1 ) return true;
+      else return false;
+  }
+
+  // Try different vertices as a next candidate in Hamiltonian Cycle.
+  // We don't try for 1 as we included 1 as starting point in in checkHamiltonianCycle()
+  for (unsigned int v=1; v<matrix->getRows(); v++) {
+
+      // Check if this vertex can be added to Hamiltonian Cycle
+      if (hamiltonianCanAdd(v, path, pos)) {
+        path[pos] = v;
+        // Recur to construct rest of the path
+        if (hamiltonianCycleUtil(path, pos+1) == true) return true;
+        // If adding vertex v doesn't lead to a solution, then remove it
+        path[pos] = 0;
+      }
+
+  }
+
+  // If no vertex can be added to Hamiltonian Cycle constructed so far, then return false
+  return false;
+}
+
+// A utility function to check if the vertex v can be added at index 'pos'
+// in the Hamiltonian Cycle constructed so far (stored in 'path[]')
+bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<unsigned int> path, unsigned int pos) {
+
+  // Check if this vertex is an adjacent vertex of the previously added vertex
+  if (matrix->getElement(path[pos-1], vertex) == 0) return false;
+
+  // Check if the vertex has already been included
+  for (unsigned int i=0; i<pos; i++)
+    if (path[i] == vertex) return false;
+
+  return true;
+}
+
+// Function for printing hamiltonian cycle
+void Graph::printHamiltonianCycle(std::vector<unsigned int> cycle) {
+  std::cout << "Hamiltonian Cycle:";
+  for (unsigned int i=0; i<cycle.size(); ++i) std::cout << " " << cycle[i];
+  std::cout << std::endl;
+}
