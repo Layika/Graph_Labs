@@ -6,7 +6,7 @@ int main() {
 
   srand(time(NULL));
 
-  /*// DEGREE SEQUENCES
+  // DEGREE SEQUENCES
   // Make a random degree sequence and check if it can represent a graph
   unsigned int sequenceLen = 7;
 
@@ -25,8 +25,39 @@ int main() {
   int a, b;
   randomGraph.generateRandomNP(8, 12, 5, 10, a, b);
 
-  std::cout << std::endl;*/
+  std::cout << std::endl;
 
+
+
+  std::cout << "Adjacency list:" << std::endl;
+  randomGraph.convertMatrix(AdjacencyList);
+  randomGraph.print();
+
+  std::cout << std::endl << "Finding separate components..." << std::endl;
+  std::vector<unsigned int> components = randomGraph.findComponents();
+  std::cout << "Nodes numbered by components:" << std::endl;
+  for (unsigned int i = 0; i < components.size(); i++)
+    std::cout << components[i] << " ";
+  std::cout << std::endl << std::endl;
+
+  std::cout << "Biggest component consists of the following nodes:" << std::endl;
+  std::vector<unsigned int> biggestComp = randomGraph.biggestComponent();
+  for (unsigned int i = 0; i < biggestComp.size(); i++)
+    std::cout << biggestComp[i] << " ";
+  std::cout << std::endl;
+
+
+  // HAMILTON CYCLE
+  std::cout << "HAMILTON CYCLE" << std::endl << std::endl;
+  std::cout << "Creating hamilton graph..." << std::endl;
+  Graph hamilton(Undirected);
+
+  std::cout << "Reading adjacency list from file:" << std::endl;
+  hamilton.readFile("sample_input_data/hamiltoncycle.txt");
+  hamilton.print();
+  std::cout << std::endl;
+
+  hamilton.checkHamiltonianCycle();
 
 
   // RANDOM K-REGULAR GRAPHS
@@ -43,22 +74,4 @@ int main() {
   regularGraph.saveGraph("regularGraph.txt");
   std::cout << std::endl;
 
-
-
-  /*std::cout << "Adjacency list:" << std::endl;
-  randomGraph.convertMatrix(AdjacencyList);
-  randomGraph.print();
-
-  std::cout << std::endl << "Finding separate components..." << std::endl;
-  std::vector<unsigned int> components = randomGraph.findComponents();
-  std::cout << "Nodes numbered by components:" << std::endl;
-  for (unsigned int i = 0; i < components.size(); i++)
-    std::cout << components[i] << " ";
-  std::cout << std::endl << std::endl;
-
-  std::cout << "Biggest component consists of the following nodes:" << std::endl;
-  std::vector<unsigned int> biggestComp = randomGraph.biggestComponent();
-  for (unsigned int i = 0; i < biggestComp.size(); i++)
-    std::cout << biggestComp[i] << " ";
-  std::cout << std::endl;*/
 }

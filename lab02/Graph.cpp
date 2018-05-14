@@ -299,14 +299,14 @@ bool Graph::checkHamiltonianCycle() {
   // We need adjacency matrix so first convert whatever we have to this type
   convertMatrix(AdjacencyMatrix);
 
-  // Prepare path variable and fill it with 0 (smallest number of a vertex is 1)
-  std::vector<unsigned int> path;
-  std::fill(path.begin(), path.end(), 0);
+  // Prepare path variable and fill it with -1
+  std::vector<int> path(matrix->getRows());
+  std::fill(path.begin(), path.end(), -1);
 
   // Lets put vertex 1 as the first vertex in the path
   // If there is a Hamiltonian Cycle, then the path can be started
   // from any point of the cycle as the graph is undirected
-  path.push_back(1);
+  path[0] = 1;
 
   if (hamiltonianCycleUtil(path, 1) == false) {
     std::cout << "Solution does not exist" << std::endl;
@@ -319,12 +319,12 @@ bool Graph::checkHamiltonianCycle() {
 
 
 // A recursive utility function to solve hamiltonian cycle problem
-bool Graph::hamiltonianCycleUtil(std::vector<unsigned int> path, unsigned int pos) {
+bool Graph::hamiltonianCycleUtil(std::vector<int> path, unsigned int pos) {
 
   // base case: If all vertices are included in Hamiltonian Cycle
   if (pos == matrix->getRows()) {
       // And if there is an edge from the last included vertex to the first vertex
-      if (matrix->getElement(pos-1, 0) == 1 ) return true;
+      if (matrix->getElement(path[pos-1], path[0]) == 1 ) return true;
       else return false;
   }
 
@@ -338,7 +338,7 @@ bool Graph::hamiltonianCycleUtil(std::vector<unsigned int> path, unsigned int po
         // Recur to construct rest of the path
         if (hamiltonianCycleUtil(path, pos+1) == true) return true;
         // If adding vertex v doesn't lead to a solution, then remove it
-        path[pos] = 0;
+        path[pos] = -1;
       }
 
   }
@@ -349,7 +349,7 @@ bool Graph::hamiltonianCycleUtil(std::vector<unsigned int> path, unsigned int po
 
 // A utility function to check if the vertex v can be added at index 'pos'
 // in the Hamiltonian Cycle constructed so far (stored in 'path[]')
-bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<unsigned int> path, unsigned int pos) {
+bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<int> path, unsigned int pos) {
 
   // Check if this vertex is an adjacent vertex of the previously added vertex
   if (matrix->getElement(path[pos-1], vertex) == 0) return false;
@@ -362,8 +362,11 @@ bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<unsigned int> pat
 }
 
 // Function for printing hamiltonian cycle
-void Graph::printHamiltonianCycle(std::vector<unsigned int> cycle) {
+void Graph::printHamiltonianCycle(std::vector<int> cycle) {
+
   std::cout << "Hamiltonian Cycle:";
   for (unsigned int i=0; i<cycle.size(); ++i) std::cout << " " << cycle[i];
+  std::cout << " " << cycle[0];
+
   std::cout << std::endl;
 }
