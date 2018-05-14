@@ -6,7 +6,7 @@ int main() {
 
   srand(time(NULL));
 
-  // DEGREE SEQUENCES
+  /*// DEGREE SEQUENCES
   // Make a random degree sequence and check if it can represent a graph
   unsigned int sequenceLen = 7;
 
@@ -25,17 +25,17 @@ int main() {
   int a, b;
   randomGraph.generateRandomNP(8, 12, 5, 10, a, b);
 
-  std::cout << std::endl;
+  std::cout << std::endl;*/
 
- /*
+
 
   // RANDOM K-REGULAR GRAPHS
   std::cout << "Generating a regular graph..." << std::endl;
   Graph regularGraph(Undirected);
 
-  unsigned int minVertices = 2;
-  unsigned int maxVertices = 4;
-  unsigned int neighbours = 1;
+  unsigned int minVertices = 6;
+  unsigned int maxVertices = 6;
+  unsigned int neighbours = 2;
   regularGraph.generateRandomRegular(minVertices, maxVertices, neighbours);
   std::cout << "Adjacency list of a generated graph:" << std::endl;
   regularGraph.print();
@@ -43,9 +43,9 @@ int main() {
   regularGraph.saveGraph("regularGraph.txt");
   std::cout << std::endl;
 
-  */
-  
-  std::cout << "Adjacency list:" << std::endl;
+
+
+  /*std::cout << "Adjacency list:" << std::endl;
   randomGraph.convertMatrix(AdjacencyList);
   randomGraph.print();
 
@@ -60,5 +60,5 @@ int main() {
   std::vector<unsigned int> biggestComp = randomGraph.biggestComponent();
   for (unsigned int i = 0; i < biggestComp.size(); i++)
     std::cout << biggestComp[i] << " ";
-  std::cout << std::endl;
+  std::cout << std::endl;*/
 }
