@@ -17,6 +17,9 @@ public:
   // Reads matrix from file. After a read matrix will be updated
   void readFile(std::string fileName);
 
+  // Getter for number of vertices
+  unsigned int getVertexCount() {return matrix->getRows();}
+
   // Wrapper function converting any type to the type we want
   // It handles calling the right function (see private functions)
   void convertMatrix(RepresentationType to);
@@ -24,6 +27,7 @@ public:
   // Wrapper functions for handling saving graph to file in adjacency list and debug print
   void saveGraph(std::string fileName) { convertMatrix(AdjacencyList); matrix->saveAdjList(fileName); }
   void print() const { matrix->print(); }
+  void printWeights() const {matrix->printWeights(); }
 
   // Helper function for random graphs, returns a random int
   static int intRand(const int min, const int max) { return rand() % (max-min+1) + min; }
@@ -44,12 +48,9 @@ public:
   void depthFirstComponent(unsigned int counter, unsigned int node, std::vector<unsigned int>& components);
   // Function that returns a vector of nodes belonging to the biggest component
   std::vector<unsigned int> biggestComponent();
-  
-  // Function for generating random k-regular graphs
-  // It generates a new adjacency list
-  // Changes type to undirected graph
-  void generateRandomRegular(unsigned int minVertices, unsigned int maxVertices, unsigned int neighbours);
 
+  // Function for generating random weights for each edge
+  void generateRandomWeights();
 
 private:
   Matrix* matrix;

@@ -56,7 +56,7 @@ void Graph::readFile(std::string fileName) {
   dataFile.close();
 }
 
-
+// TODO: fix shitty code
 // Wrapper function converting any type to the type we want
 // It handles calling the right function (see private functions)
 void Graph::convertMatrix(RepresentationType to) {
@@ -64,7 +64,6 @@ void Graph::convertMatrix(RepresentationType to) {
     delete matrixConverter;
     setConverter(to);
 }
-
 
 void Graph::setConverter(const RepresentationType &forMatrixType) {
     if (forMatrixType == AdjacencyList) matrixConverter = new AdjacencyListConverter;
@@ -250,42 +249,11 @@ std::vector<unsigned int> Graph::biggestComponent() {
     return result;
 }
 
-void Graph::generateRandomRegular(unsigned int minVertices, unsigned int maxVertices, unsigned int neighbours) {
-  // Get a random nuber of vertices
-  unsigned int vertices = intRand(minVertices, maxVertices);
-  std::cout << "veritces: " << vertices << std::endl;
-
-  // Create a new list
-  std::vector<std::vector<int>> newList(vertices);
-
-  // Change data type and graph type in case it was different
-  matrix->setRepresentationType(AdjacencyList);
-  matrix->setGraphType(Undirected);
-
-  // For each vertex
-  for (unsigned int v=0; v<vertices; ++v) {
-    std::cout << v+1 << ": ";
-
-    // If there are not enough neighbours for it
-    while (newList[v].size() < neighbours) {
-
-      // Get a random vertex number that is not equal to current vertex
-      unsigned int randomVertex = intRand(1, vertices);
-      while (randomVertex == v+1 ||
-        std::find(newList[v].begin(), newList[v].end(), randomVertex) != newList[v].end()) {
-          randomVertex = intRand(1, vertices);
-      }
-
-      // (Check if both of them don't have enough neighbours)
-      if (newList[randomVertex].size() <= neighbours) {
-        // And add it as a neighbour
-        newList[v].push_back(randomVertex);
-        newList[randomVertex].push_back(v+1);
-        std::cout << randomVertex << " ";
-      }
+void Graph::generateRandomWeights(){
+    convertMatrix(IncidenceMatrix);
+    unsigned int nodes = matrix->getRows();
+    matrix->emptyWeights(nodes);
+    for (unsigned int i = 0; i < nodes; i++) {
+        matrix->setWeight(i, intRand(1, 10));
     }
-    std::cout<<std::endl;
-  }
-
-  matrix->saveData(newList);
 }
