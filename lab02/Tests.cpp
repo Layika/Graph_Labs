@@ -33,8 +33,8 @@ int main() {
   std::cout << "Generating a regular graph..." << std::endl;
   Graph regularGraph(Undirected);
 
-  unsigned int minVertices = 6;
-  unsigned int maxVertices = 6;
+  unsigned int minVertices = 4;
+  unsigned int maxVertices = 4;
   unsigned int neighbours = 2;
   regularGraph.generateRandomRegular(minVertices, maxVertices, neighbours);
   std::cout << "Adjacency list of a generated graph:" << std::endl;
