@@ -37,6 +37,11 @@ public:
   // Function checking if it's parameter is a degree sequence
   static bool isDegreeSequence(std::vector<unsigned int> sequence);
 
+  // Function for generating random k-regular graphs
+  // It generates a new adjacency list
+  // Changes type to undirected graph
+  void generateRandomRegular(unsigned int minVertices, unsigned int maxVertices, unsigned int neighbours);
+
 
 private:
   Matrix* matrix;
