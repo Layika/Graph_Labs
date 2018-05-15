@@ -1,4 +1,4 @@
-# Graph labs 01
+# Graph labs 02
 
 Repository contains solution to tasks listed [here](http://home.agh.edu.pl/~ewach/grafy/Zestaw_2.pdf) (in Polish).
 <p>
