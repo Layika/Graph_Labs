@@ -28,13 +28,11 @@ public:
   unsigned int getRows() const { return data.size(); }
   unsigned int getColumns(unsigned int row) const { return data[row].size(); }
   int getElement(unsigned int row, unsigned int col) const { return data[row][col]; }
-  int getWeight(unsigned int edge) {return weights[edge];}
 
   // Setters for matrix
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
   void setRepresentationType(RepresentationType newType) { representationType = newType; }
   void setGraphType(GraphType newType) { graphType = newType; }
-  void setWeight(unsigned int edge, int weight) {weights[edge] = weight;}
 
   // TODO: make this std::pair
   void setElement(std::vector<unsigned int> idx, int el) { data[idx[0]][idx[1]] = el; }
@@ -50,16 +48,12 @@ public:
 
   // Function creating an empty adjacency matrix
   void createEmptyAdjacencyMat(unsigned int vertices);
-  // Function for creating empty weights vector
-  void emptyWeights(unsigned int numberOfEdges) {weights = std::vector<int>(numberOfEdges);}
 
   // Debug printing function for matrices
   void print() const;
-  void printWeights() const;
 
 private:
   std::vector<std::vector<int>> data;
-  std::vector<int> weights;
   RepresentationType representationType;
   GraphType graphType;
 };

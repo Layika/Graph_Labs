@@ -11,7 +11,7 @@ int main() {
   do {
     // If the biggest component is as big as the entire graph, then the entire graph is connected
     // So just keep generating random graphs until we find one that is connected
-    connectedGraph.generateRandomNL(7, 10, 15, 25, vertices, edges);
+    connectedGraph.generateRandomNL(5, 8, 10, 15, vertices, edges);
   } while (connectedGraph.biggestComponent().size() < connectedGraph.getVertexCount());
 
   std::cout << "Found a graph with " << vertices << " vertices and " << edges << " edges" << std::endl;
@@ -20,6 +20,6 @@ int main() {
   connectedGraph.print();
 
   std::cout << std::endl << "Edges have the following weights: " << std::endl;
-  connectedGraph.generateRandomWeights();
+  connectedGraph.generateRandomWeights(1, 10);
   connectedGraph.printWeights();
 }

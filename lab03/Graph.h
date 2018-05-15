@@ -27,7 +27,7 @@ public:
   // Wrapper functions for handling saving graph to file in adjacency list and debug print
   void saveGraph(std::string fileName) { convertMatrix(AdjacencyList); matrix->saveAdjList(fileName); }
   void print() const { matrix->print(); }
-  void printWeights() const {matrix->printWeights(); }
+  void printWeights() const;
 
   // Helper function for random graphs, returns a random int
   static int intRand(const int min, const int max) { return rand() % (max-min+1) + min; }
@@ -50,11 +50,16 @@ public:
   std::vector<unsigned int> biggestComponent();
 
   // Function for generating random weights for each edge
-  void generateRandomWeights();
+  void generateRandomWeights(int minWeight, int maxWeight);
+
+  // Getter and setter functions for weights
+  int getWeight(unsigned int source, unsigned int dest);
+  void setWeight(unsigned int source, unsigned int dest, int weight);
 
 private:
   Matrix* matrix;
   Converter* matrixConverter;
+  std::vector<std::vector<int>> weights;
 
   void setConverter(const RepresentationType &forMatrixType);
 };

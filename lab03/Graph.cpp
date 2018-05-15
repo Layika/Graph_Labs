@@ -249,11 +249,37 @@ std::vector<unsigned int> Graph::biggestComponent() {
     return result;
 }
 
-void Graph::generateRandomWeights(){
-    convertMatrix(IncidenceMatrix);
-    unsigned int nodes = matrix->getRows();
-    matrix->emptyWeights(nodes);
-    for (unsigned int i = 0; i < nodes; i++) {
-        matrix->setWeight(i, intRand(1, 10));
+void Graph::generateRandomWeights(int minWeight, int maxWeight) {
+    //weights = {std::vector<int>(numberOfEdges), std::vector<int>(numberOfEdges), std::vector<int>(numberOfEdges);}
+    weights = std::vector<std::vector<int>>(3, std::vector<int>(0));
+    convertMatrix(AdjacencyMatrix);
+
+    for (unsigned int i = 0; i < matrix->getRows(); i++) {
+        for (unsigned int j = i+1; j < matrix->getColumns(i); j++) {
+            if (matrix->getElement(i, j) == 1) {
+                weights[0].push_back(i+1);
+                weights[1].push_back(j+1);
+                weights[2].push_back(intRand(minWeight, maxWeight));
+            }
+        }
     }
+}
+
+int Graph::getWeight(unsigned int source, unsigned int dest) {
+    for (unsigned int i = 0; i < weights[0].size(); i++) {
+        if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) return weights[2][i];
+    }
+    return -1;
+}
+
+void Graph::setWeight(unsigned int source, unsigned int dest, int weight) {
+    for (unsigned int i = 0; i < weights[0].size(); i++) {
+        if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) weights[2][i] = weight;
+    }
+}
+
+void Graph::printWeights() const {
+  for (unsigned int i = 0; i < weights[0].size(); i++)
+    std::cout << weights[2][i] << " ";
+  std::cout << std::endl;
 }

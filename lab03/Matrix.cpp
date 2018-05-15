@@ -28,12 +28,6 @@ void Matrix::print() const {
   }
 }
 
-void Matrix::printWeights() const {
-  for (unsigned int i = 0; i < weights.size(); i++)
-    std::cout << weights[i] << " ";
-  std::cout << std::endl;
-}
-
 unsigned int Matrix::findInCol(unsigned int col, int el) {
   unsigned int idx = 0;
   for (unsigned int row=0; row<getRows(); ++row) {
