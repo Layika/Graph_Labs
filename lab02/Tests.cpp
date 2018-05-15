@@ -7,6 +7,9 @@ int main() {
   srand(time(NULL));
 
   // DEGREE SEQUENCES
+  std::cout << "DEGREE SEQUENCES" << std::endl;
+  std::cout << std::endl;
+
   // Make a random degree sequence and check if it can represent a graph
   unsigned int sequenceLen = 7;
 
@@ -15,19 +18,16 @@ int main() {
 
   while (!Graph::isDegreeSequence(sequence)) sequence = Graph::makeRandomDegreeSequence(sequenceLen);
 
-  std::cout << "Found a good sequence!" << std::endl;
+  std::cout << "Found a good sequence:" << std::endl;
   std::sort(sequence.rbegin(), sequence.rend());
   for (unsigned int i=0; i<sequence.size(); ++i) std::cout << sequence[i] << " ";
   std::cout << std::endl << std::endl;
 
-  std::cout << "Generating random graph..." << std::endl << std::endl;
+
+  std::cout << "Generating random graph..." << std::endl;
   Graph randomGraph(Undirected);
   int a, b;
   randomGraph.generateRandomNP(8, 12, 5, 10, a, b);
-
-  std::cout << std::endl;
-
-
 
   std::cout << "Adjacency list:" << std::endl;
   randomGraph.convertMatrix(AdjacencyList);
@@ -44,7 +44,7 @@ int main() {
   std::vector<unsigned int> biggestComp = randomGraph.biggestComponent();
   for (unsigned int i = 0; i < biggestComp.size(); i++)
     std::cout << biggestComp[i] << " ";
-  std::cout << std::endl;
+  std::cout << std::endl << std::endl << std::endl;
 
 
   // HAMILTON CYCLE
@@ -58,9 +58,10 @@ int main() {
   std::cout << std::endl;
 
   hamilton.checkHamiltonianCycle();
-
+  std::cout << std::endl << std::endl;
 
   // RANDOM K-REGULAR GRAPHS
+  std::cout << "RANDOM K-REGULAR GRAPHS" << std::endl << std::endl;
   std::cout << "Generating a regular graph..." << std::endl;
   Graph regularGraph(Undirected);
 

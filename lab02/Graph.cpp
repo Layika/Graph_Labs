@@ -335,10 +335,15 @@ bool Graph::hamiltonianCycleUtil(std::vector<int> path, unsigned int pos) {
       // Check if this vertex can be added to Hamiltonian Cycle
       if (hamiltonianCanAdd(v, path, pos)) {
         path[pos] = v;
+
+        std::cout << "PATH:";
+        for (int i=0; i<path.size(); ++i) std::cout << " " << path[i];
+        std::cout << std::endl;
+
         // Recur to construct rest of the path
         if (hamiltonianCycleUtil(path, pos+1) == true) return true;
         // If adding vertex v doesn't lead to a solution, then remove it
-        path[pos] = -1;
+        else path[pos] = -1;
       }
 
   }
