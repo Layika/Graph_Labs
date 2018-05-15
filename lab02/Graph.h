@@ -52,9 +52,9 @@ public:
 
   // Hamiltonian cycle functions.
   bool checkHamiltonianCycle();
-  bool hamiltonianCycleUtil(std::vector<int> path, unsigned int pos);
-  bool hamiltonianCanAdd(unsigned int vertex, std::vector<int> path, unsigned int pos);
-  void printHamiltonianCycle(std::vector<int> cycle);
+  bool hamiltonianCycleUtil(std::vector<int>& path, unsigned int pos);
+  bool hamiltonianCanAdd(unsigned int vertex, std::vector<int>& path, unsigned int pos);
+  void printHamiltonianCycle(std::vector<int>& cycle);
 
 private:
   Matrix* matrix;

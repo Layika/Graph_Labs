@@ -319,12 +319,13 @@ bool Graph::checkHamiltonianCycle() {
 
 
 // A recursive utility function to solve hamiltonian cycle problem
-bool Graph::hamiltonianCycleUtil(std::vector<int> path, unsigned int pos) {
+bool Graph::hamiltonianCycleUtil(std::vector<int>& path, unsigned int pos) {
 
   // base case: If all vertices are included in Hamiltonian Cycle
   if (pos == matrix->getRows()) {
       // And if there is an edge from the last included vertex to the first vertex
-      if (matrix->getElement(path[pos-1], path[0]) == 1 ) return true;
+      if (matrix->getElement(path[pos-1]-1, path[0]-1) == 1 ) return true; //numerror
+      //if (matrix->getElement(path[pos-1], path[0]) == 1 ) return true;
       else return false;
   }
 
@@ -334,7 +335,8 @@ bool Graph::hamiltonianCycleUtil(std::vector<int> path, unsigned int pos) {
 
       // Check if this vertex can be added to Hamiltonian Cycle
       if (hamiltonianCanAdd(v, path, pos)) {
-        path[pos] = v;
+        path[pos] = v+1; //numerror
+        //path[pos] = v;
 
         std::cout << "PATH:";
         for (int i=0; i<path.size(); ++i) std::cout << " " << path[i];
@@ -354,20 +356,21 @@ bool Graph::hamiltonianCycleUtil(std::vector<int> path, unsigned int pos) {
 
 // A utility function to check if the vertex v can be added at index 'pos'
 // in the Hamiltonian Cycle constructed so far (stored in 'path[]')
-bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<int> path, unsigned int pos) {
+bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<int>& path, unsigned int pos) {
 
   // Check if this vertex is an adjacent vertex of the previously added vertex
-  if (matrix->getElement(path[pos-1], vertex) == 0) return false;
-
+  if (matrix->getElement(path[pos-1]-1, vertex) == 0) return false;//numerror
+  //if (matrix->getElement(path[pos-1], vertex) == 0) return false;
   // Check if the vertex has already been included
   for (unsigned int i=0; i<pos; i++)
-    if (path[i] == vertex) return false;
+    if (path[i] == vertex+1) return false;//numerror
+    //if (path[i] == vertex) return false;
 
   return true;
 }
 
 // Function for printing hamiltonian cycle
-void Graph::printHamiltonianCycle(std::vector<int> cycle) {
+void Graph::printHamiltonianCycle(std::vector<int>& cycle) {
 
   std::cout << "Hamiltonian Cycle:";
   for (unsigned int i=0; i<cycle.size(); ++i) std::cout << " " << cycle[i];
