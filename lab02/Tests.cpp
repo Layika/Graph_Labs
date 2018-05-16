@@ -31,6 +31,8 @@ int main() {
   std::cout << std::endl << std::endl;
 
 
+  // SEPARATE COMPONENTS
+  std::cout << "FINDING SEPARATE COMPONENTS" << std::endl;
   std::cout << "Generating random graph..." << std::endl;
   Graph randomGraph(Undirected);
   int a, b;
