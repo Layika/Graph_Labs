@@ -382,7 +382,7 @@ void Graph::printHamiltonianCycle(std::vector<int>& cycle) {
 }
 
 // Function for checking if a degree sequence is eulerian
-bool Graph::isEulerianCycle(std::vector<unsigned int> sequence) {
+bool Graph::isEulerianSequence(std::vector<unsigned int> sequence) {
   // If given sequence is a degree sequence
   if (Graph::isDegreeSequence(sequence)) {
     // And all degrees are even then it's eulerian too
@@ -393,10 +393,16 @@ bool Graph::isEulerianCycle(std::vector<unsigned int> sequence) {
   return false;
 }
 
+
 bool Graph::isEulerianCycle() {
-  std::vector<int> sequence = matrix->getDegreeSequence();
-  // If all degrees are even then it's eulerian
-  for (unsigned int i=0; i<sequence.size(); ++i)
-    if (sequence[i] % 2) return false;
-  return true;
+  /*// Check if all non-zero degree vertices are connected
+  if (areConnected() == false)
+      return false;
+
+  // Check if in degree and out degree of every vertex is same
+  for (unsigned int i=0; i<; i++)
+      if (adj[i].size() != in[i])
+          return false;
+
+  return true;*/
 }

@@ -48,7 +48,7 @@ int main() {
 
   sequenceLen = 5;
   sequence = Graph::makeRandomDegreeSequence(sequenceLen);
-  while (!Graph::isEulerianCycle(sequence)) sequence = Graph::makeRandomDegreeSequence(sequenceLen);
+  while (!Graph::isEulerianSequence(sequence)) sequence = Graph::makeRandomDegreeSequence(sequenceLen);
   std::cout << std::endl << "Found a good eulerian sequence (with cycle):";
   for (unsigned int i=0; i<sequence.size(); ++i)
     std::cout << " " << sequence[i];

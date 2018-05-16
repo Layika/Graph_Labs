@@ -58,7 +58,7 @@ public:
   void printHamiltonianCycle(std::vector<int>& cycle);
 
   // Eulerian graphs
-  static bool isEulerianCycle(std::vector<unsigned int> sequence);
+  static bool isEulerianSequence(std::vector<unsigned int> sequence);
   bool isEulerianCycle();
 
 private:
