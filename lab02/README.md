@@ -36,6 +36,9 @@ To check if a given sequence can be a degree sequence use a function:
 Graph::isDegreeSequence(sequence))
 ```
 
+#### Eulerian graphs
+To create an eulerian graph you can read matrix from file like always
+
 #### Random k-regular graphs
 To create such a graph simply type:
 
