@@ -399,9 +399,8 @@ void Graph::DFSUtil(unsigned int v, bool visited[], std::vector<std::vector<int>
     visited[v] = true;
 
     // Recur for all the vertices adjacent to this vertex
-    for (auto i = matrixData[v].begin(); i != matrixData[v].end(); ++i)
-        if (!visited[*(i-1)])
-            DFSUtil(*i, visited, matrixData);
+    for (auto& i : matrixData[v])
+      if (!visited[i-1]) DFSUtil(i, visited, matrixData);
 }
 
 // Method to check if all non-zero degree vertices are connected.
