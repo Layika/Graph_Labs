@@ -37,6 +37,23 @@ int main() {
   degreeSeqGraph.print();
   std::cout << std::endl << std::endl;
 
+    // RANDOMIZATION
+  std::cout << "RANDOMIZATION" << std::endl;
+  std::cout << "Generating random graph..." << std::endl;
+  Graph randomizator(Undirected);
+  int n, p;
+  randomizator.generateRandomNP(8, 8, 40, 40, n, p);
+  randomizator.print();
+  std::cout << "degrees:" << std::endl;
+  randomizator.printDegrees();
+  std::cout << std::endl << "Randomizing..." << std::endl;
+  for (unsigned int i = 0; i < 1000; i++) {
+      randomizator.randomize();
+  }
+  randomizator.print();
+  std::cout << "degrees:" << std::endl;
+  randomizator.printDegrees();
+
   // EULERIAN GRAPHS
   std::cout << "EULERIAN GRAPHS" << std::endl;
 

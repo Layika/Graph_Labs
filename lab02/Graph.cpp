@@ -455,3 +455,61 @@ int Graph::isEulerianCycle() {
     // Note that odd count can never be 1 for undirected graph
     return (odd)? 1 : 2;
 }
+
+void Graph::randomize() {
+    // The objective is to pick random A, B, C, D vertices, which form A-B and C-D edges
+    // Then remove A-B and C-D edges in order to create new edges: A-D and B-C
+    convertMatrix(AdjacencyList);
+
+    // chosenVertices represents A, B, C and D vertices
+    std::vector<int> chosenVertices;
+
+    // Pick random A, B, D, C vertices
+    for (unsigned int i = 0; i < 4; i++) {
+        int randomVertex = intRand(1, matrix->getRows());
+        while (std::find(chosenVertices.begin(), chosenVertices.end(), randomVertex) != chosenVertices.end()) {
+            randomVertex = intRand(1, matrix->getRows());
+        }
+        chosenVertices.push_back(randomVertex);
+    }
+
+    convertMatrix(AdjacencyMatrix);
+
+        // Check if chosen vertices fulfill requirements (stated in the first comment)
+        if(matrix->getElement(chosenVertices[0]-1, chosenVertices[2]-1)) return;
+        if(matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1)) return;
+        if(matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1)) return;
+        if(matrix->getElement(chosenVertices[1]-1, chosenVertices[3]-1)) return;
+        if(matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1) == 0) return;
+        if(matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1) == 0) return;
+
+        // Remember connections before switching them
+        int AtoB = matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1);
+        int CtoD = matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1);
+        int AtoD = matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1);
+        int BtoC = matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1);
+
+        // Set A-B edge
+        matrix->setElement(chosenVertices[0]-1, chosenVertices[1]-1, AtoD);
+        matrix->setElement(chosenVertices[1]-1, chosenVertices[0]-1, AtoD);
+
+        // Set C-D edge
+        matrix->setElement(chosenVertices[2]-1, chosenVertices[3]-1, BtoC);
+        matrix->setElement(chosenVertices[3]-1, chosenVertices[2]-1, BtoC);
+
+        // Set A-D edge
+        matrix->setElement(chosenVertices[0]-1, chosenVertices[3]-1, AtoB);
+        matrix->setElement(chosenVertices[3]-1, chosenVertices[0]-1, AtoB);
+
+        // Set B-C edge
+        matrix->setElement(chosenVertices[1]-1, chosenVertices[2]-1, CtoD);
+        matrix->setElement(chosenVertices[2]-1, chosenVertices[1]-1, CtoD);
+}
+
+void Graph::printDegrees() {
+    convertMatrix(AdjacencyList);
+    for (unsigned int i = 0; i < matrix->getRows(); i++) {
+        std::cout << matrix->getColumns(i) << " ";
+    }
+    std::cout << std::endl;
+}
