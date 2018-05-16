@@ -3,11 +3,13 @@
 #include <sstream>
 #include <iterator>
 
-std::vector<int> Matrix::getDegreeSequence() {
-  std::vector<int> sequenceCopy(data[0].size());
-  for (unsigned int i=i; i<data[0].size(); ++i)
-    sequenceCopy[i] = data[0][i];
-  return sequenceCopy;
+std::vector<unsigned int> Matrix::getDegreeSequence() {
+    if (representationType == DegreeSequence) {
+        std::vector<unsigned int> sequenceCopy;
+        for (unsigned int i=i; i<data[0].size(); ++i)
+            sequenceCopy.push_back(static_cast<unsigned int>(data[0][i]));
+        return sequenceCopy;
+    }
 }
 
 void Matrix::saveAdjList(std::string fileName) {
