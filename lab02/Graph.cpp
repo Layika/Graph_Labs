@@ -394,15 +394,64 @@ bool Graph::isEulerianSequence(std::vector<unsigned int> sequence) {
 }
 
 
-bool Graph::isEulerianCycle() {
-  /*// Check if all non-zero degree vertices are connected
-  if (areConnected() == false)
-      return false;
+void Graph::DFSUtil(unsigned int v, bool visited[], std::vector<std::vector<int>> matrixData) {
+    // Mark the current node as visited and print it
+    visited[v] = true;
 
-  // Check if in degree and out degree of every vertex is same
-  for (unsigned int i=0; i<; i++)
-      if (adj[i].size() != in[i])
-          return false;
+    // Recur for all the vertices adjacent to this vertex
+    for (auto i = matrixData[v].begin(); i != matrixData[v].end(); ++i)
+        if (!visited[*i])
+            DFSUtil(*i, visited, matrixData);
+}
 
-  return true;*/
+// Method to check if all non-zero degree vertices are connected.
+// It mainly does DFS traversal starting from
+bool Graph::areConnected(unsigned int rows) {
+    // Mark all the vertices as not visited
+    bool visited[rows];
+    unsigned int i;
+    for (i=0; i<rows; i++) visited[i] = false;
+
+    // Find a vertex with non-zero degree
+    for (i=0; i<rows; i++)
+        if (matrix->getColumns(i) != 0) break;
+
+    // If there are no edges in the graph, return true
+    if (i == rows) return true;
+
+    // Start DFS traversal from a vertex with non-zero degree
+    std::vector<std::vector<int>> matrixData = matrix->getMatrix();
+    DFSUtil(i, visited, matrixData);
+
+    // Check if all non-zero degree vertices are visited
+    for (i=0; i<rows; i++)
+       if (visited[i] == false && matrix->getColumns(i) > 0) return false;
+
+    return true;
+}
+
+/* The function returns one of the following values
+   0 --> If grpah is not Eulerian
+   1 --> If graph has an Euler path (Semi-Eulerian)
+   2 --> If graph has an Euler Circuit (Eulerian)  */
+int Graph::isEulerianCycle() {
+
+    convertMatrix(AdjacencyList);
+    unsigned int rows = matrix->getRows();
+
+    // Check if all non-zero degree vertices are connected
+    if (areConnected(rows) == false) return 0;
+
+    // Count vertices with odd degree
+    int odd = 0;
+    for (unsigned int i=0; i<rows; i++)
+        if (matrix->getColumns(i) & 1) odd++;
+
+    // If count is more than 2, then graph is not Eulerian
+    if (odd > 2) return 0;
+
+    // If odd count is 2, then semi-eulerian.
+    // If odd count is 0, then eulerian
+    // Note that odd count can never be 1 for undirected graph
+    return (odd)? 1 : 2;
 }

@@ -59,7 +59,9 @@ public:
 
   // Eulerian graphs
   static bool isEulerianSequence(std::vector<unsigned int> sequence);
-  bool isEulerianCycle();
+  bool areConnected(unsigned int rows);
+  void DFSUtil(unsigned int v, bool visited[], std::vector<std::vector<int>> matrixData);
+  int isEulerianCycle();
 
 private:
   Matrix* matrix;

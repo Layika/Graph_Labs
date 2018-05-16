@@ -46,6 +46,9 @@ int main() {
   std::cout << "Adjacency list of this graph:" << std::endl;
   eulerianGraph.print();
 
+  std::cout << "Looking for eulerian cycle:" << std::endl;
+  eulerianGraph.isEulerianCycle();
+
   sequenceLen = 5;
   sequence = Graph::makeRandomDegreeSequence(sequenceLen);
   while (!Graph::isEulerianSequence(sequence)) sequence = Graph::makeRandomDegreeSequence(sequenceLen);
