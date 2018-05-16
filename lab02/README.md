@@ -83,7 +83,17 @@ hamilton.checkHamiltonianCycle();
 ```
 This will print the solution.
 
+#### Separate Components
 
+To find compoments simply do:
+```
+std::vector<unsigned int> components = randomGraph.findComponents();
+```
+
+And then to find biggest component:
+```
+std::vector<unsigned int> biggestComp = randomGraph.biggestComponent();
+```
 ## Authors
 
 * Mikołaj Skawiński
