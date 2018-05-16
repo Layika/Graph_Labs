@@ -94,6 +94,15 @@ And then to find biggest component:
 ```
 std::vector<unsigned int> biggestComp = randomGraph.biggestComponent();
 ```
+
+#### Randomization
+
+To randomize graph, simply use
+```
+void yourGraph.randomize();
+```
+This may take several attempts to cause a change in edges. It's recommended to perform this multiple times
+
 ## Authors
 
 * Mikołaj Skawiński
