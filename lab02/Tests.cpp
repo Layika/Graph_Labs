@@ -25,15 +25,15 @@ int main() {
 
   // Make a graph and read sequence from file
   Graph degreeSeqGraph(Undirected);
-  std::cout << "Reading degree sequence from file:" << std::endl;
+  std::cout << "Reading degree sequence from file to test if it's graphical. Sequence:" << std::endl;
   degreeSeqGraph.readFile("sample_input_data/degreeseq.txt");
   degreeSeqGraph.print();
   // Save graph converts degree sequence to adjacency list so basically creates a graph out of it
   std::vector<unsigned int> testVec = degreeSeqGraph.getDegreeSequence();
-  if (Graph::isDegreeSequence(testVec)) {std::cout << "sequence is graphical!" << std::endl; }
+  if (Graph::isDegreeSequence(testVec)) {std::cout << "Sequence is graphical!" << std::endl; }
   degreeSeqGraph.saveGraph("graph_sample.txt");
 
-  std::cout << "Saved to file, generated a graph of adjacency list:" << std::endl;
+  std::cout << "Converted to adjacency list:" << std::endl;
   degreeSeqGraph.print();
   std::cout << std::endl << std::endl;
 
@@ -47,12 +47,13 @@ int main() {
   std::cout << "degrees:" << std::endl;
   randomizator.printDegrees();
   std::cout << std::endl << "Randomizing..." << std::endl;
-  for (unsigned int i = 0; i < 1000; i++) {
+  for (unsigned int i=0; i<1000; i++) {
       randomizator.randomize();
   }
   randomizator.print();
   std::cout << "degrees:" << std::endl;
   randomizator.printDegrees();
+  std::cout << std::endl << std::endl;
 
   // EULERIAN GRAPHS
   std::cout << "EULERIAN GRAPHS" << std::endl;
@@ -66,7 +67,10 @@ int main() {
   eulerianGraph.print();
 
   std::cout << "Looking for eulerian cycle:" << std::endl;
-  eulerianGraph.isEulerianCycle();
+  int res = eulerianGraph.isEulerianCycle();
+  if (res == 0) std::cout << "Graph is not Eulerian\n";
+  else if (res == 1) std::cout << "Graph has a Euler path\n";
+  else std::cout << "Graph has a Euler cycle\n";
 
   sequenceLen = 5;
   sequence = Graph::makeRandomDegreeSequence(sequenceLen);

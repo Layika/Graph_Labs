@@ -400,7 +400,7 @@ void Graph::DFSUtil(unsigned int v, bool visited[], std::vector<std::vector<int>
 
     // Recur for all the vertices adjacent to this vertex
     for (auto i = matrixData[v].begin(); i != matrixData[v].end(); ++i)
-        if (!visited[*i])
+        if (!visited[*(i-1)])
             DFSUtil(*i, visited, matrixData);
 }
 
@@ -475,35 +475,35 @@ void Graph::randomize() {
 
     convertMatrix(AdjacencyMatrix);
 
-        // Check if chosen vertices fulfill requirements (stated in the first comment)
-        if(matrix->getElement(chosenVertices[0]-1, chosenVertices[2]-1)) return;
-        if(matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1)) return;
-        if(matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1)) return;
-        if(matrix->getElement(chosenVertices[1]-1, chosenVertices[3]-1)) return;
-        if(matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1) == 0) return;
-        if(matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1) == 0) return;
+    // Check if chosen vertices fulfill requirements (stated in the first comment)
+    if(matrix->getElement(chosenVertices[0]-1, chosenVertices[2]-1)) return;
+    if(matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1)) return;
+    if(matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1)) return;
+    if(matrix->getElement(chosenVertices[1]-1, chosenVertices[3]-1)) return;
+    if(matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1) == 0) return;
+    if(matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1) == 0) return;
 
-        // Remember connections before switching them
-        int AtoB = matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1);
-        int CtoD = matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1);
-        int AtoD = matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1);
-        int BtoC = matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1);
+    // Remember connections before switching them
+    int AtoB = matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1);
+    int CtoD = matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1);
+    int AtoD = matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1);
+    int BtoC = matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1);
 
-        // Set A-B edge
-        matrix->setElement(chosenVertices[0]-1, chosenVertices[1]-1, AtoD);
-        matrix->setElement(chosenVertices[1]-1, chosenVertices[0]-1, AtoD);
+    // Set A-B edge
+    matrix->setElement(chosenVertices[0]-1, chosenVertices[1]-1, AtoD);
+    matrix->setElement(chosenVertices[1]-1, chosenVertices[0]-1, AtoD);
 
-        // Set C-D edge
-        matrix->setElement(chosenVertices[2]-1, chosenVertices[3]-1, BtoC);
-        matrix->setElement(chosenVertices[3]-1, chosenVertices[2]-1, BtoC);
+    // Set C-D edge
+    matrix->setElement(chosenVertices[2]-1, chosenVertices[3]-1, BtoC);
+    matrix->setElement(chosenVertices[3]-1, chosenVertices[2]-1, BtoC);
 
-        // Set A-D edge
-        matrix->setElement(chosenVertices[0]-1, chosenVertices[3]-1, AtoB);
-        matrix->setElement(chosenVertices[3]-1, chosenVertices[0]-1, AtoB);
+    // Set A-D edge
+    matrix->setElement(chosenVertices[0]-1, chosenVertices[3]-1, AtoB);
+    matrix->setElement(chosenVertices[3]-1, chosenVertices[0]-1, AtoB);
 
-        // Set B-C edge
-        matrix->setElement(chosenVertices[1]-1, chosenVertices[2]-1, CtoD);
-        matrix->setElement(chosenVertices[2]-1, chosenVertices[1]-1, CtoD);
+    // Set B-C edge
+    matrix->setElement(chosenVertices[1]-1, chosenVertices[2]-1, CtoD);
+    matrix->setElement(chosenVertices[2]-1, chosenVertices[1]-1, CtoD);
 }
 
 void Graph::printDegrees() {
