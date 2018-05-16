@@ -1,4 +1,5 @@
 #include "Converter.h"
+#include <algorithm>
 
 void AdjacencyListConverter::convertRepresentation(Matrix* matrix, RepresentationType to) {
   if (to == AdjacencyMatrix) {
@@ -148,9 +149,43 @@ void IncidenceMatrixConverter::incMatToAdjList(Matrix* matrix) {
 }
 
 void DegreeSequenceConverter::convertRepresentation(Matrix* matrix, RepresentationType to) {
-    
+    if ( to == AdjacencyList) {
+        degreeSeqToAdjList(matrix);
+    }
 }
 
+struct degreeNode {
+    int value;
+    unsigned int order;
+};
+
+bool compareByValue(const degreeNode &a, const degreeNode &b) {
+    return a.value > b.value;
+}
+
+
+
 void DegreeSequenceConverter::degreeSeqToAdjList(Matrix* matrix) {
+    std::vector<degreeNode> sequence(matrix->getColumns(0));
+    for (int i = 0; i < matrix->getColumns(0); ++i) {
+        sequence[i].value = matrix->getElement(0, i);
+        sequence[i].order = i;
+    }
+
+
+   std::vector<std::vector<int>> newData(matrix->getColumns(0), std::vector<int>());
+
+   while (sequence[0].value != 0) {
+       int d = sequence[0].value;
+       for (int i = 1; i < d; ++i) {
+           newData[sequence[i].order].push_back(sequence[0].order + 1);
+           newData[sequence[0].order].push_back(sequence[i].order + 1);
+           sequence[i].value = sequence[i].value - 1;
+       }
+       sequence[0].value = 0;
+       sort(sequence.begin(), sequence.end(), compareByValue);
+   }
+
+   matrix->saveData(newData);
 
  }

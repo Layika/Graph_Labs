@@ -17,12 +17,11 @@ void Graph::readFile(std::string fileName) {
   // Now we need to be able to tell what matrix are we reading from file
   // TODO: Make it a bit better than using -1 and -2
   int rowWidth = -1;
-  int lines = 2;
+  int lines = 0;
 
   // Read the file line by line and store each line in line variable
   std::string line;
   while(getline(dataFile, line)) {
-
     // Change line variable (string) to stream because we need a stream to iterate through it
     std::istringstream lineStream(line);
 
@@ -33,6 +32,8 @@ void Graph::readFile(std::string fileName) {
     // line length etc. We can use it later to determine data type
     if(rowWidth == -1) rowWidth = newData.back().size();
     else if(rowWidth != newData.back().size()) rowWidth = -2;
+
+    ++lines;
   }
 
   // Save the new type and new data matrix

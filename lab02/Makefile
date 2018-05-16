@@ -8,8 +8,8 @@ TXT_FILES=$(wildcard *.txt)
 
 OBJECTS=$(SOURCES:.cpp=.o)
 
-END_NAME=lab01
-TAR_NAME=lab01.tar
+END_NAME=lab02
+TAR_NAME=lab02.tar
 
 
 all: $(OBJECTS)
@@ -19,7 +19,7 @@ all: $(OBJECTS)
 	$(CXX) $^ $(CXXFLAGS) -o $@
 
 clean:
-	rm $(OBJECTS) $(END_NAME) 
+	rm $(OBJECTS) $(END_NAME)
 
 run:
 	./$(END_NAME)
