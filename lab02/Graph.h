@@ -56,6 +56,9 @@ public:
   bool hamiltonianCanAdd(unsigned int vertex, std::vector<int>& path, unsigned int pos);
   void printHamiltonianCycle(std::vector<int>& cycle);
 
+  // Eulerian graphs
+  bool isEulerian(std::vector<unsigned int> sequence);
+  
 private:
   Matrix* matrix;
   Converter* matrixConverter;

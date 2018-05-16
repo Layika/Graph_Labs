@@ -379,3 +379,15 @@ void Graph::printHamiltonianCycle(std::vector<int>& cycle) {
 
   std::cout << std::endl;
 }
+
+// Function for checking if a degree sequence is eulerian
+bool Graph::isEulerian(std::vector<unsigned int> sequence) {
+  // If given sequence is a degree sequence
+  if (Graph::isDegreeSequence(sequence)) {
+    // And all degrees are even then it's eulerian too
+    for (unsigned int i=0; i<sequence.size(); ++i)
+      if (sequence[i] % 2) return false;
+    return true;
+  }
+  return false;
+}
