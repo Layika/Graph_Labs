@@ -29,7 +29,7 @@ public:
   unsigned int getColumns(unsigned int row) const { return data[row].size(); }
   int getElement(unsigned int row, unsigned int col) const { return data[row][col]; }
   // TODO: segfault
-  std::vector<int> getDegreeSequence();
+  std::vector<unsigned int> getDegreeSequence();
   
   // Setters for matrix
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
