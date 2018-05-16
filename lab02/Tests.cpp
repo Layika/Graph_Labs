@@ -78,8 +78,9 @@ int main() {
   regularGraph.generateRandomRegular(minVertices, maxVertices, neighbours);
   std::cout << "Adjacency list of a generated graph:" << std::endl;
   regularGraph.print();
-  std::cout << "Saving graph..." << std::endl;
-  regularGraph.saveGraph("regularGraph.txt");
-  std::cout << std::endl;
+  // TODO: segfault w konwerterze:
+  //std::cout << "Saving graph..." << std::endl;
+  //regularGraph.saveGraph("regularGraph.txt");
+  //std::cout << std::endl;
 
 }
