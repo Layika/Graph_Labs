@@ -29,10 +29,10 @@ int main() {
   degreeSeqGraph.readFile("sample_input_data/degreeseq.txt");
   degreeSeqGraph.print();
   // Save graph converts degree sequence to adjacency list so basically creates a graph out of it
-    std::vector<unsigned int> testVec = degreeSeqGraph.getDegreeSequence();
-    if (Graph::isDegreeSequence(testVec)) {std::cout << "sequence is graphical!" << std::endl; }
-    degreeSeqGraph.saveGraph("graph_sample.txt");
-    
+  std::vector<unsigned int> testVec = degreeSeqGraph.getDegreeSequence();
+  if (Graph::isDegreeSequence(testVec)) {std::cout << "sequence is graphical!" << std::endl; }
+  degreeSeqGraph.saveGraph("graph_sample.txt");
+
   std::cout << "Saved to file, generated a graph of adjacency list:" << std::endl;
   degreeSeqGraph.print();
   std::cout << std::endl << std::endl;
