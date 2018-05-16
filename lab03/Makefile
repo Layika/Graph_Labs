@@ -8,8 +8,8 @@ TXT_FILES=$(wildcard *.txt)
 
 OBJECTS=$(SOURCES:.cpp=.o)
 
-END_NAME=lab01
-TAR_NAME=lab01.tar
+END_NAME=lab03
+TAR_NAME=lab03.tar
 
 
 all: $(OBJECTS)
