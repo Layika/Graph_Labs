@@ -37,15 +37,14 @@ int main() {
   degreeSeqGraph.print();
   std::cout << std::endl << std::endl;
 
-  // Eulerian graphs
+  // EULERIAN GRAPHS
   std::cout << "EULERIAN GRAPHS" << std::endl;
 
   Graph eulerianGraph(Undirected);
   std::cout << "Reading degree sequence from file:" << std::endl;
   eulerianGraph.readFile("sample_input_data/eulerianseq.txt");
   eulerianGraph.print();
-  std::cout << "Saving graph to file..." << std::endl;
-  eulerianGraph.saveGraph("euleriancycle.txt");
+  eulerianGraph.convertMatrix(AdjacencyList);
   std::cout << "Adjacency list of this graph:" << std::endl;
   eulerianGraph.print();
 
