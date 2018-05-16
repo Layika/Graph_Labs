@@ -37,7 +37,28 @@ Graph::isDegreeSequence(sequence))
 ```
 
 #### Eulerian graphs
-To create an eulerian graph you can read matrix from file like always
+To create an eulerian graph you can read matrix from file like always:
+
+```
+Graph eulerianGraph(Undirected);
+eulerianGraph.readFile("sample_input_data/eulerianseq.txt");
+```
+
+You can also check if generated random degree sequence is eulerian like follows:
+```
+Graph::isEulerianSequence(sequence);
+```
+
+And also check if undirected graph contains Euler Cycle:
+```
+eulerianGraph.isEulerianCycle();
+```
+
+Then you can also convert it to adjacency list:
+
+```
+eulerianGraph.convertMatrix(AdjacencyList);
+```
 
 #### Random k-regular graphs
 To create such a graph simply type:
