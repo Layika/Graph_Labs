@@ -6,13 +6,6 @@ int main() {
 
   srand(time(NULL));
 
-
-  Graph degreeSeqGraph(Undirected);
-  std::cout << "Reading degree sequence from file:" << std::endl;
-  degreeSeqGraph.readFile("sample_input_data/deegreeseq.txt");
-  degreeSeqGraph.saveGraph("graph_sample.txt");
-  std::cout << "Saved to file" << std::endl;
-
   // DEGREE SEQUENCES
   std::cout << "DEGREE SEQUENCES" << std::endl;
   std::cout << std::endl;
@@ -29,6 +22,14 @@ int main() {
   std::sort(sequence.rbegin(), sequence.rend());
   for (unsigned int i=0; i<sequence.size(); ++i) std::cout << sequence[i] << " ";
   std::cout << std::endl << std::endl;
+
+  // Make a graph and read sequence from file
+  Graph degreeSeqGraph(Undirected);
+  std::cout << "Reading degree sequence from file:" << std::endl;
+  degreeSeqGraph.readFile("sample_input_data/deegreeseq.txt");
+  // Save graph converts degree sequence to adjacency list so basically creates a graph out of it
+  degreeSeqGraph.saveGraph("graph_sample.txt");
+  std::cout << "Saved to file" << std::endl;
 
 
   // SEPARATE COMPONENTS
