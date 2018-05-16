@@ -14,11 +14,13 @@ public:
   // In order to get a matrix we need to read from file or create a random matrix
   Graph(GraphType type) { matrix = new Matrix; matrix->setGraphType(type); }
 
-  // Reads matrix from file. After a read matrix will be updated
-  void readFile(std::string fileName);
-
   // Getter for number of vertices
   unsigned int getVertexCount() {return matrix->getRows();}
+
+  // Wrapper for getting a degree sequence
+  std::vector<unsigned int> getDegreeSequence() { return matrix->getDegreeSequence(); }
+  // Reads matrix from file. After a read matrix will be updated
+  void readFile(std::string fileName);
 
   // Wrapper function converting any type to the type we want
   // It handles calling the right function (see private functions)
@@ -27,7 +29,8 @@ public:
   // Wrapper functions for handling saving graph to file in adjacency list and debug print
   void saveGraph(std::string fileName) { convertMatrix(AdjacencyList); matrix->saveAdjList(fileName); }
   void print() const { matrix->print(); }
-  void printWeights() const;
+  void printDegrees();
+
 
   // Helper function for random graphs, returns a random int
   static int intRand(const int min, const int max) { return rand() % (max-min+1) + min; }
@@ -49,12 +52,35 @@ public:
   // Function that returns a vector of nodes belonging to the biggest component
   std::vector<unsigned int> biggestComponent();
 
+  // Function for generating random k-regular graphs
+  // It generates a new adjacency list
+  // Changes type to undirected graph
+  void generateRandomRegular(unsigned int minVertices, unsigned int maxVertices, unsigned int neighbours);
+
+  // Hamiltonian cycle functions.
+  bool checkHamiltonianCycle();
+  bool hamiltonianCycleUtil(std::vector<int>& path, unsigned int pos);
+  bool hamiltonianCanAdd(unsigned int vertex, std::vector<int>& path, unsigned int pos);
+  void printHamiltonianCycle(std::vector<int>& cycle);
+
+  // Eulerian graphs
+  static bool isEulerianSequence(std::vector<unsigned int> sequence);
+  bool areConnected(unsigned int rows);
+  void DFSUtil(unsigned int v, bool visited[], std::vector<std::vector<int>> matrixData);
+  int isEulerianCycle();
+
+  // Randomizing function
+  void randomize();
+
   // Function for generating random weights for each edge
   void generateRandomWeights(int minWeight, int maxWeight);
 
   // Getter and setter functions for weights
   int getWeight(unsigned int source, unsigned int dest);
   void setWeight(unsigned int source, unsigned int dest, int weight);
+
+  // Print weights along with their edges
+  void printWeights() const;
 
 private:
   Matrix* matrix;

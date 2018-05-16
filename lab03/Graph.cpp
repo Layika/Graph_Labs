@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iterator>
 
+
 void Graph::readFile(std::string fileName) {
 
   // Open file with a matrix
@@ -17,12 +18,11 @@ void Graph::readFile(std::string fileName) {
   // Now we need to be able to tell what matrix are we reading from file
   // TODO: Make it a bit better than using -1 and -2
   int rowWidth = -1;
-  int lines = 2;
+  int lines = 0;
 
   // Read the file line by line and store each line in line variable
   std::string line;
   while(getline(dataFile, line)) {
-
     // Change line variable (string) to stream because we need a stream to iterate through it
     std::istringstream lineStream(line);
 
@@ -33,6 +33,8 @@ void Graph::readFile(std::string fileName) {
     // line length etc. We can use it later to determine data type
     if(rowWidth == -1) rowWidth = newData.back().size();
     else if(rowWidth != newData.back().size()) rowWidth = -2;
+
+    ++lines;
   }
 
   // Save the new type and new data matrix
@@ -56,7 +58,7 @@ void Graph::readFile(std::string fileName) {
   dataFile.close();
 }
 
-// TODO: fix shitty code
+
 // Wrapper function converting any type to the type we want
 // It handles calling the right function (see private functions)
 void Graph::convertMatrix(RepresentationType to) {
@@ -64,6 +66,7 @@ void Graph::convertMatrix(RepresentationType to) {
     delete matrixConverter;
     setConverter(to);
 }
+
 
 void Graph::setConverter(const RepresentationType &forMatrixType) {
     if (forMatrixType == AdjacencyList) matrixConverter = new AdjacencyListConverter;
@@ -249,16 +252,282 @@ std::vector<unsigned int> Graph::biggestComponent() {
     return result;
 }
 
-void Graph::generateRandomWeights(int minWeight, int maxWeight) {
-    //weights = {std::vector<int>(numberOfEdges), std::vector<int>(numberOfEdges), std::vector<int>(numberOfEdges);}
-    weights = std::vector<std::vector<int>>(3, std::vector<int>(0));
+void Graph::generateRandomRegular(unsigned int minVertices, unsigned int maxVertices, unsigned int neighbours) {
+  // Get a random nuber of vertices
+  unsigned int vertices = intRand(minVertices, maxVertices);
+
+  // Create a new list
+  std::vector<std::vector<int>> newList(vertices);
+
+  // Change data type and graph type in case it was different
+  matrix->setRepresentationType(AdjacencyList);
+  matrix->setGraphType(Undirected);
+
+  // For each vertex
+  for (unsigned int v=0; v<vertices; ++v) {
+
+    // If there are not enough neighbours for it
+    while (newList[v].size() < neighbours) {
+
+      // Get a random vertex number that is not equal to current vertex
+      unsigned int randomVertex = intRand(1, vertices);
+      while (randomVertex == v+1 ||
+        (std::find(newList[v].begin(), newList[v].end(), randomVertex) != newList[v].end())) {
+          randomVertex = intRand(1, vertices);
+      }
+
+      // (Check if both of them don't have enough neighbours)
+      if (newList[randomVertex-1].size() < neighbours) {
+        // And add it as a neighbour
+        newList[v].push_back(randomVertex);
+        newList[randomVertex-1].push_back(v+1);
+
+      }
+    }
+  }
+
+  matrix->saveData(newList);
+}
+
+
+/* This function solves the Hamiltonian Cycle problem using Backtracking.
+  It mainly uses hamiltonianCycleUtil() to solve the problem. It returns false
+  if there is no Hamiltonian Cycle possible, otherwise return true and
+  prints the path. Please note that there may be more than one solutions,
+  this function prints one of the feasible solutions. */
+
+bool Graph::checkHamiltonianCycle() {
+
+  // We need adjacency matrix so first convert whatever we have to this type
+  convertMatrix(AdjacencyMatrix);
+
+  // Prepare path variable and fill it with -1
+  std::vector<int> path(matrix->getRows());
+  std::fill(path.begin(), path.end(), -1);
+
+  // Lets put vertex 1 as the first vertex in the path
+  // If there is a Hamiltonian Cycle, then the path can be started
+  // from any point of the cycle as the graph is undirected
+  path[0] = 1;
+
+  if (hamiltonianCycleUtil(path, 1) == false) {
+    std::cout << "Solution does not exist" << std::endl;
+    return false;
+  }
+
+  printHamiltonianCycle(path);
+  return true;
+}
+
+
+// A recursive utility function to solve hamiltonian cycle problem
+bool Graph::hamiltonianCycleUtil(std::vector<int>& path, unsigned int pos) {
+
+  // base case: If all vertices are included in Hamiltonian Cycle
+  if (pos == matrix->getRows()) {
+      // And if there is an edge from the last included vertex to the first vertex
+      if (matrix->getElement(path[pos-1]-1, path[0]-1) == 1 ) return true; //numerror
+      //if (matrix->getElement(path[pos-1], path[0]) == 1 ) return true;
+      else return false;
+  }
+
+  // Try different vertices as a next candidate in Hamiltonian Cycle.
+  // We don't try for 1 as we included 1 as starting point in in checkHamiltonianCycle()
+  for (unsigned int v=1; v<matrix->getRows(); v++) {
+
+      // Check if this vertex can be added to Hamiltonian Cycle
+      if (hamiltonianCanAdd(v, path, pos)) {
+        path[pos] = v+1; //numerror
+        //path[pos] = v;
+
+        std::cout << "PATH:";
+        for (int i=0; i<path.size(); ++i) std::cout << " " << path[i];
+        std::cout << std::endl;
+
+        // Recur to construct rest of the path
+        if (hamiltonianCycleUtil(path, pos+1) == true) return true;
+        // If adding vertex v doesn't lead to a solution, then remove it
+        else path[pos] = -1;
+      }
+
+  }
+
+  // If no vertex can be added to Hamiltonian Cycle constructed so far, then return false
+  return false;
+}
+
+// A utility function to check if the vertex v can be added at index 'pos'
+// in the Hamiltonian Cycle constructed so far (stored in 'path[]')
+bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<int>& path, unsigned int pos) {
+
+  // Check if this vertex is an adjacent vertex of the previously added vertex
+  if (matrix->getElement(path[pos-1]-1, vertex) == 0) return false;//numerror
+  //if (matrix->getElement(path[pos-1], vertex) == 0) return false;
+  // Check if the vertex has already been included
+  for (unsigned int i=0; i<pos; i++)
+    if (path[i] == vertex+1) return false;//numerror
+    //if (path[i] == vertex) return false;
+
+  return true;
+}
+
+// Function for printing hamiltonian cycle
+void Graph::printHamiltonianCycle(std::vector<int>& cycle) {
+
+  std::cout << "Hamiltonian Cycle:";
+  for (unsigned int i=0; i<cycle.size(); ++i) std::cout << " " << cycle[i];
+  std::cout << " " << cycle[0];
+
+  std::cout << std::endl;
+}
+
+// Function for checking if a degree sequence is eulerian
+bool Graph::isEulerianSequence(std::vector<unsigned int> sequence) {
+  // If given sequence is a degree sequence
+  if (Graph::isDegreeSequence(sequence)) {
+    // And all degrees are even then it's eulerian too
+    for (unsigned int i=0; i<sequence.size(); ++i)
+      if (sequence[i] % 2) return false;
+    return true;
+  }
+  return false;
+}
+
+
+void Graph::DFSUtil(unsigned int v, bool visited[], std::vector<std::vector<int>> matrixData) {
+    // Mark the current node as visited and print it
+    visited[v] = true;
+
+    // Recur for all the vertices adjacent to this vertex
+    for (auto& i : matrixData[v])
+      if (!visited[i-1]) DFSUtil(i, visited, matrixData);
+}
+
+// Method to check if all non-zero degree vertices are connected.
+// It mainly does DFS traversal starting from
+bool Graph::areConnected(unsigned int rows) {
+    // Mark all the vertices as not visited
+    bool visited[rows];
+    unsigned int i;
+    for (i=0; i<rows; i++) visited[i] = false;
+
+    // Find a vertex with non-zero degree
+    for (i=0; i<rows; i++)
+        if (matrix->getColumns(i) != 0) break;
+
+    // If there are no edges in the graph, return true
+    if (i == rows) return true;
+
+    // Start DFS traversal from a vertex with non-zero degree
+    std::vector<std::vector<int>> matrixData = matrix->getMatrix();
+    DFSUtil(i, visited, matrixData);
+
+    // Check if all non-zero degree vertices are visited
+    for (i=0; i<rows; i++)
+       if (visited[i] == false && matrix->getColumns(i) > 0) return false;
+
+    return true;
+}
+
+/* The function returns one of the following values
+   0 --> If grpah is not Eulerian
+   1 --> If graph has an Euler path (Semi-Eulerian)
+   2 --> If graph has an Euler Circuit (Eulerian)  */
+int Graph::isEulerianCycle() {
+
+    convertMatrix(AdjacencyList);
+    unsigned int rows = matrix->getRows();
+
+    // Check if all non-zero degree vertices are connected
+    if (areConnected(rows) == false) return 0;
+
+    // Count vertices with odd degree
+    int odd = 0;
+    for (unsigned int i=0; i<rows; i++)
+        if (matrix->getColumns(i) & 1) odd++;
+
+    // If count is more than 2, then graph is not Eulerian
+    if (odd > 2) return 0;
+
+    // If odd count is 2, then semi-eulerian.
+    // If odd count is 0, then eulerian
+    // Note that odd count can never be 1 for undirected graph
+    return (odd)? 1 : 2;
+}
+
+void Graph::randomize() {
+    // The objective is to pick random A, B, C, D vertices, which form A-B and C-D edges
+    // Then remove A-B and C-D edges in order to create new edges: A-D and B-C
+    convertMatrix(AdjacencyList);
+
+    // chosenVertices represents A, B, C and D vertices
+    std::vector<int> chosenVertices;
+
+    // Pick random A, B, D, C vertices
+    for (unsigned int i = 0; i < 4; i++) {
+        int randomVertex = intRand(1, matrix->getRows());
+        while (std::find(chosenVertices.begin(), chosenVertices.end(), randomVertex) != chosenVertices.end()) {
+            randomVertex = intRand(1, matrix->getRows());
+        }
+        chosenVertices.push_back(randomVertex);
+    }
+
     convertMatrix(AdjacencyMatrix);
 
+    // Check if chosen vertices fulfill requirements (stated in the first comment)
+    if(matrix->getElement(chosenVertices[0]-1, chosenVertices[2]-1)) return;
+    if(matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1)) return;
+    if(matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1)) return;
+    if(matrix->getElement(chosenVertices[1]-1, chosenVertices[3]-1)) return;
+    if(matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1) == 0) return;
+    if(matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1) == 0) return;
+
+    // Remember connections before switching them
+    int AtoB = matrix->getElement(chosenVertices[0]-1, chosenVertices[1]-1);
+    int CtoD = matrix->getElement(chosenVertices[2]-1, chosenVertices[3]-1);
+    int AtoD = matrix->getElement(chosenVertices[0]-1, chosenVertices[3]-1);
+    int BtoC = matrix->getElement(chosenVertices[1]-1, chosenVertices[2]-1);
+
+    // Set A-B edge
+    matrix->setElement(chosenVertices[0]-1, chosenVertices[1]-1, AtoD);
+    matrix->setElement(chosenVertices[1]-1, chosenVertices[0]-1, AtoD);
+
+    // Set C-D edge
+    matrix->setElement(chosenVertices[2]-1, chosenVertices[3]-1, BtoC);
+    matrix->setElement(chosenVertices[3]-1, chosenVertices[2]-1, BtoC);
+
+    // Set A-D edge
+    matrix->setElement(chosenVertices[0]-1, chosenVertices[3]-1, AtoB);
+    matrix->setElement(chosenVertices[3]-1, chosenVertices[0]-1, AtoB);
+
+    // Set B-C edge
+    matrix->setElement(chosenVertices[1]-1, chosenVertices[2]-1, CtoD);
+    matrix->setElement(chosenVertices[2]-1, chosenVertices[1]-1, CtoD);
+}
+
+void Graph::printDegrees() {
+    convertMatrix(AdjacencyList);
+    for (unsigned int i = 0; i < matrix->getRows(); i++) {
+        std::cout << matrix->getColumns(i) << " ";
+    }
+    std::cout << std::endl;
+}
+
+void Graph::generateRandomWeights(int minWeight, int maxWeight) {
+    convertMatrix(AdjacencyMatrix);
+
+    // weights[0] and weights[1] are source and dest. vertices for each edge
+    // weights[2] contains the actual weights
+    weights = std::vector<std::vector<int>>(3, std::vector<int>(0));
+
+    // Scan the entire adjacency matrix
     for (unsigned int i = 0; i < matrix->getRows(); i++) {
         for (unsigned int j = i+1; j < matrix->getColumns(i); j++) {
             if (matrix->getElement(i, j) == 1) {
+                // Add source and dest of edge between i-th and j-th vertex
                 weights[0].push_back(i+1);
                 weights[1].push_back(j+1);
+                // Generate random weight for above edge
                 weights[2].push_back(intRand(minWeight, maxWeight));
             }
         }
@@ -266,6 +535,7 @@ void Graph::generateRandomWeights(int minWeight, int maxWeight) {
 }
 
 int Graph::getWeight(unsigned int source, unsigned int dest) {
+    // Check if an edge from source to dest exists. If it does - return it's weight. Otherwise return -1
     for (unsigned int i = 0; i < weights[0].size(); i++) {
         if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) return weights[2][i];
     }
@@ -273,6 +543,7 @@ int Graph::getWeight(unsigned int source, unsigned int dest) {
 }
 
 void Graph::setWeight(unsigned int source, unsigned int dest, int weight) {
+    // Check if an edge from source to dest exists. New weight will only be set if such edge exists
     for (unsigned int i = 0; i < weights[0].size(); i++) {
         if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) weights[2][i] = weight;
     }
@@ -280,6 +551,5 @@ void Graph::setWeight(unsigned int source, unsigned int dest, int weight) {
 
 void Graph::printWeights() const {
   for (unsigned int i = 0; i < weights[0].size(); i++)
-    std::cout << weights[2][i] << " ";
-  std::cout << std::endl;
+    std::cout << "Edge from " << weights[0][i] << " to " << weights[1][i] << " has weight: " << weights[2][i] << std::endl;
 }

@@ -19,7 +19,6 @@ int main() {
   connectedGraph.convertMatrix(IncidenceMatrix);
   connectedGraph.print();
 
-  std::cout << std::endl << "Edges have the following weights: " << std::endl;
   connectedGraph.generateRandomWeights(1, 10);
   connectedGraph.printWeights();
 }
