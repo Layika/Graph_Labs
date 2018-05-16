@@ -27,6 +27,7 @@ public:
   // Wrapper functions for handling saving graph to file in adjacency list and debug print
   void saveGraph(std::string fileName) { convertMatrix(AdjacencyList); matrix->saveAdjList(fileName); }
   void print() const { matrix->print(); }
+  void printDegrees();
 
 
   // Helper function for random graphs, returns a random int
@@ -65,6 +66,9 @@ public:
   bool areConnected(unsigned int rows);
   void DFSUtil(unsigned int v, bool visited[], std::vector<std::vector<int>> matrixData);
   int isEulerianCycle();
+
+  // Randomizing function
+  void randomize();
 
 private:
   Matrix* matrix;
