@@ -3,6 +3,13 @@
 #include <sstream>
 #include <iterator>
 
+std::vector<int> Matrix::getDegreeSequence() {
+  std::vector<int> sequenceCopy(data[0].size());
+  for (unsigned int i=i; i<data[0].size(); ++i)
+    sequenceCopy[i] = data[0][i];
+  return sequenceCopy;
+}
+
 void Matrix::saveAdjList(std::string fileName) {
   // Open out file
   std::ofstream outfile(fileName);

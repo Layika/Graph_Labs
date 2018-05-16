@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iterator>
 
+
 void Graph::readFile(std::string fileName) {
 
   // Open file with a matrix
@@ -381,7 +382,7 @@ void Graph::printHamiltonianCycle(std::vector<int>& cycle) {
 }
 
 // Function for checking if a degree sequence is eulerian
-bool Graph::isEulerian(std::vector<unsigned int> sequence) {
+bool Graph::isEulerianCycle(std::vector<unsigned int> sequence) {
   // If given sequence is a degree sequence
   if (Graph::isDegreeSequence(sequence)) {
     // And all degrees are even then it's eulerian too
@@ -390,4 +391,12 @@ bool Graph::isEulerian(std::vector<unsigned int> sequence) {
     return true;
   }
   return false;
+}
+
+bool Graph::isEulerianCycle() {
+  std::vector<int> sequence = matrix->getDegreeSequence();
+  // If all degrees are even then it's eulerian
+  for (unsigned int i=0; i<sequence.size(); ++i)
+    if (sequence[i] % 2) return false;
+  return true;
 }

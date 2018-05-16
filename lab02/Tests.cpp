@@ -26,11 +26,37 @@ int main() {
   // Make a graph and read sequence from file
   Graph degreeSeqGraph(Undirected);
   std::cout << "Reading degree sequence from file:" << std::endl;
-  degreeSeqGraph.readFile("sample_input_data/deegreeseq.txt");
+  degreeSeqGraph.readFile("sample_input_data/degreeseq.txt");
+  degreeSeqGraph.print();
   // Save graph converts degree sequence to adjacency list so basically creates a graph out of it
   degreeSeqGraph.saveGraph("graph_sample.txt");
-  std::cout << "Saved to file" << std::endl;
+  std::cout << "Saved to file, generated a graph of adjacency list:" << std::endl;
+  degreeSeqGraph.print();
+  std::cout << std::endl << std::endl;
 
+  // Eulerian graphs
+  std::cout << "EULERIAN GRAPHS" << std::endl;
+
+  Graph eulerianGraph(Undirected);
+  std::cout << "Reading degree sequence from file:" << std::endl;
+  eulerianGraph.readFile("sample_input_data/eulerianseq.txt");
+  eulerianGraph.print();
+  std::cout << "Saving graph to file..." << std::endl;
+  eulerianGraph.saveGraph("euleriancycle.txt");
+  std::cout << "Adjacency list of this graph:" << std::endl;
+  eulerianGraph.print();
+
+  sequenceLen = 5;
+  sequence = Graph::makeRandomDegreeSequence(sequenceLen);
+  while (!Graph::isEulerianCycle(sequence)) sequence = Graph::makeRandomDegreeSequence(sequenceLen);
+  std::cout << std::endl << "Found a good eulerian sequence (with cycle):";
+  for (unsigned int i=0; i<sequence.size(); ++i)
+    std::cout << " " << sequence[i];
+  std::cout << std::endl;
+
+
+
+  std::cout << std::endl << std::endl;
 
   // SEPARATE COMPONENTS
   std::cout << "FINDING SEPARATE COMPONENTS" << std::endl;

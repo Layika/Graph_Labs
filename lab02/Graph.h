@@ -25,6 +25,7 @@ public:
   void saveGraph(std::string fileName) { convertMatrix(AdjacencyList); matrix->saveAdjList(fileName); }
   void print() const { matrix->print(); }
 
+
   // Helper function for random graphs, returns a random int
   static int intRand(const int min, const int max) { return rand() % (max-min+1) + min; }
   // Function for generating a random G(n,l) graph
@@ -57,8 +58,9 @@ public:
   void printHamiltonianCycle(std::vector<int>& cycle);
 
   // Eulerian graphs
-  bool isEulerian(std::vector<unsigned int> sequence);
-  
+  static bool isEulerianCycle(std::vector<unsigned int> sequence);
+  bool isEulerianCycle();
+
 private:
   Matrix* matrix;
   Converter* matrixConverter;
