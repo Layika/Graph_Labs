@@ -553,3 +553,68 @@ void Graph::printWeights() const {
   for (unsigned int i = 0; i < weights[0].size(); i++)
     std::cout << "Edge from " << weights[0][i] << " to " << weights[1][i] << " has weight: " << weights[2][i] << std::endl;
 }
+
+  // Function finding minimal distance
+int Graph::minDistance(std::vector<bool> visited, std::vector<int> distance) {
+	int index = -1;
+	int minValue = 0;
+
+	for (int i = 0; i < matrix->getRows(); i++) {
+		if (!visited[i]) {
+            if (distance[i] <= minValue || index == -1) {
+                minValue = distance[i];
+                index = i;
+            }
+		}
+    }
+	return index;
+}
+
+std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
+    convertMatrix(AdjacencyList);
+
+	// Helper variables for storing previously visited vertices, tentative distances
+	// and remembering which vertices have already been visited
+	std::vector<int> previous;
+	std::vector<int> distance;
+	std::vector<bool> visited;
+
+	// Initialize vectors
+	for (unsigned int i = 0; i<matrix->getRows(); ++i) {
+		distance.push_back(INT_MAX);
+		previous.push_back(-1);
+		visited.push_back(false);
+	}
+	// Distance to itself is 0
+	distance[startVertex] = 0;
+
+	// While there are still some unvisited vertices left
+	while (std::find(visited.begin(), visited.end(), false) != visited.end()) {
+
+        // Among unvisited vertices pick one, whose distance value is the lowest and mark it as visited
+		int u = minDistance(visited, distance);
+		visited[u] = true;
+
+        // For every unvisited neighbor
+		for (int j = 0; j < matrix->getColumns(u); j++) {
+            int v = matrix->getElement(u, j)-1;
+			if (!visited[v]) {
+
+                // If the new distance is shorter than previous shortest distance, update distances vector
+                if(distance[u] != INT_MAX && (distance[u] + getWeight(u+1, v+1) < distance[v])) {
+                    distance[v] = distance[u] + getWeight(u+1, v+1);
+                    previous[v] = u;
+                }
+			}
+		}
+	}
+
+	// Printing distances
+	if (print) {
+		for (unsigned int i = 0; i < matrix->getRows(); ++i)
+			std::cout << "Min. distance to " << i+1 << " is: " << distance[i] << std::endl;
+		std::cout << std::endl;
+	}
+
+  return distance;
+}

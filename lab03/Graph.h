@@ -82,6 +82,10 @@ public:
   // Print weights along with their edges
   void printWeights() const;
 
+  // Functions used for finding shortest distances
+  std::vector<int> Dijkstra(unsigned int startVertex, bool print);
+  int minDistance(std::vector<bool> visited, std::vector<int> distance);
+
 private:
   Matrix* matrix;
   Converter* matrixConverter;
