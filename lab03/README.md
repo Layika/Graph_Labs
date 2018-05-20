@@ -4,11 +4,11 @@ Repository contains solution to tasks listed [here](http://home.agh.edu.pl/~ewac
 <p>
 These are as follows:
 <p>
-  1. Generate a random connected graph. Assign a weight for every edge with a random value of 1 - 10.
-  2. Implement Dijkstra's algorithm to find and print shortest paths from one vertex to every other.
-  3. Generate a matrix of shortest path distances for every vertex-to-vertex pair.
-  4. Find graph's center, where the sum of minimal distances to every other vertex is minimal.
-  5. Generate a minimum spanning tree using either Prim's of Kruskal's algorithm.
+1. Generate a random connected graph. Assign a weight for every edge with a random value of 1 - 10
+2. Implement Dijkstra's algorithm to find and print shortest paths from one vertex to every other
+3. Generate a matrix of shortest path distances for every vertex-to-vertex pair
+4. Find graph's center, where the sum of minimal distances to every other vertex is minimal
+5. Generate a minimum spanning tree using either Prim's of Kruskal's algorithm
 
 
 ## Running the tests
