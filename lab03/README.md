@@ -45,7 +45,7 @@ When performing changes on the graph (such as adding or removing edges) the 'wei
 ```
 yourGraph.updateWeights();
 ```
-This will remove weights for edges that don't exist anymore, and add new weight values for newly added edges.
+This will remove weights for edges that don't exist anymore, and assign 0 for weight values for newly added edges.
 
 Finally, to print weight values along with their corresponding edges, type:
 ```
