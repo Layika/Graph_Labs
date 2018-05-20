@@ -543,9 +543,42 @@ int Graph::getWeight(unsigned int source, unsigned int dest) {
 }
 
 void Graph::setWeight(unsigned int source, unsigned int dest, int weight) {
-    // Check if an edge from source to dest exists. New weight will only be set if such edge exists
+    // Check if an edge from source to dest exists
     for (unsigned int i = 0; i < weights[0].size(); i++) {
-        if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) weights[2][i] = weight;
+        if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) {weights[2][i] = weight; return;}
+    }
+
+    // If such edge isn't registered in 'weights', add a new value
+    weights[0].push_back(source);
+    weights[1].push_back(dest);
+    weights[2].push_back(weight);
+}
+
+void Graph::updateWeights() {
+    convertMatrix(AdjacencyMatrix);
+    unsigned int vertices = matrix->getRows();
+
+    //check every vertex-to-vertex combination
+    for (unsigned int i = 0; i < vertices; i++) {
+        for (unsigned int j = i; j < vertices; j++) {
+            if (matrix->getElement(i, j) == 1) {
+                // Add new weight value if necessary
+                if (getWeight(i+1, j+1) == -1)
+                    setWeight(i+1, j+1, 0);
+            }
+            else {
+                // Remove weight if necessary
+                if (getWeight(i+1, j+1) != -1) {
+                    for (unsigned int k = 0; k < weights[0].size(); k++) {
+                        if((weights[0][k] == i+1 && weights[1][k] == j+1) || (weights[1][k] == i+1 && weights[0][k] == j+1)) {
+                            weights[0].erase(weights[0].begin()+k);
+                            weights[1].erase(weights[1].begin()+k);
+                            weights[2].erase(weights[2].begin()+k);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -609,10 +642,22 @@ std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
 		}
 	}
 
-	// Printing distances
+	// Printing distances and paths
 	if (print) {
-		for (unsigned int i = 0; i < matrix->getRows(); ++i)
-			std::cout << "Min. distance to " << i+1 << " is: " << distance[i] << std::endl;
+		for (unsigned int i = 0; i < matrix->getRows(); ++i) {
+			std::cout << "Min. distance to " << i+1 << " is: " << distance[i] << ". Path: ";;
+			std::vector<int> path;
+			int k = i;
+			path.insert(path.begin(), k);
+			while (previous[k] != -1) {
+                k = previous[k];
+                path.insert(path.begin(), k);
+			}
+			for (unsigned int j = 0; j < path.size(); j++) {
+                std::cout << path[j]+1 << " ";
+			}
+			std::cout << std::endl;
+		}
 		std::cout << std::endl;
 	}
 

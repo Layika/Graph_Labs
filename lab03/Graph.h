@@ -75,14 +75,22 @@ public:
   // Function for generating random weights for each edge
   void generateRandomWeights(int minWeight, int maxWeight);
 
-  // Getter and setter functions for weights
+  // Getter function which returns weight of an edge between source and dest. Returns -1 if such edge isn't registered in the 'weights' vector
   int getWeight(unsigned int source, unsigned int dest);
+
+  // Setter function which assigns a new weight to an edge between source and dest.
+  // If such edge isn't registered in the 'weights' vector, a new value will be added
   void setWeight(unsigned int source, unsigned int dest, int weight);
+
+  // Function which synchronizes 'weights' with the actual graph, deleting weights for edges that don't exist anymore
+  // and adding new weights for unregistered edges with a value of 0
+  void updateWeights();
 
   // Print weights along with their edges
   void printWeights() const;
 
-  // Functions used for finding shortest distances
+  // Functions used for finding shortest distances. Returns a vector of shortest distances to every vertex
+  // If print is true, both shortest paths and distances will be printed
   std::vector<int> Dijkstra(unsigned int startVertex, bool print);
   int minDistance(std::vector<bool> visited, std::vector<int> distance);
 

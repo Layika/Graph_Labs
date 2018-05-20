@@ -11,7 +11,7 @@ int main() {
   do {
     // If the biggest component is as big as the entire graph, then the entire graph is connected
     // So just keep generating random graphs until we find one that is connected
-    connectedGraph.generateRandomNL(7, 10, 12, 17, vertices, edges);
+    connectedGraph.generateRandomNL(7, 10, 2, 7, vertices, edges);
   } while (connectedGraph.biggestComponent().size() < connectedGraph.getVertexCount());
 
   std::cout << "Found a graph with " << vertices << " vertices and " << edges << " edges" << std::endl;
@@ -23,9 +23,10 @@ int main() {
   // Generating random weights
   connectedGraph.generateRandomWeights(1, 10);
   connectedGraph.printWeights();
+  std::cout << std::endl;
 
   // DIJKSTRA
-  std::cout << std::endl << "DIJKSTRA" << std::endl;
+  std::cout << "DIJKSTRA" << std::endl;
   unsigned int startVertex=Graph::intRand(0, connectedGraph.getVertexCount()-1);
   std::cout << "Finding shortest path distances from vertex " << startVertex+1 << " to every other vertex..." <<std::endl;
   connectedGraph.Dijkstra(startVertex, true);
