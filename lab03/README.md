@@ -24,7 +24,7 @@ make run
 #### Weights
 
 Weights are stored in the 'weights' member of the Graph class, including their source and destination vertices. <br />
-To get weight of an edge between vertex A and B, use:
+To get weight of an edge between vertex A and B, type:
 ```
 yourGraph.getWeight(A, B);
 ```
