@@ -62,6 +62,27 @@ std::vector<int> distances = yourGraph.Dijkstra(v+1, true);
 ```
 The 'distances' vector will hold minimum distances to each vertex.
 
+
+#### Minimum spanning tree using Prime's algorithm
+
+In order to find a minimum spanning tree and print it just call a function responsible for it:
+
+```
+connectedGraph.primMST();
+```
+
+This will print a result in a following way:
+
+```
+Edge   Weight
+1 - 2    2 
+2 - 3    3 
+1 - 4    6 
+2 - 5    5 
+```
+
+Remember that first you need to either generate a graph with random weights or add weights using `setWeight(src, dst, weight)` function.
+
 ## Authors
 
 * Mikołaj Skawiński
