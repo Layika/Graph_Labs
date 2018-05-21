@@ -4,12 +4,14 @@
 #include <iterator>
 
 std::vector<unsigned int> Matrix::getDegreeSequence() {
+    std::vector<unsigned int> sequenceCopy;
+
     if (representationType == DegreeSequence) {
-        std::vector<unsigned int> sequenceCopy;
-        for (unsigned int i=i; i<data[0].size(); ++i)
+        for (unsigned int i=0; i<data[0].size(); ++i)
             sequenceCopy.push_back(static_cast<unsigned int>(data[0][i]));
-        return sequenceCopy;
     }
+
+    return sequenceCopy;
 }
 
 void Matrix::saveAdjList(std::string fileName) {
@@ -49,8 +51,8 @@ std::vector<unsigned int> Matrix::findElement(int el) {
   std::vector<unsigned int> v;
   for(unsigned int row = 0; row < getRows(); ++row) {
     auto colIter = std::find(data[row].begin(),data[row].end(), el);
-    int column = std::distance(data[row].begin(), colIter);
-    if (column <  data[row].size()){
+    unsigned int column = std::distance(data[row].begin(), colIter);
+    if (column < data[row].size()){
       v.push_back(row);
       v.push_back(column);
       return v;

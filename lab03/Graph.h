@@ -47,9 +47,9 @@ public:
 
   // Function for finding connected components. Returns a vector which numbers every node according to
   // which component they belong to
-  std::vector<unsigned int> findComponents();
+  std::vector<int> findComponents();
   // Helper function for finding components which performs recursive depth-first search
-  void depthFirstComponent(unsigned int counter, unsigned int node, std::vector<unsigned int>& components);
+  void depthFirstComponent(unsigned int counter, unsigned int node, std::vector<int>& components);
   // Function that returns a vector of nodes belonging to the biggest component
   std::vector<unsigned int> biggestComponent();
 
@@ -95,7 +95,7 @@ public:
 
   // Minimum spanning tree using Prim's algorithm Functions
   void primMST();
-  int printMST(std::vector<int> parent);
+  void printMST(std::vector<int> parent);
   int minKey(std::vector<int> key, std::vector<bool> mstSet, unsigned int rows);
 
 private:

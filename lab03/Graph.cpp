@@ -23,7 +23,7 @@ void Graph::readFile(std::string fileName) {
 
   // Read the file line by line and store each line in line variable
   std::string line;
-  while(getline(dataFile, line)) {
+  while (getline(dataFile, line)) {
     // Change line variable (string) to stream because we need a stream to iterate through it
     std::istringstream lineStream(line);
 
@@ -32,8 +32,8 @@ void Graph::readFile(std::string fileName) {
 
     // Update type symbols in case they need to be changed because we got a different
     // line length etc. We can use it later to determine data type
-    if(rowWidth == -1) rowWidth = newData.back().size();
-    else if(rowWidth != newData.back().size()) rowWidth = -2;
+    if (rowWidth == -1) rowWidth = newData.back().size();
+    else if (rowWidth != (int)newData.back().size()) rowWidth = -2;
 
     ++lines;
   }
@@ -42,7 +42,7 @@ void Graph::readFile(std::string fileName) {
   if (lines == 1) {
       matrix->setRepresentationType(DegreeSequence);
       matrixConverter = new DegreeSequenceConverter;
-  } else if (rowWidth == newData.size()) {
+  } else if (rowWidth == (int)newData.size()) {
       matrix->setRepresentationType(AdjacencyMatrix);
       matrixConverter = new AdjacencyMatrixConverter;
   } else if (rowWidth == -2) {
@@ -179,14 +179,14 @@ bool Graph::isDegreeSequence(std::vector<unsigned int> sequence) {
   }
 }
 
-std::vector<unsigned int> Graph::findComponents() {
+std::vector<int> Graph::findComponents() {
     // Counter value will be different for every component
     unsigned int counter = 0;
     convertMatrix(AdjacencyList);
 
     // Initialize components with -1 for every node
     unsigned int nodes = matrix->getRows();
-    std::vector<unsigned int> components(nodes);
+    std::vector<int> components(nodes);
     std::fill(components.begin(), components.end(), -1);
 
     // For every node
@@ -202,7 +202,7 @@ std::vector<unsigned int> Graph::findComponents() {
     return components;
 }
 
-void Graph::depthFirstComponent(unsigned int counter, unsigned int node, std::vector<unsigned int>& components) {
+void Graph::depthFirstComponent(unsigned int counter, unsigned int node, std::vector<int>& components) {
     unsigned int adjacentNodes = matrix->getColumns(node);
 
     // For every adjacent node
@@ -221,7 +221,7 @@ void Graph::depthFirstComponent(unsigned int counter, unsigned int node, std::ve
 std::vector<unsigned int> Graph::biggestComponent() {
     convertMatrix(AdjacencyList);
     // Find every component and store it in "components"
-    std::vector<unsigned int> components = findComponents();
+    std::vector<int> components = findComponents();
 
     // nodeCount will store the amount of nodes per component
     unsigned int totalNodes = components.size();
@@ -235,7 +235,7 @@ std::vector<unsigned int> Graph::biggestComponent() {
 
     // Find the component with the biggest node count
     unsigned int biggestNodeCount = 0;
-    unsigned int currentBiggestComponent = 0;
+    int currentBiggestComponent = 0;
     for (unsigned int i = 0; i < totalNodes; i++) {
         if (nodeCount[i] > biggestNodeCount) {
             biggestNodeCount = nodeCount[i];
@@ -342,7 +342,7 @@ bool Graph::hamiltonianCycleUtil(std::vector<int>& path, unsigned int pos) {
         //path[pos] = v;
 
         std::cout << "PATH:";
-        for (int i=0; i<path.size(); ++i) std::cout << " " << path[i];
+        for (int i=0; i<(int)path.size(); ++i) std::cout << " " << path[i];
         std::cout << std::endl;
 
         // Recur to construct rest of the path
@@ -362,12 +362,10 @@ bool Graph::hamiltonianCycleUtil(std::vector<int>& path, unsigned int pos) {
 bool Graph::hamiltonianCanAdd(unsigned int vertex, std::vector<int>& path, unsigned int pos) {
 
   // Check if this vertex is an adjacent vertex of the previously added vertex
-  if (matrix->getElement(path[pos-1]-1, vertex) == 0) return false;//numerror
-  //if (matrix->getElement(path[pos-1], vertex) == 0) return false;
+  if (matrix->getElement(path[pos-1]-1, vertex) == 0) return false;
   // Check if the vertex has already been included
   for (unsigned int i=0; i<pos; i++)
-    if (path[i] == vertex+1) return false;//numerror
-    //if (path[i] == vertex) return false;
+    if (path[i] == (int)vertex+1) return false;
 
   return true;
 }
@@ -541,16 +539,20 @@ void Graph::createWeights() {
 
 int Graph::getWeight(unsigned int source, unsigned int dest) {
     // Check if an edge from source to dest exists. If it does - return it's weight. Otherwise return -1
-    for (unsigned int i = 0; i < weights[0].size(); i++) {
-        if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) return weights[2][i];
-    }
+    for (unsigned int i = 0; i < weights[0].size(); i++)
+        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest)
+        || (weights[0][i] == (int)dest && weights[1][i] == (int)source))
+          return weights[2][i];
     return -1;
 }
 
 void Graph::setWeight(unsigned int source, unsigned int dest, int weight) {
     // Check if an edge from source to dest exists
     for (unsigned int i = 0; i < weights[0].size(); i++) {
-        if ((weights[0][i] == source && weights[1][i] == dest) || (weights[0][i] == dest && weights[1][i] == source)) {weights[2][i] = weight; return;}
+        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest) ||
+        (weights[0][i] == (int)dest && weights[1][i] == (int)source)) {
+          weights[2][i] = weight; return;
+        }
     }
 
     // If such edge isn't registered in 'weights', add a new value
@@ -574,8 +576,8 @@ void Graph::updateWeights() {
             else {
                 // Remove weight if necessary
                 if (getWeight(i+1, j+1) != -1) {
-                    for (unsigned int k = 0; k < weights[0].size(); k++) {
-                        if((weights[0][k] == i+1 && weights[1][k] == j+1) || (weights[1][k] == i+1 && weights[0][k] == j+1)) {
+                    for (int k = 0; k < (int)weights[0].size(); k++) {
+                        if((weights[0][k] == (int)i+1 && weights[1][k] == (int)j+1) || (weights[1][k] == (int)i+1 && weights[0][k] == (int)j+1)) {
                             weights[0].erase(weights[0].begin()+k);
                             weights[1].erase(weights[1].begin()+k);
                             weights[2].erase(weights[2].begin()+k);
@@ -634,17 +636,18 @@ std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
 		visited[u] = true;
 
         // For every unvisited neighbor
-		for (int j = 0; j < matrix->getColumns(u); j++) {
-            int v = matrix->getElement(u, j)-1;
-			if (!visited[v]) {
+		for (unsigned int j = 0; j < matrix->getColumns(u); j++) {
 
-                // If the new distance is shorter than previous shortest distance, update distances vector
-                if(distance[u] != std::numeric_limits<int>::max() && (distance[u] + getWeight(u+1, v+1) < distance[v])) {
-                    distance[v] = distance[u] + getWeight(u+1, v+1);
-                    previous[v] = u;
-                }
+      int v = matrix->getElement(u, j)-1;
+			if (!visited[v]) {
+        // If the new distance is shorter than previous shortest distance, update distances vector
+        if (distance[u] != std::numeric_limits<int>::max() && (distance[u] + getWeight(u+1, v+1) < distance[v])) {
+          distance[v] = distance[u] + getWeight(u+1, v+1);
+          previous[v] = u;
+        }
 			}
 		}
+
 	}
 
 	// Printing distances and paths
@@ -681,7 +684,7 @@ void Graph::primMST() {
   std::vector<bool> mstSet(rows);
 
   // Initialize all keys as INFINITE
-  for (int i = 0; i < rows; i++) key[i] = std::numeric_limits<int>::max(), mstSet[i] = false;
+  for (unsigned int i = 0; i < rows; i++) key[i] = std::numeric_limits<int>::max(), mstSet[i] = false;
 
   // Always include first 1st vertex in MST.
   // Make key 0 so that this vertex is picked as first vertex
@@ -699,7 +702,7 @@ void Graph::primMST() {
 
      // Update key value and parent index of the adjacent vertices of the picked vertex.
      // Consider only those vertices which are not yet included in MST
-     for (int v = 0; v < rows; v++) {
+     for (unsigned int v = 0; v < rows; v++) {
        int weight = getWeight(u+1, v+1);
 
         // graph[u][v] is not -1 only for adjacent vertices of m
@@ -729,7 +732,7 @@ int Graph::minKey(std::vector<int> key, std::vector<bool> mstSet, unsigned int r
 }
 
 // A utility function to print the constructed MST stored in parent[]
-int Graph::printMST(std::vector<int> parent) {
+void Graph::printMST(std::vector<int> parent) {
    printf("Edge   Weight\n");
    for (unsigned int i = 1; i < matrix->getRows(); i++)
       printf("%d - %d    %d \n", parent[i]+1, i+1, getWeight(i+1, parent[i]+1));

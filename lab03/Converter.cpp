@@ -167,7 +167,7 @@ bool compareByValue(const degreeNode &a, const degreeNode &b) {
 
 void DegreeSequenceConverter::degreeSeqToAdjList(Matrix* matrix) {
     std::vector<degreeNode> sequence(matrix->getColumns(0));
-    for (int i = 0; i < matrix->getColumns(0); ++i) {
+    for (unsigned int i = 0; i < matrix->getColumns(0); ++i) {
         sequence[i].value = matrix->getElement(0, i);
         sequence[i].order = i;
     }
