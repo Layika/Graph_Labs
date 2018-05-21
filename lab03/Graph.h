@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdlib.h>
+
 #include "Matrix.h"
 #include "Converter.h"
 
@@ -72,20 +73,18 @@ public:
   // Randomizing function
   void randomize();
 
+  // Function creating empty weights matrix
+  void createWeights();
   // Function for generating random weights for each edge
   void generateRandomWeights(int minWeight, int maxWeight);
-
   // Getter function which returns weight of an edge between source and dest. Returns -1 if such edge isn't registered in the 'weights' vector
   int getWeight(unsigned int source, unsigned int dest);
-
   // Setter function which assigns a new weight to an edge between source and dest.
   // If such edge isn't registered in the 'weights' vector, a new value will be added
   void setWeight(unsigned int source, unsigned int dest, int weight);
-
   // Function which synchronizes 'weights' with the actual graph, deleting weights for edges that don't exist anymore
   // and adding new weights for unregistered edges with a value of 0
   void updateWeights();
-
   // Print weights along with their edges
   void printWeights() const;
 
@@ -93,6 +92,11 @@ public:
   // If print is true, both shortest paths and distances will be printed
   std::vector<int> Dijkstra(unsigned int startVertex, bool print);
   int minDistance(std::vector<bool> visited, std::vector<int> distance);
+
+  // Minimum spanning tree using Prim's algorithm Functions
+  void primMST();
+  int printMST(std::vector<int> parent);
+  int minKey(std::vector<int> key, std::vector<bool> mstSet, unsigned int rows);
 
 private:
   Matrix* matrix;

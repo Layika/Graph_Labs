@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iterator>
+#include <cstdint>
 
 
 void Graph::readFile(std::string fileName) {
@@ -516,9 +517,7 @@ void Graph::printDegrees() {
 void Graph::generateRandomWeights(int minWeight, int maxWeight) {
     convertMatrix(AdjacencyMatrix);
 
-    // weights[0] and weights[1] are source and dest. vertices for each edge
-    // weights[2] contains the actual weights
-    weights = std::vector<std::vector<int>>(3, std::vector<int>(0));
+    createWeights();
 
     // Scan the entire adjacency matrix
     for (unsigned int i = 0; i < matrix->getRows(); i++) {
@@ -532,6 +531,12 @@ void Graph::generateRandomWeights(int minWeight, int maxWeight) {
             }
         }
     }
+}
+
+void Graph::createWeights() {
+  // weights[0] and weights[1] are source and dest. vertices for each edge
+  // weights[2] contains the actual weights
+  weights = std::vector<std::vector<int>>(3, std::vector<int>(0));
 }
 
 int Graph::getWeight(unsigned int source, unsigned int dest) {
@@ -592,7 +597,7 @@ int Graph::minDistance(std::vector<bool> visited, std::vector<int> distance) {
 	int index = -1;
 	int minValue = 0;
 
-	for (int i = 0; i < matrix->getRows(); i++) {
+	for (unsigned int i = 0; i < matrix->getRows(); i++) {
 		if (!visited[i]) {
             if (distance[i] <= minValue || index == -1) {
                 minValue = distance[i];
@@ -614,7 +619,7 @@ std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
 
 	// Initialize vectors
 	for (unsigned int i = 0; i<matrix->getRows(); ++i) {
-		distance.push_back(INT_MAX);
+		distance.push_back(std::numeric_limits<int>::max());
 		previous.push_back(-1);
 		visited.push_back(false);
 	}
@@ -634,7 +639,7 @@ std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
 			if (!visited[v]) {
 
                 // If the new distance is shorter than previous shortest distance, update distances vector
-                if(distance[u] != INT_MAX && (distance[u] + getWeight(u+1, v+1) < distance[v])) {
+                if(distance[u] != std::numeric_limits<int>::max() && (distance[u] + getWeight(u+1, v+1) < distance[v])) {
                     distance[v] = distance[u] + getWeight(u+1, v+1);
                     previous[v] = u;
                 }
@@ -662,4 +667,70 @@ std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
 	}
 
   return distance;
+}
+
+
+void Graph::primMST() {
+  unsigned int rows = matrix->getRows();
+
+  // Array to store constructed MST
+  std::vector<int> parent(rows);
+  // Key values used to pick minimum weight edge in cut
+  std::vector<int> key(rows);
+  // To represent set of vertices not yet included in MST
+  std::vector<bool> mstSet(rows);
+
+  // Initialize all keys as INFINITE
+  for (int i = 0; i < rows; i++) key[i] = std::numeric_limits<int>::max(), mstSet[i] = false;
+
+  // Always include first 1st vertex in MST.
+  // Make key 0 so that this vertex is picked as first vertex
+  key[0] = 1;
+  // First node is always root of MST
+  parent[0] = -1;
+
+  // The MST will have 'rows' vertices
+  for (unsigned int count = 0; count < rows-1; count++) {
+     // Pick the minimum key vertex from the set of vertices not yet included in MST
+     int u = minKey(key, mstSet, rows);
+
+     // Add the picked vertex to the MST Set
+     mstSet[u] = true;
+
+     // Update key value and parent index of the adjacent vertices of the picked vertex.
+     // Consider only those vertices which are not yet included in MST
+     for (int v = 0; v < rows; v++) {
+       int weight = getWeight(u+1, v+1);
+
+        // graph[u][v] is not -1 only for adjacent vertices of m
+        // mstSet[v] is false for vertices not yet included in MST
+        // Update the key only if graph[u][v] is smaller than key[v]
+
+       if (weight != -1 && mstSet[v] == false && weight < key[v]) parent[v] = u, key[v] = weight;
+      }
+  }
+
+  // Print the constructed MST
+  printMST(parent);
+}
+
+
+// A utility function to find the vertex with minimum key value, from
+// the set of vertices not yet included in MST
+int Graph::minKey(std::vector<int> key, std::vector<bool> mstSet, unsigned int rows) {
+   // Initialize min value
+   int min = std::numeric_limits<int>::max(), min_index;
+
+   for (unsigned int v = 0; v < rows; v++)
+     if (mstSet[v] == false && key[v] < min)
+         min = key[v], min_index = v;
+
+   return min_index;
+}
+
+// A utility function to print the constructed MST stored in parent[]
+int Graph::printMST(std::vector<int> parent) {
+   printf("Edge   Weight\n");
+   for (unsigned int i = 1; i < matrix->getRows(); i++)
+      printf("%d - %d    %d \n", parent[i]+1, i+1, getWeight(i+1, parent[i]+1));
 }

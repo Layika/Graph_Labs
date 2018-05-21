@@ -177,7 +177,7 @@ void DegreeSequenceConverter::degreeSeqToAdjList(Matrix* matrix) {
 
    while (sequence[0].value != 0) {
        int d = sequence[0].value;
-       for (int i = 1; i < d; ++i) {
+       for (int i = 1; i < d + 1; ++i) {
            newData[sequence[i].order].push_back(sequence[0].order + 1);
            newData[sequence[0].order].push_back(sequence[i].order + 1);
            sequence[i].value = sequence[i].value - 1;

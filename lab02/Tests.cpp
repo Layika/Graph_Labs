@@ -66,11 +66,11 @@ int main() {
   std::cout << "Adjacency list of this graph:" << std::endl;
   eulerianGraph.print();
 
-  std::cout << "Looking for eulerian cycle:" << std::endl;
+  /*std::cout << "Looking for eulerian cycle:" << std::endl;
   int res = eulerianGraph.isEulerianCycle();
   if (res == 0) std::cout << "Graph is not Eulerian\n";
   else if (res == 1) std::cout << "Graph has a Euler path\n";
-  else std::cout << "Graph has a Euler cycle\n";
+  else std::cout << "Graph has a Euler cycle\n";*/
 
   sequenceLen = 5;
   sequence = Graph::makeRandomDegreeSequence(sequenceLen);
@@ -129,7 +129,7 @@ int main() {
 
   unsigned int minVertices = 6;
   unsigned int maxVertices = 6;
-  unsigned int neighbours = 2;
+  unsigned int neighbours = 4;
   regularGraph.generateRandomRegular(minVertices, maxVertices, neighbours);
   std::cout << "Adjacency list of a generated graph:" << std::endl;
   regularGraph.print();

@@ -5,6 +5,8 @@
 int main() {
   srand(time(NULL));
 
+  // RANDOM CONNECTED Graph
+  std::cout << "RANDOM CONNECTED GRAPH" << std::endl;
   std::cout << "Generating random connected graph..." << std::endl;
   Graph connectedGraph(Undirected);
   int vertices, edges;
@@ -30,4 +32,33 @@ int main() {
   unsigned int startVertex=Graph::intRand(0, connectedGraph.getVertexCount()-1);
   std::cout << "Finding shortest path distances from vertex " << startVertex+1 << " to every other vertex..." <<std::endl;
   connectedGraph.Dijkstra(startVertex, true);
+
+
+  // MINIMUM SPANNING TREE
+  std::cout << "MINIMUM SPANNING TREE" << std::endl;
+  connectedGraph.primMST();
+  
+  std::cout << "\n\nTest graph:" << std::endl;
+  Graph testGraph(Undirected);
+  testGraph.readFile("sample_input_data/mst.txt");
+  testGraph.createWeights();
+
+  // Set weights in a graph
+  /*
+              2    3
+          (0)--(1)--(2)
+           |   / \   |
+          6| 8/   \5 |7
+           | /     \ |
+          (3)-------(4)
+                9              */
+  testGraph.setWeight(1, 2, 2);
+  testGraph.setWeight(1, 4, 6);
+  testGraph.setWeight(2, 3, 3);
+  testGraph.setWeight(2, 4, 8);
+  testGraph.setWeight(2, 5, 5);
+  testGraph.setWeight(3, 5, 7);
+  testGraph.setWeight(4, 5, 9);
+
+  testGraph.primMST();
 }
