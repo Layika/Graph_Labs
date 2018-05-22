@@ -38,7 +38,19 @@ int minProbability = 5;
 int maxProbability = 10;
 
 int chosenVertices, chosenPprobability;
-directedRandomGraph.generateRandomNP(minVertices, maxVertices, minProbability, maxProbability, chosenVertices, chosenPprobability);
+directedRandomGraph.generateRandomNP(minVertices, maxVertices, minProbability, maxProbability, chosenVertices, chosenProbability);
+```
+
+In order to display this graph first save it:
+
+```
+ directedRandomGraph.saveGraph("directedRandomGraph.txt");
+```
+
+And then check `GraphPaint.py` script to check if it has `arrows=True`. If this variable is set to `False` then change it. Then run this script as follows:
+
+```
+python3 GraphPaint.py directedRandomGraph.txt
 ```
 
 
