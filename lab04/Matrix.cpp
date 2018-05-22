@@ -90,3 +90,27 @@ void Matrix::createEmptyAdjacencyMat(unsigned int vertices) {
 
   saveData(emptyMatrix);
 }
+
+void Matrix::transpose() {
+  unsigned int rows = getRows();
+
+  for (unsigned int row=0; row<rows; ++row) {
+    for (unsigned int col=0; col<rows; ++col) {
+      if (data[row][col] == 1) {
+        data[row][col] = 0;
+        data[col][row] = 1;
+      }
+    }
+  }
+}
+
+std::vector<unsigned int> Matrix::getNeighbours(unsigned int vertex) {
+  std::vector<unsigned int> neighbours;
+
+  for (unsigned int i=0; i<vertex; ++i) {
+    if (getElement(vertex, i) == 1)
+      neighbours.push_back(i);
+    }
+
+  return neighbours;
+}

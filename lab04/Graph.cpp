@@ -793,3 +793,89 @@ void Graph::printMST(std::vector<int> parent) {
    for (unsigned int i = 1; i < matrix->getRows(); i++)
       printf("%d - %d    %d \n", parent[i]+1, i+1, getWeight(i+1, parent[i]+1));
 }
+
+std::vector<int> Graph::Kosaraju() {
+  // Prepare vector for components
+  unsigned int rows = matrix->getRows();
+  std::vector<int> components(rows);
+  std::fill(components.begin(), components.end(), -1);
+
+  // If graph is undirected then return vector with -1 as members
+  // There can't be -1 vertex
+  if (matrix->getGraphType() == Undirected) return components;
+
+  // Convert matrix to adjacency matrix
+  convertMatrix(AdjacencyMatrix);
+
+  // Time within vertex was visited
+  std::vector<int> timeVisited(rows);
+  // Time within vertex was processed
+  std::vector<int> timeProcessed(rows);
+  // -1 means it was not visited
+  std::fill(timeVisited.begin(), timeVisited.end(), -1);
+  std::fill(timeProcessed.begin(), timeProcessed.end(), -1);
+
+  unsigned int times = 0;
+  for (unsigned int i=0; i<rows; ++i) {
+    if (timeVisited[i] == -1)
+     visitDFS(i, timeVisited, timeProcessed, times);
+  }
+
+  Graph transposed = transpose();
+
+  unsigned int componentNumber = 0;
+
+  // Sort timeProcessed in dscending order
+  std::sort(timeProcessed.rbegin(), timeProcessed.rend());
+
+  for (unsigned int v=0; v<timeProcessed.size(); ++v) {
+    if (components[v] == -1) {
+      ++componentNumber;
+      components[v] = componentNumber;
+      transposed.addComponents(componentNumber, v, components);
+    }
+  }
+  return components;
+}
+
+Graph Graph::transpose() {
+  Graph transposed(Directed);
+  transposed.matrix->saveData(matrix->getMatrix());
+
+  if (matrix->getGraphType() == Directed) {
+    transposed.convertMatrix(AdjacencyMatrix);
+    transposed.matrix->transpose();
+  }
+  return transposed;
+}
+
+std::vector<unsigned int> Graph::getNeighbours(unsigned int vertex) {
+  convertMatrix(AdjacencyMatrix);
+  return matrix->getNeighbours(vertex);
+}
+
+void Graph::visitDFS(unsigned int vertex, std::vector<int> timeVisited, std::vector<int> timeProcessed, unsigned int times) {
+  times++;
+  timeVisited[vertex] = times;
+
+  std::vector<unsigned int> neighbours = getNeighbours(vertex);
+
+  for (unsigned int i=0; i<neighbours.size(); ++i) {
+    if (timeVisited[i] == -1)
+      visitDFS(i, timeVisited, timeProcessed, times);
+  }
+
+  times++;
+  timeProcessed[vertex] = times;
+}
+
+void Graph::addComponents(unsigned int componentNumber, unsigned int vertex, std::vector<int> components) {
+  std::vector<unsigned int> neighbours = getNeighbours(vertex);
+
+  for (unsigned int v=0; v<neighbours.size(); ++v) {
+    if (components[v] == -1) {
+      components[v] = componentNumber;
+      addComponents(componentNumber, v, components);
+    }
+  }
+}

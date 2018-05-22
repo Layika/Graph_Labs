@@ -31,6 +31,8 @@ public:
   // TODO: segfault
   std::vector<unsigned int> getDegreeSequence();
   std::vector<std::vector<int>> getMatrix() { return data; }
+  // Function for getting a vector of neighbours of vertex
+  std::vector<unsigned int> getNeighbours(unsigned int vertex);
 
   // Setters for matrix
   void saveData(std::vector<std::vector<int>> newData) { data.clear(); data = newData; }
@@ -51,6 +53,9 @@ public:
 
   // Function creating an empty adjacency matrix
   void createEmptyAdjacencyMat(unsigned int vertices);
+
+  // Function for transposing a graph
+  void transpose();
 
   // Debug printing function for matrices
   void print() const;

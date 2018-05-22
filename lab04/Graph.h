@@ -101,6 +101,13 @@ public:
   void printMST(std::vector<int> parent);
   int minKey(std::vector<int> key, std::vector<bool> mstSet, unsigned int rows);
 
+  // Strongly connected components, Kosaraju
+  std::vector<int> Kosaraju();
+  void visitDFS(unsigned int vertex, std::vector<int> timeVisited, std::vector<int> timeProcessed, unsigned int times);
+  Graph transpose();
+  std::vector<unsigned int> getNeighbours(unsigned int vertex);
+  void addComponents(unsigned int componentNumber, unsigned int vertex, std::vector<int> components);
+
 private:
   Matrix* matrix;
   Converter* matrixConverter;
