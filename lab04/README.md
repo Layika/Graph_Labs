@@ -21,67 +21,26 @@ make run
 
 ### Description
 
-#### Weights
+#### Randon directed graph G(n,p)
 
-Weights are stored in the 'weights' member of the Graph class, including their source and destination vertices. <br />
-To get weight of an edge between vertex A and B, type:
-```
-yourGraph.getWeight(A, B);
-```
-If such edge is not registered in 'weights' vector, -1 will be returned;
-
-To set a new weight value for an edge between vertex A and B, use:
+To create a directed graph simply type:
 
 ```
-yourGraph.setWeight(A, B, weight);
-```
-If such edge is not registered in 'weights' vector, a new value will be added.
-
-To generate random weight values from x to y for every edge, use:
-```
-yourGraph.generateRandomWeights(x, y);
-```
-When performing changes on the graph (such as adding or removing edges) the 'weights' might become desynchronized with the actual graph. To fix it, simply use:
-```
-yourGraph.updateWeights();
-```
-This will remove weights for edges that don't exist anymore, and assign 0 for weight values for newly added edges.
-
-Finally, to print weight values along with their corresponding edges, type:
-```
-yourGraph.printWeights();
+Graph directedRandomGraph(Directed);
 ```
 
-
-#### Shortest paths
-
-To find and print shortest paths from vertex v to every other vertex, use:
+Then you can make a random G(n,p) graph out of it. Create also variables for holding vertices number and probability as the function creating G(n,p) graph saves there random numbers it chose. You can also give it minumim and maximum number of vertices as well as probability.
 
 ```
-std::vector<int> distances = yourGraph.Dijkstra(v+1, true);
-```
-The 'distances' vector will hold minimum distances to each vertex.
+int minVertices = 6;
+int maxVertices = 10;
+int minProbability = 5;
+int maxProbability = 10;
 
-
-#### Minimum spanning tree using Prime's algorithm
-
-In order to find a minimum spanning tree and print it just call a function responsible for it:
-
-```
-connectedGraph.primMST();
+int chosenVertices, chosenPprobability;
+directedRandomGraph.generateRandomNP(minVertices, maxVertices, minProbability, maxProbability, chosenVertices, chosenPprobability);
 ```
 
-This will print a result in a following way:
-
-```
-Edge   Weight
-1 - 2    2 
-2 - 3    3 
-1 - 4    6 
-2 - 5    5 
-```
-
-Remember that first you need to either generate a graph with random weights or add weights using `setWeight(src, dst, weight)` function.
 
 ## Authors
 
