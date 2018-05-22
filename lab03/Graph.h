@@ -93,6 +93,9 @@ public:
   std::vector<int> Dijkstra(unsigned int startVertex, bool print);
   int minDistance(std::vector<bool> visited, std::vector<int> distance);
 
+  //Distance matrix, center of the graph and minimax center of the graph
+  void min_distances();
+
   // Minimum spanning tree using Prim's algorithm Functions
   void primMST();
   void printMST(std::vector<int> parent);

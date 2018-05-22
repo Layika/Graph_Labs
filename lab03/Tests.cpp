@@ -33,11 +33,15 @@ int main() {
   std::cout << "Finding shortest path distances from vertex " << startVertex+1 << " to every other vertex..." <<std::endl;
   connectedGraph.Dijkstra(startVertex, true);
 
+  //DISTANCE MATRIX, CENTER AND MINIMAX CENTER OF THE GRAPH
+  std::cout << "DISTANCE MATRIX, CENTER AND MINIMAX CENTER OF THE GRAPH" << std::endl;
+  connectedGraph.min_distances();
+  std::cout << std::endl;
 
   // MINIMUM SPANNING TREE
   std::cout << "MINIMUM SPANNING TREE" << std::endl;
   connectedGraph.primMST();
-  
+
   std::cout << "\n\nTest graph:" << std::endl;
   Graph testGraph(Undirected);
   testGraph.readFile("sample_input_data/mst.txt");

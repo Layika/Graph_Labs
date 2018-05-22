@@ -672,6 +672,71 @@ std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
   return distance;
 }
 
+void Graph::min_distances()
+{
+  //temporary vector to store shortest path for each verticle
+  std::vector<int>tmp;
+  //helper variables
+	int minimax_index, minimax, center_sum=INT_MAX, center_index, sum=0, min=INT_MAX;
+  //array to store distance matrix
+	int distance_matrix[matrix->getRows()][matrix->getRows()];
+
+  //shortest path for each verticle using Dijkstra algorithm
+	for(unsigned int i=0;i<matrix->getRows();++i)
+	{
+		tmp=Dijkstra(i, false);
+		for(unsigned int j=0;j<matrix->getRows();++j)
+		{
+			distance_matrix[i][j]=tmp[j];
+		}
+	}
+
+	for(unsigned int i=0;i<matrix->getRows();++i)
+	{
+		std::cout << i+1 << ":  ";
+		minimax=distance_matrix[i][0];
+		for(unsigned int j=0;j<matrix->getRows();++j)
+		{
+      //counting weight sum for i verticle
+			sum+=distance_matrix[i][j];
+      // update minimax center of the graph
+			if(minimax<distance_matrix[i][j])
+			{
+				minimax=distance_matrix[i][j];
+			}
+
+      // Printing matrix
+      if(distance_matrix[i][j]<10)
+      //just for the aesthetics of printing
+      std::cout << " "<< distance_matrix[i][j] << "  ";
+      else
+			std::cout << distance_matrix[i][j] << "  ";
+
+		}
+    // update minimax center of the graph
+		if(minimax<min)
+		{
+			min=minimax;
+			minimax_index=i;
+		}
+    // update center of the graph
+		if(sum<center_sum)
+		{
+			center_sum=sum;
+			center_index=i;
+		}
+    // printing weight sum
+		std::cout << "Weight sum: " << sum;
+    //resetting sum
+		sum=0;
+		std::cout << std::endl;
+	}
+  // printing center of the graph and minimax center of the graph
+  std::cout << std::endl;
+  //"+1" because numbering of vertices is from 1
+	std::cout << "The center of the graph is in " << center_index +1<< std::endl;
+	std::cout << "The minimax center of the graph is in "<< minimax_index +1<< std::endl;
+}
 
 void Graph::primMST() {
   unsigned int rows = matrix->getRows();
