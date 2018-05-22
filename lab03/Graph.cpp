@@ -577,7 +577,7 @@ void Graph::updateWeights() {
                 // Remove weight if necessary
                 if (getWeight(i+1, j+1) != -1) {
                     for (int k = 0; k < (int)weights[0].size(); k++) {
-                        if((weights[0][k] == (int)i+1 && weights[1][k] == (int)j+1) || (weights[1][k] == (int)i+1 && weights[0][k] == (int)j+1)) {
+                        if ((weights[0][k] == (int)i+1 && weights[1][k] == (int)j+1) || (weights[1][k] == (int)i+1 && weights[0][k] == (int)j+1)) {
                             weights[0].erase(weights[0].begin()+k);
                             weights[1].erase(weights[1].begin()+k);
                             weights[2].erase(weights[2].begin()+k);
@@ -601,12 +601,12 @@ int Graph::minDistance(std::vector<bool> visited, std::vector<int> distance) {
 
 	for (unsigned int i = 0; i < matrix->getRows(); i++) {
 		if (!visited[i]) {
-            if (distance[i] <= minValue || index == -1) {
-                minValue = distance[i];
-                index = i;
-            }
+      if (distance[i] <= minValue || index == -1) {
+        minValue = distance[i];
+        index = i;
+      }
 		}
-    }
+  }
 	return index;
 }
 
@@ -672,41 +672,34 @@ std::vector<int> Graph::Dijkstra(unsigned int startVertex, bool print) {
   return distance;
 }
 
-void Graph::min_distances()
-{
+void Graph::minDistances() {
   //temporary vector to store shortest path for each verticle
   std::vector<int>tmp;
   //helper variables
-	int minimax_index, minimax, center_sum=INT_MAX, center_index, sum=0, min=INT_MAX;
+	int minimaxIndex, minimax, centerSum=std::numeric_limits<int>::max(), centerIndex, sum=0, min=std::numeric_limits<int>::max();
   //array to store distance matrix
 	int distance_matrix[matrix->getRows()][matrix->getRows()];
 
   //shortest path for each verticle using Dijkstra algorithm
-	for(unsigned int i=0;i<matrix->getRows();++i)
-	{
+	for (unsigned int i=0;i<matrix->getRows();++i) {
 		tmp=Dijkstra(i, false);
 		for(unsigned int j=0;j<matrix->getRows();++j)
-		{
 			distance_matrix[i][j]=tmp[j];
-		}
 	}
 
-	for(unsigned int i=0;i<matrix->getRows();++i)
-	{
+	for (unsigned int i=0;i<matrix->getRows();++i) {
 		std::cout << i+1 << ":  ";
 		minimax=distance_matrix[i][0];
-		for(unsigned int j=0;j<matrix->getRows();++j)
-		{
+		for (unsigned int j=0;j<matrix->getRows();++j) {
       //counting weight sum for i verticle
 			sum+=distance_matrix[i][j];
       // update minimax center of the graph
-			if(minimax<distance_matrix[i][j])
-			{
+			if (minimax<distance_matrix[i][j])
 				minimax=distance_matrix[i][j];
-			}
+
 
       // Printing matrix
-      if(distance_matrix[i][j]<10)
+      if (distance_matrix[i][j]<10)
       //just for the aesthetics of printing
       std::cout << " "<< distance_matrix[i][j] << "  ";
       else
@@ -714,16 +707,14 @@ void Graph::min_distances()
 
 		}
     // update minimax center of the graph
-		if(minimax<min)
-		{
+		if (minimax<min) {
 			min=minimax;
-			minimax_index=i;
+			minimaxIndex=i;
 		}
     // update center of the graph
-		if(sum<center_sum)
-		{
-			center_sum=sum;
-			center_index=i;
+		if (sum<centerSum) {
+			centerSum=sum;
+			centerIndex=i;
 		}
     // printing weight sum
 		std::cout << "Weight sum: " << sum;
@@ -734,8 +725,8 @@ void Graph::min_distances()
   // printing center of the graph and minimax center of the graph
   std::cout << std::endl;
   //"+1" because numbering of vertices is from 1
-	std::cout << "The center of the graph is in " << center_index +1<< std::endl;
-	std::cout << "The minimax center of the graph is in "<< minimax_index +1<< std::endl;
+	std::cout << "The center of the graph is in " << centerIndex +1<< std::endl;
+	std::cout << "The minimax center of the graph is in "<< minimaxIndex +1<< std::endl;
 }
 
 void Graph::primMST() {

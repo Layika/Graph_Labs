@@ -35,7 +35,7 @@ int main() {
 
   //DISTANCE MATRIX, CENTER AND MINIMAX CENTER OF THE GRAPH
   std::cout << "DISTANCE MATRIX, CENTER AND MINIMAX CENTER OF THE GRAPH" << std::endl;
-  connectedGraph.min_distances();
+  connectedGraph.minDistances();
   std::cout << std::endl;
 
   // MINIMUM SPANNING TREE
