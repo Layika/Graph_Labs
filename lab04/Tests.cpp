@@ -9,9 +9,16 @@ int main() {
   std::cout << "DIRECTED GRAPHS" << std::endl;
   Graph directedRandomGraph(Directed);
 
-  int vertices, probability;
-  directedRandomGraph.generateRandomNP(6, 10, 5, 10, vertices, probability);
-  std::cout << "Vertices: " << vertices << ", probability: " << probability << "%" << std::endl << std::endl;
+  int minVertices = 6;
+  int maxVertices = 10;
+  int minProbability = 5;
+  int maxProbability = 10;
+
+  int chosenVertices, chosenPprobability;
+  directedRandomGraph.generateRandomNP(minVertices, maxVertices, minProbability, maxProbability, chosenVertices, chosenProbability);
+
+  std::cout << "Vertices: " << chosenVertices << ", probability: " << chosenProbability << "%" << std::endl << std::endl;
+  
   directedRandomGraph.print();
   std::cout << "\nSaving graph to directedRandomGraph.txt" << std::endl;
   directedRandomGraph.saveGraph("directedRandomGraph.txt");
