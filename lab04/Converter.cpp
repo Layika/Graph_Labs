@@ -23,7 +23,7 @@ void AdjacencyListConverter::adjListToAdjMat(Matrix *matrix) {
   }
 
   matrix->saveData(newData);
-  matrix->setRepresentationType(AdjacencyList);
+  matrix->setRepresentationType(AdjacencyMatrix);
 }
 
 

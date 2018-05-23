@@ -28,7 +28,13 @@ public:
   void convertMatrix(RepresentationType to);
 
   // Wrapper functions for handling saving graph to file in adjacency list and debug print
-  void saveGraph(std::string fileName) { convertMatrix(AdjacencyList); matrix->saveAdjList(fileName); }
+  void saveGraph(std::string fileName) {
+    RepresentationType previousType = matrix->getRepresentationType();
+    convertMatrix(AdjacencyList);
+    matrix->saveAdjList(fileName);
+    convertMatrix(previousType);
+
+  }
   void print() const { matrix->print(); }
   void printDegrees();
 
@@ -107,6 +113,7 @@ public:
   Graph transpose();
   std::vector<unsigned int> getNeighbours(unsigned int vertex);
   void addComponents(unsigned int componentNumber, unsigned int vertex, std::vector<int> components);
+  void setConverter(Converter* conv) { matrixConverter = conv; }
 
 private:
   Matrix* matrix;

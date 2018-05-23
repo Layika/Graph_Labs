@@ -63,6 +63,7 @@ void Graph::readFile(std::string fileName) {
 // Wrapper function converting any type to the type we want
 // It handles calling the right function (see private functions)
 void Graph::convertMatrix(RepresentationType to) {
+    if(matrix->getRepresentationType() == to) return;
     matrixConverter->convertRepresentation(matrix, to);
     delete matrixConverter;
     setConverter(to);
@@ -841,6 +842,9 @@ std::vector<int> Graph::Kosaraju() {
 Graph Graph::transpose() {
   Graph transposed(Directed);
   transposed.matrix->saveData(matrix->getMatrix());
+  transposed.matrix->setRepresentationType(matrix->getRepresentationType());
+  transposed.setConverter(matrixConverter);
+
 
   if (matrix->getGraphType() == Directed) {
     transposed.convertMatrix(AdjacencyMatrix);
