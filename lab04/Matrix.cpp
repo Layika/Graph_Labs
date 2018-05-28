@@ -96,7 +96,7 @@ void Matrix::transpose() {
 
   for (unsigned int row=0; row<rows; ++row) {
     for (unsigned int col=0; col<rows; ++col) {
-      if (data[row][col] == 1) {
+      if (data[row][col] == 1 && data[col][row] == 0) {
         data[row][col] = 0;
         data[col][row] = 1;
       }
@@ -107,7 +107,7 @@ void Matrix::transpose() {
 std::vector<unsigned int> Matrix::getNeighbours(unsigned int vertex) {
   std::vector<unsigned int> neighbours;
 
-  for (unsigned int i=0; i<vertex; ++i) {
+  for (unsigned int i=0; i<getRows(); ++i) {
     if (getElement(vertex, i) == 1)
       neighbours.push_back(i);
     }

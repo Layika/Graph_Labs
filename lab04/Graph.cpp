@@ -520,7 +520,7 @@ void Graph::generateRandomWeights(int minWeight, int maxWeight) {
 
     // Scan the entire adjacency matrix
     for (unsigned int i = 0; i < matrix->getRows(); i++) {
-        for (unsigned int j = i+1; j < matrix->getColumns(i); j++) {
+        for (unsigned int j =0; j < matrix->getColumns(i); j++) {
             if (matrix->getElement(i, j) == 1) {
                 // Add source and dest of edge between i-th and j-th vertex
                 weights[0].push_back(i+1);
@@ -541,8 +541,7 @@ void Graph::createWeights() {
 int Graph::getWeight(unsigned int source, unsigned int dest) {
     // Check if an edge from source to dest exists. If it does - return it's weight. Otherwise return -1
     for (unsigned int i = 0; i < weights[0].size(); i++)
-        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest)
-        || (weights[0][i] == (int)dest && weights[1][i] == (int)source))
+        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest))
           return weights[2][i];
     return -1;
 }
@@ -550,8 +549,7 @@ int Graph::getWeight(unsigned int source, unsigned int dest) {
 void Graph::setWeight(unsigned int source, unsigned int dest, int weight) {
     // Check if an edge from source to dest exists
     for (unsigned int i = 0; i < weights[0].size(); i++) {
-        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest) ||
-        (weights[0][i] == (int)dest && weights[1][i] == (int)source)) {
+        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest)) {
           weights[2][i] = weight; return;
         }
     }
@@ -815,7 +813,6 @@ std::vector<int> Graph::Kosaraju() {
   // -1 means it was not visited
   std::fill(timeVisited.begin(), timeVisited.end(), -1);
   std::fill(timeProcessed.begin(), timeProcessed.end(), -1);
-
   unsigned int times = 0;
   for (unsigned int i=0; i<rows; ++i) {
     if (timeVisited[i] == -1)
@@ -826,7 +823,7 @@ std::vector<int> Graph::Kosaraju() {
 
   unsigned int componentNumber = 0;
 
-  // Sort timeProcessed in dscending order
+  // Sort timeProcessed in descending order
   std::sort(timeProcessed.rbegin(), timeProcessed.rend());
 
   for (unsigned int v=0; v<timeProcessed.size(); ++v) {
@@ -858,22 +855,21 @@ std::vector<unsigned int> Graph::getNeighbours(unsigned int vertex) {
   return matrix->getNeighbours(vertex);
 }
 
-void Graph::visitDFS(unsigned int vertex, std::vector<int> timeVisited, std::vector<int> timeProcessed, unsigned int times) {
+void Graph::visitDFS(unsigned int vertex, std::vector<int>& timeVisited, std::vector<int>& timeProcessed, unsigned int& times) {
   times++;
   timeVisited[vertex] = times;
 
   std::vector<unsigned int> neighbours = getNeighbours(vertex);
 
   for (unsigned int i=0; i<neighbours.size(); ++i) {
-    if (timeVisited[i] == -1)
-      visitDFS(i, timeVisited, timeProcessed, times);
+    if (timeVisited[neighbours[i]] == -1)
+      visitDFS(neighbours[i], timeVisited, timeProcessed, times);
   }
-
   times++;
   timeProcessed[vertex] = times;
 }
 
-void Graph::addComponents(unsigned int componentNumber, unsigned int vertex, std::vector<int> components) {
+void Graph::addComponents(unsigned int& componentNumber, unsigned int vertex, std::vector<int>& components) {
   std::vector<unsigned int> neighbours = getNeighbours(vertex);
 
   for (unsigned int v=0; v<neighbours.size(); ++v) {
@@ -882,4 +878,60 @@ void Graph::addComponents(unsigned int componentNumber, unsigned int vertex, std
       addComponents(componentNumber, v, components);
     }
   }
+}
+
+
+
+void Graph::BellmanFord(int startVertex) {
+
+	int distance[matrix->getRows()];
+  std::vector<int> previous;
+
+	for (unsigned int i = 0; i<matrix->getRows(); i++) {
+		distance[i]=(std::numeric_limits<int>::max()/2);
+    previous.push_back(-1);
+	}
+	distance[startVertex] = 0;
+
+for(unsigned int i=1; i< matrix->getRows();++i){
+  for(unsigned int j=0; j<weights[0].size();++j){
+    int u=weights[0][j]-1;
+    int v=weights[1][j]-1;
+    int weight=weights[2][j];
+    if((distance[u] + weight < distance[v])) {
+      distance[v] = distance[u] + weight;
+      previous[v] = u;
+    }
+  }
+}
+
+  for (unsigned int i = 0; i < weights[0].size(); i++){
+    int u=weights[0][i]-1;
+    int v=weights[1][i]-1;
+    int weight=weights[2][i];
+    if((distance[u] + weight < distance[v])) {
+      distance[v] = distance[u] + weight;
+      std::cout<<"Graph contains negative weight cycle"<<std::endl;
+      exit(0);
+  }
+}
+
+
+		for (unsigned int i = 0; i < matrix->getRows(); ++i) {
+			std::cout << "Min. distance to " << i+1 << " is: " << distance[i] << ". Path: ";;
+			std::vector<int> path;
+			int k = i;
+			path.insert(path.begin(), k);
+			while (previous[k] != -1) {
+                k = previous[k];
+                path.insert(path.begin(), k);
+			}
+			for (unsigned int j = 0; j < path.size(); j++) {
+                std::cout << path[j]+1 << " ";
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+
+
 }
