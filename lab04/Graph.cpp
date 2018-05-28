@@ -873,9 +873,9 @@ void Graph::addComponents(unsigned int& componentNumber, unsigned int vertex, st
   std::vector<unsigned int> neighbours = getNeighbours(vertex);
 
   for (unsigned int v=0; v<neighbours.size(); ++v) {
-    if (components[v] == -1) {
-      components[v] = componentNumber;
-      addComponents(componentNumber, v, components);
+    if (components[neighbours[v]] == -1) {
+      components[neighbours[v]] = componentNumber;
+      addComponents(componentNumber, neighbours[v], components);
     }
   }
 }
