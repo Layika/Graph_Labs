@@ -1011,5 +1011,5 @@ void Graph::addS() {
     convertMatrix(AdjacencyMatrix);
     matrix->addS();
     unsigned int vertices = matrix->getRows();
-    for (unsigned int i = 0; i < vertices-1; i++) setWeight(vertices, i+1, 1);
+    for (unsigned int i = 0; i < vertices-1; i++) setWeight(vertices, i+1, 0);
 }
