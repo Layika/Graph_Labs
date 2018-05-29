@@ -813,6 +813,7 @@ std::vector<int> Graph::Kosaraju() {
   // -1 means it was not visited
   std::fill(timeVisited.begin(), timeVisited.end(), -1);
   std::fill(timeProcessed.begin(), timeProcessed.end(), -1);
+
   unsigned int times = 0;
   for (unsigned int i=0; i<rows; ++i) {
     if (timeVisited[i] == -1)
@@ -862,9 +863,10 @@ void Graph::visitDFS(unsigned int vertex, std::vector<int>& timeVisited, std::ve
   std::vector<unsigned int> neighbours = getNeighbours(vertex);
 
   for (unsigned int i=0; i<neighbours.size(); ++i) {
-    if (timeVisited[neighbours[i]] == -1)
-      visitDFS(neighbours[i], timeVisited, timeProcessed, times);
+      if (timeVisited[neighbours[i]] == -1)
+        visitDFS(neighbours[i], timeVisited, timeProcessed, times);
   }
+
   times++;
   timeProcessed[vertex] = times;
 }
@@ -873,17 +875,15 @@ void Graph::addComponents(unsigned int& componentNumber, unsigned int vertex, st
   std::vector<unsigned int> neighbours = getNeighbours(vertex);
 
   for (unsigned int v=0; v<neighbours.size(); ++v) {
-    if (components[neighbours[v]] == -1) {
-      components[neighbours[v]] = componentNumber;
-      addComponents(componentNumber, neighbours[v], components);
+      if (components[neighbours[v]] == -1) {
+        components[neighbours[v]] = componentNumber;
+        addComponents(componentNumber, neighbours[v], components);
     }
   }
 }
 
 
-
 std::vector<int> Graph::BellmanFord(int startVertex) {
-
 	int distance[matrix->getRows()];
   std::vector<int> previous;
 
@@ -997,7 +997,6 @@ void Graph::Johnson(){
 
       }
       std::cout << "\nMacierz odleglosci: " << std::endl;
-
       for(unsigned int i = 0; i < matrix->getRows(); i++){
         for(unsigned int j = 0; j < matrix->getRows(); j++){
           std::cout << D[i][j] << " ";

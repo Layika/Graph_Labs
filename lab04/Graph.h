@@ -114,8 +114,6 @@ public:
   std::vector<unsigned int> getNeighbours(unsigned int vertex);
   void addComponents(unsigned int& componentNumber, unsigned int vertex, std::vector<int>& components);
   void setConverter(Converter* conv) { matrixConverter = conv; }
-
-
   void Johnson();
   // Wrapper function used to create a new vertex connected to every other vertex with a weight of 0
   void addS();
