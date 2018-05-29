@@ -109,14 +109,15 @@ public:
 
   // Strongly connected components, Kosaraju
   std::vector<int> Kosaraju();
-  void visitDFS(unsigned int vertex, std::vector<int>& timeVisited, std::vector<int>& timeProcessed, unsigned int& times);
+  void visitDFS(unsigned int vertex, std::vector<int> timeVisited, std::vector<int> timeProcessed, unsigned int times);
   Graph transpose();
   std::vector<unsigned int> getNeighbours(unsigned int vertex);
-  void addComponents(unsigned int& componentNumber, unsigned int vertex, std::vector<int>& components);
+  void addComponents(unsigned int componentNumber, unsigned int vertex, std::vector<int> components);
   void setConverter(Converter* conv) { matrixConverter = conv; }
 
-
-void BellmanFord(int startVertex);
+void Johnson();
+std::vector<int> BellmanFord(int startVertex);
+int check;
 private:
   Matrix* matrix;
   Converter* matrixConverter;
