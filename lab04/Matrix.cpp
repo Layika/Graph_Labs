@@ -91,6 +91,25 @@ void Matrix::createEmptyAdjacencyMat(unsigned int vertices) {
   saveData(emptyMatrix);
 }
 
+void Matrix::addS() {
+    unsigned int vertices = getRows() + 1;
+    std::vector<std::vector<int>> emptyMatrix(vertices, std::vector<int>(vertices));
+    representationType = AdjacencyMatrix;
+    for (unsigned int i = 0; i < vertices - 1; i++) {
+        for (unsigned int j = 0; j < vertices - 1; j++) {
+            emptyMatrix[i][j] = data[i][j];
+        }
+    }
+
+    for (unsigned int i = 0; i < vertices-1; i++) {
+        emptyMatrix[vertices-1][i] = 1;
+        emptyMatrix[i][vertices-1] = 0;
+    }
+    emptyMatrix[vertices-1][vertices-1] = 0;
+
+    saveData(emptyMatrix);
+}
+
 void Matrix::transpose() {
   unsigned int rows = getRows();
 

@@ -882,7 +882,7 @@ void Graph::addComponents(unsigned int& componentNumber, unsigned int vertex, st
 
 
 
-void Graph::BellmanFord(int startVertex) {
+std::vector<int> Graph::BellmanFord(int startVertex) {
 
 	int distance[matrix->getRows()];
   std::vector<int> previous;
@@ -909,13 +909,14 @@ for(unsigned int i=1; i< matrix->getRows();++i){
     int u=weights[0][i]-1;
     int v=weights[1][i]-1;
     int weight=weights[2][i];
+
     if((distance[u] + weight < distance[v])) {
-      distance[v] = distance[u] + weight;
       std::cout<<"Graph contains negative weight cycle"<<std::endl;
-      exit(0);
+      check = 0;
+      //exit(0);
   }
 }
-
+check  = 1;
 
 		for (unsigned int i = 0; i < matrix->getRows(); ++i) {
 			std::cout << "Min. distance to " << i+1 << " is: " << distance[i] << ". Path: ";;
@@ -932,6 +933,83 @@ for(unsigned int i=1; i< matrix->getRows();++i){
 			std::cout << std::endl;
 		}
 		std::cout << std::endl;
+    std::vector<int> dist;
+    for(unsigned int i = 0; i < matrix->getRows(); i++){
+      dist.push_back(distance[i]);
+    }
+    return dist;
+
+}
 
 
+void Graph::Johnson(){
+  Graph g(Directed);
+  g.readFile("example_johnson.txt");
+  g.print();
+  g.generateRandomWeights(-5, 10);
+  g.setWeight(1,2,-1);
+  g.setWeight(1,3,-4);
+  g.setWeight(2,1,4);
+  g.setWeight(3,2,2);
+  g.setWeight(4,1,0);
+  g.setWeight(4,2,0);
+  g.setWeight(4,3,0);
+  g.printWeights();
+  g.print();
+
+
+  std::cout << g.matrix->getRows()<<std::endl;
+  std::vector<int> d=BellmanFord(g.matrix->getRows());
+  int h[g.matrix->getRows()];
+
+  if(g.check == 0){
+    std::cout << "ERROR\n";
+    exit(0);}
+
+    else{
+      for(int i = 0; i < g.matrix->getRows(); i++){
+        h[i] = d[i];
+      }
+
+      for (unsigned int i = 0; i < g.weights[0].size(); i++){
+        int u=g.weights[0][i]-1;
+        int v=g.weights[1][i]-1;
+        int w=g.weights[2][i];
+        int nowaWaga = w + h[u] - h[v];
+        g.setWeight(u+1,v+1,nowaWaga);
+      }
+      //////////////////////////////////////////
+      for(unsigned int i = 0; i < weights[0].size(); i++){
+        int u=weights[0][i]-1;
+        int v=weights[1][i]-1;
+        weights[2][i];
+        setWeight(u+1,v+1,g.weights[2][i]);
+
+      }
+
+      int D[matrix->getRows()][matrix->getRows()];
+      for(unsigned int i = 0; i < matrix->getRows(); i++){
+
+          std::vector<int> odleglosc = Dijkstra(i, false);
+          for(unsigned int j = 0; j < matrix->getRows(); j++){
+            D[i][j] = odleglosc[j] - h[i] + h[j];
+          }
+
+      }
+      std::cout << "\nMacierz odleglosci: " << std::endl;
+
+      for(unsigned int i = 0; i < matrix->getRows(); i++){
+        for(unsigned int j = 0; j < matrix->getRows(); j++){
+          std::cout << D[i][j] << " ";
+        }
+        std::cout << std::endl;
+      }
+    }
+}
+
+void Graph::addS() {
+    convertMatrix(AdjacencyMatrix);
+    matrix->addS();
+    unsigned int vertices = matrix->getRows();
+    for (unsigned int i = 0; i < vertices-1; i++) setWeight(vertices, i+1, 1);
 }

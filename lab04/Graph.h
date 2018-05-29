@@ -13,7 +13,7 @@ class Graph {
 public:
   // Constructor for graphs, only creates a new matrix, but doesn't fill it
   // In order to get a matrix we need to read from file or create a random matrix
-  Graph(GraphType type) { matrix = new Matrix; matrix->setGraphType(type); }
+  Graph(GraphType type) { matrix = new Matrix; matrix->setGraphType(type); createWeights(); }
 
   // Getter for number of vertices
   unsigned int getVertexCount() {return matrix->getRows();}
@@ -116,7 +116,11 @@ public:
   void setConverter(Converter* conv) { matrixConverter = conv; }
 
 
-void BellmanFord(int startVertex);
+  void Johnson();
+  // Wrapper function used to create a new vertex connected to every other vertex with a weight of 0
+  void addS();
+  std::vector<int> BellmanFord(int startVertex);
+  int check;
 private:
   Matrix* matrix;
   Converter* matrixConverter;
