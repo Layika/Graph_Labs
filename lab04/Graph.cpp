@@ -883,10 +883,7 @@ void Graph::addComponents(unsigned int& componentNumber, unsigned int vertex, st
 }
 
 
-
-std::vector<int> Graph::BellmanFord(int startVertex)
-{
-
+std::vector<int> Graph::BellmanFord(int startVertex) {
 	int distance[matrix->getRows()];
   std::vector<int> previous;
 
@@ -946,7 +943,6 @@ check  = 1;
 
 
 void Graph::Johnson(){
-  std::cout <<"Johnson"<<std::endl<<std::endl;
   Graph g(Directed);
   g.readFile("example_johnson.txt");
   g.print();
@@ -1001,7 +997,6 @@ void Graph::Johnson(){
 
       }
       std::cout << "\nMacierz odleglosci: " << std::endl;
-
       for(unsigned int i = 0; i < matrix->getRows(); i++){
         for(unsigned int j = 0; j < matrix->getRows(); j++){
           std::cout << D[i][j] << " ";
@@ -1009,6 +1004,11 @@ void Graph::Johnson(){
         std::cout << std::endl;
       }
     }
+}
 
-
+void Graph::addS() {
+    convertMatrix(AdjacencyMatrix);
+    matrix->addS();
+    unsigned int vertices = matrix->getRows();
+    for (unsigned int i = 0; i < vertices-1; i++) setWeight(vertices, i+1, 0);
 }

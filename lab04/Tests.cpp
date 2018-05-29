@@ -3,7 +3,7 @@
 #include <time.h>
 
 int main() {
-  srand(time(NULL));
+  srand(time(0));
 
   // DIRECTED GRAPHS
   std::cout << "DIRECTED GRAPHS" << std::endl;
@@ -45,11 +45,6 @@ int main() {
   unsigned int startVertex=Graph::intRand(0, example.getVertexCount()-1);
   std::cout << "Finding shortest path distances from vertex " << startVertex+1 << " to every other vertex..." <<std::endl<<std::endl;
   std::vector<int> v=example.BellmanFord(startVertex);
-
+  std::cout << "JOHNSON" << std::endl;
   example.Johnson();
-
-
-
-
-
 }

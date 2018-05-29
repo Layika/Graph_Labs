@@ -54,6 +54,9 @@ public:
   // Function creating an empty adjacency matrix
   void createEmptyAdjacencyMat(unsigned int vertices);
 
+  // Helper function for Johnson's algorithm. Adds a new vertex and connects it to every other vertex
+  void addS();
+
   // Function for transposing a graph
   void transpose();
 
