@@ -824,7 +824,7 @@ std::vector<int> Graph::Kosaraju() {
 
   unsigned int componentNumber = 0;
 
-  // Sort timeProcessed in dscending order
+  // Sort timeProcessed in descending order
   std::sort(timeProcessed.rbegin(), timeProcessed.rend());
 
   for (unsigned int v=0; v<timeProcessed.size(); ++v) {
@@ -856,28 +856,28 @@ std::vector<unsigned int> Graph::getNeighbours(unsigned int vertex) {
   return matrix->getNeighbours(vertex);
 }
 
-void Graph::visitDFS(unsigned int vertex, std::vector<int> timeVisited, std::vector<int> timeProcessed, unsigned int times) {
+void Graph::visitDFS(unsigned int vertex, std::vector<int>& timeVisited, std::vector<int>& timeProcessed, unsigned int& times) {
   times++;
   timeVisited[vertex] = times;
 
   std::vector<unsigned int> neighbours = getNeighbours(vertex);
 
   for (unsigned int i=0; i<neighbours.size(); ++i) {
-    if (timeVisited[i] == -1)
-      visitDFS(i, timeVisited, timeProcessed, times);
+      if (timeVisited[neighbours[i]] == -1)
+        visitDFS(neighbours[i], timeVisited, timeProcessed, times);
   }
 
   times++;
   timeProcessed[vertex] = times;
 }
 
-void Graph::addComponents(unsigned int componentNumber, unsigned int vertex, std::vector<int> components) {
+void Graph::addComponents(unsigned int& componentNumber, unsigned int vertex, std::vector<int>& components) {
   std::vector<unsigned int> neighbours = getNeighbours(vertex);
 
   for (unsigned int v=0; v<neighbours.size(); ++v) {
-    if (components[v] == -1) {
-      components[v] = componentNumber;
-      addComponents(componentNumber, v, components);
+      if (components[neighbours[v]] == -1) {
+        components[neighbours[v]] = componentNumber;
+        addComponents(componentNumber, neighbours[v], components);
     }
   }
 }
