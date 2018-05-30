@@ -37,18 +37,19 @@ int main() {
   //BELLMAN FORD
   std::cout << "BELLMAN FORD" << std::endl;
   Graph example(Directed);
-  example.readFile("example_bellman_ford.txt");
+  //example.readFile("example_bellman_ford.txt");
   example.print();
+  example.generateRandomNP(minVertices, maxVertices, minProbability, maxProbability, chosenVertices, chosenProbability);
   example.generateRandomWeights(-5, 10);
-  example.setWeight(1,2,-1);
-  example.setWeight(1,3,-4);
-  example.setWeight(2,1,4);
-  example.setWeight(3,2,2);
   example.printWeights();
-  unsigned int startVertex=Graph::intRand(0, example.getVertexCount()-1);
+  int vert = example.getVertexCount()-1;
+  unsigned int startVertex=Graph::intRand(0, vert);
   std::cout << "Finding shortest path distances from vertex " << startVertex+1 << " to every other vertex..." <<std::endl<<std::endl;
   std::vector<int> v=example.BellmanFord(startVertex);
 
   std::cout << "JOHNSON" << std::endl;
-  example.Johnson();
+  Graph test(Directed);
+  test.generateRandomNP(minVertices, maxVertices, minProbability, maxProbability, chosenVertices, chosenProbability);
+  test.generateRandomWeights(1, 10);
+  test.Johnson();
 }

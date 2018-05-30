@@ -943,47 +943,47 @@ check  = 1;
 
 
 void Graph::Johnson(){
-  Graph g(Directed);
-  g.readFile("example_johnson.txt");
-  g.print();
-  g.generateRandomWeights(-5, 10);
-  g.setWeight(1,2,-1);
-  g.setWeight(1,3,-4);
-  g.setWeight(2,1,4);
-  g.setWeight(3,2,2);
-  g.setWeight(4,1,0);
-  g.setWeight(4,2,0);
-  g.setWeight(4,3,0);
-  g.printWeights();
-  g.print();
+//  Graph g(Directed);
+//  g.readFile("example_johnson.txt");
+//  g.print();
+//  g.generateRandomWeights(-5, 10);
+//  g.setWeight(1,2,-1);
+//  g.setWeight(1,3,-4);
+//  g.setWeight(2,1,4);
+//  g.setWeight(3,2,2);
+//  g.setWeight(4,1,0);
+//  g.setWeight(4,2,0);
+//  g.setWeight(4,3,0);
+//  g.printWeights();
+//  g.print();
 
+  addS();
+  std::cout << matrix->getRows()<<std::endl;
+  std::vector<int> d=BellmanFord(matrix->getRows() - 1);
+  int h[matrix->getRows()];
 
-  std::cout << g.matrix->getRows()<<std::endl;
-  std::vector<int> d=BellmanFord(g.matrix->getRows());
-  int h[g.matrix->getRows()];
-
-  if(g.check == 0){
+  if(check == 0){
     std::cout << "ERROR\n";
     exit(0);}
 
     else{
-      for(int i = 0; i < g.matrix->getRows(); i++){
+      for(int i = 0; i < matrix->getRows(); i++){
         h[i] = d[i];
       }
 
-      for (unsigned int i = 0; i < g.weights[0].size(); i++){
-        int u=g.weights[0][i]-1;
-        int v=g.weights[1][i]-1;
-        int w=g.weights[2][i];
+      for (unsigned int i = 0; i < weights[0].size(); i++){
+        int u=weights[0][i]-1;
+        int v=weights[1][i]-1;
+        int w=weights[2][i];
         int nowaWaga = w + h[u] - h[v];
-        g.setWeight(u+1,v+1,nowaWaga);
+        setWeight(u+1,v+1,nowaWaga);
       }
       //////////////////////////////////////////
       for(unsigned int i = 0; i < weights[0].size(); i++){
         int u=weights[0][i]-1;
         int v=weights[1][i]-1;
         weights[2][i];
-        setWeight(u+1,v+1,g.weights[2][i]);
+        setWeight(u+1,v+1,weights[2][i]);
 
       }
 
