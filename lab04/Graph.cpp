@@ -796,8 +796,7 @@ void Graph::printMST(std::vector<int> parent) {
 std::vector<int> Graph::Kosaraju() {
   // Prepare vector for components
   unsigned int rows = matrix->getRows();
-  std::vector<int> components(rows);
-  std::fill(components.begin(), components.end(), -1);
+  std::vector<int> components(rows, -1);
 
   // If graph is undirected then return vector with -1 as members
   // There can't be -1 vertex
@@ -806,13 +805,14 @@ std::vector<int> Graph::Kosaraju() {
   // Convert matrix to adjacency matrix
   convertMatrix(AdjacencyMatrix);
 
+   // -1 means it was not visited
   // Time within vertex was visited
-  std::vector<int> timeVisited(rows);
+  std::vector<int> timeVisited(rows, -1);
   // Time within vertex was processed
-  std::vector<int> timeProcessed(rows);
-  // -1 means it was not visited
-  std::fill(timeVisited.begin(), timeVisited.end(), -1);
-  std::fill(timeProcessed.begin(), timeProcessed.end(), -1);
+  std::vector<int> timeProcessed(rows, -1);
+
+
+
   unsigned int times = 0;
   for (unsigned int i=0; i<rows; ++i) {
     if (timeVisited[i] == -1)
