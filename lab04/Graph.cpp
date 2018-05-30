@@ -998,8 +998,8 @@ void Graph::Johnson(){
       }
       std::cout << "\nMacierz odleglosci: " << std::endl;
 
-      for(unsigned int i = 0; i < matrix->getRows(); i++){
-        for(unsigned int j = 0; j < matrix->getRows(); j++){
+      for(unsigned int i = 0; i < matrix->getRows() - 1; i++){
+        for(unsigned int j = 0; j < matrix->getRows() - 1; j++){
           std::cout << D[i][j] << " ";
         }
         std::cout << std::endl;
