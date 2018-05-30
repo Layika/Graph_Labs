@@ -962,14 +962,14 @@ void Graph::Johnson(){
   std::vector<int> d=BellmanFord(g.matrix->getRows());
   int h[g.matrix->getRows()];
 
-  if(g.check == 0){
+  if (g.check == 0) {
     std::cout << "ERROR\n";
-    exit(0);}
+    exit(0);
+  }
 
-    else{
-      for(int i = 0; i < g.matrix->getRows(); i++){
-        h[i] = d[i];
-      }
+    else {
+      for (unsigned int i = 0; i < g.matrix->getRows(); i++) h[i] = d[i];
+
 
       for (unsigned int i = 0; i < g.weights[0].size(); i++){
         int u=g.weights[0][i]-1;
