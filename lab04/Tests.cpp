@@ -37,7 +37,7 @@ int main() {
   //BELLMAN FORD
   std::cout << "BELLMAN FORD" << std::endl;
   Graph example(Directed);
-  example.readFile("example_bellman_ford.txt");
+  example.readFile("sample_input_data/example_bellman_ford.txt");
   example.print();
   example.generateRandomWeights(-5, 10);
   example.setWeight(1,2,-1);
