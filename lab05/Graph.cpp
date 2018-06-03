@@ -823,37 +823,14 @@ std::vector<int> Graph::Kosaraju() {
 
   unsigned int componentNumber = 0;
 
-  std::vector<int> timeCopy;
-  for (unsigned int i=0; i<timeProcessed.size(); ++i)
-    timeCopy.push_back(timeProcessed[i]);
-
-
-  std::vector<int> indexes;
-  bool found = false;
-  while (timeCopy.size() > indexes.size()) {
-
-    int maxElem = -1;
-    int maxIdx = 0;
-
-    for (unsigned int i=0; i<timeCopy.size(); ++i) {
-      if (timeCopy[i] > maxElem) {
-        found = true;
-        maxElem = timeCopy[i];
-        maxIdx = i;
-      }
-    }
-    if (found) {
-      found = false;
-      timeCopy[maxIdx] = -1;
-      indexes.push_back(maxIdx);
-    }
-  }
+  // Sort timeProcessed in descending order
+  std::sort(timeProcessed.rbegin(), timeProcessed.rend());
 
   for (unsigned int v=0; v<timeProcessed.size(); ++v) {
-    if (components[indexes[v]] == -1) {
+    if (components[v] == -1) {
       ++componentNumber;
-      components[indexes[v]] = componentNumber;
-      transposed.addComponents(componentNumber, indexes[v], components);
+      components[v] = componentNumber;
+      transposed.addComponents(componentNumber, v, components);
     }
   }
   return components;
@@ -970,19 +947,13 @@ void Graph::Johnson(){
   g.readFile("example_johnson.txt");
   g.print();
   g.generateRandomWeights(-5, 10);
-  g.setWeight(1,2,8);
-  g.setWeight(1,4,1);
-  g.setWeight(2,1,7);
-  g.setWeight(3,1,2);
-  g.setWeight(3,4,3);
-    g.setWeight(4,1,0);
-      g.setWeight(4,2,4);
-        g.setWeight(4,3,4);
-        g.setWeight(5,1,0);
-        g.setWeight(5,2,0);
-        g.setWeight(5,3,0);
-        g.setWeight(5,4,0);
-
+  g.setWeight(1,2,-1);
+  g.setWeight(1,3,-4);
+  g.setWeight(2,1,4);
+  g.setWeight(3,2,2);
+  g.setWeight(4,1,0);
+  g.setWeight(4,2,0);
+  g.setWeight(4,3,0);
   g.printWeights();
   g.print();
 
@@ -1041,4 +1012,84 @@ void Graph::addS() {
     matrix->addS();
     unsigned int vertices = matrix->getRows();
     for (unsigned int i = 0; i < vertices-1; i++) setWeight(vertices, i+1, 0);
+}
+
+std::vector<unsigned int> Graph::verticesFromLayer(unsigned int layer) {
+    // Prepare an empty vector to store the output
+    std::vector<unsigned int> vertices(0);
+
+    // For every vertex
+    for (unsigned int i = 0; i < vertexLayer.size(); i++) {
+        // If it belongs to the layer in question, add it do 'vertices'
+        if (vertexLayer[i] == layer) vertices.push_back(i);
+    }
+
+    return vertices;
+}
+
+void Graph::printFlowNetwork() const {
+    int lastLayerNum = -1;
+
+    unsigned int rows = matrix->getRows();
+    for (unsigned int i = 0; i < rows; i++) {
+        unsigned int columns = matrix->getColumns(i);
+        for (unsigned int j = 0; j < columns; j++) {
+            std::cout << matrix->getElement(i, j) << " ";
+        }
+        if ((int) vertexLayer[i] > lastLayerNum) {
+            lastLayerNum++;
+            if (lastLayerNum == 0) std::cout << "SOURCE LAYER";
+            else if (lastLayerNum == numOfLayers + 1) std::cout << "SINK LAYER";
+            else std::cout << "LAYER " << lastLayerNum;
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Graph::randomFlowNetwork(unsigned int layers) {
+    vertexLayer = std::vector<unsigned int>(0);
+    vertexLayer.push_back(0);
+    numOfLayers = layers;
+    int vertices = 1;
+
+    for (unsigned int i = 1; i <= layers; i++) {
+        int verticesPerLayer = intRand(2, layers);
+        vertices += verticesPerLayer;
+        for (unsigned int j = 0; j < verticesPerLayer; j++) vertexLayer.push_back(i);
+
+        if (i == layers) vertexLayer.push_back(i+1);
+    }
+    vertices++;
+
+    matrix->createEmptyAdjacencyMat(vertices);
+    setConverter(AdjacencyMatrix);
+
+    std::vector<unsigned int> nextLayerContents = verticesFromLayer(1);
+    for (unsigned int i = 0; i < nextLayerContents.size(); i++) {
+        matrix->setElement(0, nextLayerContents[i], 1);
+    }
+
+    std::vector<unsigned int> curLayerContents;
+    for (unsigned int i = 1; i <= layers; i++) {
+        curLayerContents = nextLayerContents;
+        nextLayerContents = verticesFromLayer(i+1);
+
+        // Add output edges from every vertex in a layer
+        for (unsigned int j = 0; j < curLayerContents.size(); j++)
+            matrix->setElement(curLayerContents[j], nextLayerContents[intRand(0, nextLayerContents.size()-1)], 1);
+
+        // Add input edges to every vertex in the next layer
+        for (unsigned int j = 0; j < nextLayerContents.size(); j++)
+            matrix->setElement(curLayerContents[intRand(0, curLayerContents.size()-1)], nextLayerContents[j], 1);
+    }
+
+    int randomEdges = 0;
+    while (randomEdges < 2 * layers) {
+        int vert1 = intRand(1, vertices-2);
+        int vert2 = intRand(1, vertices-2);
+        if (vert1 != vert2 && matrix->getElement(vert1, vert2) == 0) {
+            randomEdges++;
+            matrix->setElement(vert1, vert2, 1);
+        }
+    }
 }
