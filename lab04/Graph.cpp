@@ -823,14 +823,37 @@ std::vector<int> Graph::Kosaraju() {
 
   unsigned int componentNumber = 0;
 
-  // Sort timeProcessed in descending order
-  std::sort(timeProcessed.rbegin(), timeProcessed.rend());
+  std::vector<int> timeCopy;
+  for (unsigned int i=0; i<timeProcessed.size(); ++i)
+    timeCopy.push_back(timeProcessed[i]);
+
+
+  std::vector<int> indexes;
+  bool found = false;
+  while (timeCopy.size() > indexes.size()) {
+
+    int maxElem = -1;
+    int maxIdx = 0;
+
+    for (unsigned int i=0; i<timeCopy.size(); ++i) {
+      if (timeCopy[i] > maxElem) {
+        found = true;
+        maxElem = timeCopy[i];
+        maxIdx = i;
+      }
+    }
+    if (found) {
+      found = false;
+      timeCopy[maxIdx] = -1;
+      indexes.push_back(maxIdx);
+    }
+  }
 
   for (unsigned int v=0; v<timeProcessed.size(); ++v) {
-    if (components[v] == -1) {
+    if (components[indexes[v]] == -1) {
       ++componentNumber;
-      components[v] = componentNumber;
-      transposed.addComponents(componentNumber, v, components);
+      components[indexes[v]] = componentNumber;
+      transposed.addComponents(componentNumber, indexes[v], components);
     }
   }
   return components;
@@ -947,13 +970,19 @@ void Graph::Johnson(){
   g.readFile("example_johnson.txt");
   g.print();
   g.generateRandomWeights(-5, 10);
-  g.setWeight(1,2,-1);
-  g.setWeight(1,3,-4);
-  g.setWeight(2,1,4);
-  g.setWeight(3,2,2);
-  g.setWeight(4,1,0);
-  g.setWeight(4,2,0);
-  g.setWeight(4,3,0);
+  g.setWeight(1,2,8);
+  g.setWeight(1,4,1);
+  g.setWeight(2,1,7);
+  g.setWeight(3,1,2);
+  g.setWeight(3,4,3);
+    g.setWeight(4,1,0);
+      g.setWeight(4,2,4);
+        g.setWeight(4,3,4);
+        g.setWeight(5,1,0);
+        g.setWeight(5,2,0);
+        g.setWeight(5,3,0);
+        g.setWeight(5,4,0);
+
   g.printWeights();
   g.print();
 
