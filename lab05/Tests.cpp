@@ -11,6 +11,11 @@ int main() {
   unsigned int numOfLayers = Graph::intRand(2, 4);
   flowNetwork.randomFlowNetwork(numOfLayers);
   std::cout << "A random flow network with " << numOfLayers << " layers has been generated." << std::endl;
+  std::cout << "Adjacency matrix: " << std::endl << std::endl;
   flowNetwork.printFlowNetwork();
   std::cout << std::endl;
+
+  std::cout << "GENERATING CAPACITY VALUES" << std::endl;
+  flowNetwork.generateRandomCapacities(1, 10);
+  flowNetwork.printFlowsAndCapacities();
 }

@@ -532,10 +532,38 @@ void Graph::generateRandomWeights(int minWeight, int maxWeight) {
     }
 }
 
+void Graph::generateRandomCapacities(int minCapacity, int maxCapacity) {
+    convertMatrix(AdjacencyMatrix);
+
+    createFlowsAndCapacities();
+
+    // Scan the entire adjacency matrix
+    for (unsigned int i = 0; i < matrix->getRows(); i++) {
+        for (unsigned int j =0; j < matrix->getColumns(i); j++) {
+            if (matrix->getElement(i, j) == 1) {
+                // Add source and dest of edge between i-th and j-th vertex
+                weights[0].push_back(i+1);
+                weights[1].push_back(j+1);
+                // Set flow value to 0 for above edge
+                weights[2].push_back(0);
+                // Generate random capacity for above edge
+                weights[3].push_back(intRand(minCapacity, maxCapacity));
+            }
+        }
+    }
+}
+
 void Graph::createWeights() {
   // weights[0] and weights[1] are source and dest. vertices for each edge
   // weights[2] contains the actual weights
   weights = std::vector<std::vector<int>>(3, std::vector<int>(0));
+}
+
+void Graph::createFlowsAndCapacities() {
+  // weights[0] and weights[1] are source and dest. vertices for each edge
+  // weights[2] contains flows
+  // weights[3] contains capacities
+  weights = std::vector<std::vector<int>>(4, std::vector<int>(0));
 }
 
 int Graph::getWeight(unsigned int source, unsigned int dest) {
@@ -558,6 +586,30 @@ void Graph::setWeight(unsigned int source, unsigned int dest, int weight) {
     weights[0].push_back(source);
     weights[1].push_back(dest);
     weights[2].push_back(weight);
+    if (weights.size() == 4) weights[3].push_back(0);
+}
+
+int Graph::getCapacity(unsigned int source, unsigned int dest) {
+    // Check if an edge from source to dest exists. If it does - return it's capacity. Otherwise return -1
+    for (unsigned int i = 0; i < weights[0].size(); i++)
+        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest))
+          return weights[3][i];
+    return -1;
+}
+
+void Graph::setCapacity(unsigned int source, unsigned int dest, int capacity) {
+    // Check if an edge from source to dest exists
+    for (unsigned int i = 0; i < weights[0].size(); i++) {
+        if ((weights[0][i] == (int)source && weights[1][i] == (int)dest)) {
+          weights[3][i] = capacity; return;
+        }
+    }
+
+    // If such edge isn't registered in 'weights', add a new value
+    weights[0].push_back(source);
+    weights[1].push_back(dest);
+    weights[2].push_back(0);
+    weights[3].push_back(capacity);
 }
 
 void Graph::updateWeights() {
@@ -591,6 +643,12 @@ void Graph::updateWeights() {
 void Graph::printWeights() const {
   for (unsigned int i = 0; i < weights[0].size(); i++)
     std::cout << "Edge from " << weights[0][i] << " to " << weights[1][i] << " has weight: " << weights[2][i] << std::endl;
+}
+
+void Graph::printFlowsAndCapacities() const {
+    std::cout << "Source\tDest\tFlow\tCapacity" << std::endl;
+    for (unsigned int i = 0; i < weights[0].size(); i++)
+        std::cout << weights[0][i] << "\t" << weights[1][i] << "\t" << weights[2][i] << "\t" << weights[3][i] << std::endl;
 }
 
   // Function finding minimal distance
@@ -1033,14 +1091,13 @@ void Graph::printFlowNetwork() const {
     unsigned int rows = matrix->getRows();
     for (unsigned int i = 0; i < rows; i++) {
         unsigned int columns = matrix->getColumns(i);
+        if ((int) vertexLayer[i] > lastLayerNum)
+            lastLayerNum++;
+        if (lastLayerNum == 0) std::cout << "SOURCE    ";
+        else if (lastLayerNum == numOfLayers + 1) std::cout << "SINK      ";
+        else std::cout << "LAYER " << lastLayerNum << "   ";
         for (unsigned int j = 0; j < columns; j++) {
             std::cout << matrix->getElement(i, j) << " ";
-        }
-        if ((int) vertexLayer[i] > lastLayerNum) {
-            lastLayerNum++;
-            if (lastLayerNum == 0) std::cout << "SOURCE LAYER";
-            else if (lastLayerNum == numOfLayers + 1) std::cout << "SINK LAYER";
-            else std::cout << "LAYER " << lastLayerNum;
         }
         std::cout << std::endl;
     }

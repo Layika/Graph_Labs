@@ -82,8 +82,12 @@ public:
 
   // Function creating empty weights matrix
   void createWeights();
+  // Function creating empty flows and capacities
+  void createFlowsAndCapacities();
   // Function for generating random weights for each edge
   void generateRandomWeights(int minWeight, int maxWeight);
+  // Function for generating random capacity values for each edge
+  void generateRandomCapacities(int minCapacity, int maxCapacity);
   // Getter function which returns weight of an edge between source and dest. Returns -1 if such edge isn't registered in the 'weights' vector
   int getWeight(unsigned int source, unsigned int dest);
   // Setter function which assigns a new weight to an edge between source and dest.
@@ -94,6 +98,13 @@ public:
   void updateWeights();
   // Print weights along with their edges
   void printWeights() const;
+  // Below functions are getters and setters for flow and capacity values
+  int getFlow(unsigned int source, unsigned int dest) { return getWeight(source, dest); }
+  void setFlow(unsigned int source, unsigned int dest, int flow) { setWeight(source, dest, flow); }
+  int getCapacity(unsigned int source, unsigned int dest);
+  void setCapacity(unsigned int source, unsigned int dest, int capacity);
+  // Print flows and capacities
+  void printFlowsAndCapacities() const;
 
   // Functions used for finding shortest distances. Returns a vector of shortest distances to every vertex
   // If print is true, both shortest paths and distances will be printed
