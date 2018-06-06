@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iterator>
 #include <cstdint>
+#include <queue>
 
 
 void Graph::readFile(std::string fileName) {
@@ -594,7 +595,7 @@ int Graph::getCapacity(unsigned int source, unsigned int dest) {
     for (unsigned int i = 0; i < weights[0].size(); i++)
         if ((weights[0][i] == (int)source && weights[1][i] == (int)dest))
           return weights[3][i];
-    return -1;
+    return 0;
 }
 
 void Graph::setCapacity(unsigned int source, unsigned int dest, int capacity) {
@@ -1149,4 +1150,66 @@ void Graph::randomFlowNetwork(unsigned int layers) {
             matrix->setElement(vert1, vert2, 1);
         }
     }
+}
+
+bool Graph::BFS(std::vector<unsigned int>& path) {
+    unsigned int vertices = matrix->getRows();
+    
+    std::vector<bool> ifVisited(vertices);
+    
+    std::fill(ifVisited.begin(), ifVisited.end(), false);
+    std::queue<unsigned int> q;
+    q.push(0);
+    while (!q.empty()) {
+        unsigned int i = q.front();
+        q.pop();
+        for (unsigned int j = 0; j < vertices; ++j) {
+            if ( matrix->getElement(i, j) && !ifVisited[j] ) {
+                q.push(j);
+                path[j] = i;
+                ifVisited[j] = true;
+            }
+        }
+    }
+    return ifVisited[vertices - 1];
+}
+
+
+void Graph::FordFulkerson() {
+    convertMatrix(AdjacencyMatrix);
+    
+    unsigned int vertices = matrix->getRows();
+    unsigned int maxFlow = 0;
+    std::vector<unsigned int> path(vertices);
+    std::fill(path.begin(), path.end(), 0);
+    
+    
+    while (BFS(path)) {
+        int minResidualCapacity = INT_MAX;
+
+        std::cout << "path: ";
+        for(int i = 0; i < vertices; ++i) std::cout << path[i];
+        std::cout << std::endl;
+
+        for (unsigned int i = vertices - 1; i != 0; i = path[i]) {
+            int flow = getCapacity(path[i], i);
+            minResidualCapacity = std::min(flow, minResidualCapacity);
+        }
+        
+        for (unsigned int i = vertices - 1; i != 0; i = path[i]) {
+            int flow = getCapacity(path[i], i) - minResidualCapacity;
+            
+
+                //deleting egde if maximal current flow is equal to capacity and updating residualCapacity matrix
+                 if ( flow == 0 ) matrix->setElement(path[i], i, 0);
+                setCapacity(path[i], i, getCapacity(path[i], i) - minResidualCapacity);
+                
+                //adding reverse egde with value equals to minResidualCapacity
+                matrix->setElement(i, path[i], 1);
+                setCapacity(i, path[i], getCapacity(i, path[i]) + minResidualCapacity);
+        }
+        maxFlow += minResidualCapacity;
+    }
+    
+    std::cout << std::endl << "Maximal flow: " << maxFlow << std::endl;
 }

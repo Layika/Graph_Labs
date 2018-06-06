@@ -18,4 +18,6 @@ int main() {
   std::cout << "GENERATING CAPACITY VALUES" << std::endl;
   flowNetwork.generateRandomCapacities(1, 10);
   flowNetwork.printFlowsAndCapacities();
+    flowNetwork.saveGraph("flow.txt");
+    flowNetwork.FordFulkerson();
 }

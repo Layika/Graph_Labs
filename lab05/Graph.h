@@ -136,6 +136,10 @@ public:
 
   // Function for generating a random flow network
   void randomFlowNetwork(unsigned int layers);
+
+  bool BFS(std::vector<unsigned int>& path);
+  void FordFulkerson();
+    
   // Function which returns a vector of vertices belonging to a specific layer
   std::vector<unsigned int> verticesFromLayer(unsigned int layer);
 private:
