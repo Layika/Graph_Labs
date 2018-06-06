@@ -1152,11 +1152,62 @@ void Graph::randomFlowNetwork(unsigned int layers) {
     }
 }
 
+void Graph::gnuplotFlowNetwork(std::string fileName)
+{
+    convertMatrix(AdjacencyList);
+
+    unsigned int vertices = matrix->getRows();
+    std::vector<unsigned int> xVertices(0);
+    std::vector<unsigned int> yVertices(0);
+    unsigned int layer = 0;
+    unsigned int numOfLayers = 0;
+    for(unsigned int i = 0; i < vertices; i++)
+        if (vertexLayer[i] > numOfLayers) numOfLayers = vertexLayer[i];
+    std::vector<unsigned int> layerContents = verticesFromLayer(layer);
+    while (layerContents.size() != 0) {
+        for (unsigned int i = 0; i < layerContents.size(); i++) {
+            xVertices.push_back(10 + layer * 75/numOfLayers);
+            yVertices.push_back(40 + layerContents.size() * 12 - 24*i);
+        }
+        layer++;
+        layerContents = verticesFromLayer(layer);
+    }
+    FILE* file;
+    file = fopen(fileName.c_str(), "w");
+    fprintf(file, "set term png\nset output \'flowNetwork.png\'\nset macro\n");
+    fprintf(file, "labelMacro(i,x,y,l) = sprintf('set obj %%d circle at %%f,%%f size char 2, char 1 front; set label %%d at %%f,%%f \"%%s\" front center', i, x, y, i, x, y, l)\n");
+    for(unsigned int i=0; i<vertices; i++)
+    {
+        unsigned int neighbors = matrix->getColumns(i);
+        for(unsigned int j=0; j<neighbors; j++)
+        {
+            double x1, y1, x2, y2, x2temp, y2temp;
+            x1 = xVertices[i];
+            y1 = yVertices[i];
+            x2temp = xVertices[matrix->getElement(i, j)-1];
+            y2temp = yVertices[matrix->getElement(i, j)-1];
+            x2 = x2temp - 4*((x2temp-x1)/sqrt((x2temp-x1)*(x2temp-x1)+(y2temp-y1)*(y2temp-y1)));
+            y2 = y2temp - 5*((y2temp-y1)/sqrt((x2temp-x1)*(x2temp-x1)+(y2temp-y1)*(y2temp-y1)));
+            fprintf(file, "set arrow from %f,%f to %f,%f lw 2 back\n", x1, y1, x2, y2);
+        }
+    }
+    fprintf(file, "set style fill solid 1.0 border -1\n");
+    for(int i=0; i<vertices; i++) {
+            double x1, y1;
+            x1 = xVertices[i];
+            y1 = yVertices[i];
+            fprintf(file, "l%d = labelMacro(%d, %f, %f, \"%d\")\n", i+1, i+1, x1, y1, i+1);
+    }
+    for(int i=0; i<vertices; i++) fprintf(file, "@l%d;", i+1);
+    fprintf(file, "\nset xrange [0:100]\nset yrange [0:100]\nplot -1 notitle");
+    fclose(file);
+}
+
 bool Graph::BFS(std::vector<unsigned int>& path) {
     unsigned int vertices = matrix->getRows();
-    
+
     std::vector<bool> ifVisited(vertices);
-    
+
     std::fill(ifVisited.begin(), ifVisited.end(), false);
     std::queue<unsigned int> q;
     q.push(0);
@@ -1177,13 +1228,13 @@ bool Graph::BFS(std::vector<unsigned int>& path) {
 
 void Graph::FordFulkerson() {
     convertMatrix(AdjacencyMatrix);
-    
+
     unsigned int vertices = matrix->getRows();
     unsigned int maxFlow = 0;
     std::vector<unsigned int> path(vertices);
     std::fill(path.begin(), path.end(), 0);
-    
-    
+
+
     while (BFS(path)) {
         int minResidualCapacity = INT_MAX;
 
@@ -1195,21 +1246,21 @@ void Graph::FordFulkerson() {
             int flow = getCapacity(path[i], i);
             minResidualCapacity = std::min(flow, minResidualCapacity);
         }
-        
+
         for (unsigned int i = vertices - 1; i != 0; i = path[i]) {
             int flow = getCapacity(path[i], i) - minResidualCapacity;
-            
+
 
                 //deleting egde if maximal current flow is equal to capacity and updating residualCapacity matrix
                  if ( flow == 0 ) matrix->setElement(path[i], i, 0);
                 setCapacity(path[i], i, getCapacity(path[i], i) - minResidualCapacity);
-                
+
                 //adding reverse egde with value equals to minResidualCapacity
                 matrix->setElement(i, path[i], 1);
                 setCapacity(i, path[i], getCapacity(i, path[i]) + minResidualCapacity);
         }
         maxFlow += minResidualCapacity;
     }
-    
+
     std::cout << std::endl << "Maximal flow: " << maxFlow << std::endl;
 }

@@ -15,6 +15,9 @@ int main() {
   flowNetwork.printFlowNetwork();
   std::cout << std::endl;
 
+  flowNetwork.gnuplotFlowNetwork("flowNetwork.plt");
+  std::cout << std::endl << "Ready to plot" << std::endl << std::endl;
+
   std::cout << "GENERATING CAPACITY VALUES" << std::endl;
   flowNetwork.generateRandomCapacities(1, 10);
   flowNetwork.printFlowsAndCapacities();

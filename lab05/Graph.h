@@ -136,10 +136,12 @@ public:
 
   // Function for generating a random flow network
   void randomFlowNetwork(unsigned int layers);
+  // Function which generates a gnuplot script to display a flow network
+  void gnuplotFlowNetwork(std::string fileName);
 
   bool BFS(std::vector<unsigned int>& path);
   void FordFulkerson();
-    
+
   // Function which returns a vector of vertices belonging to a specific layer
   std::vector<unsigned int> verticesFromLayer(unsigned int layer);
 private:
