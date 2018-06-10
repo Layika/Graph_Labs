@@ -1374,7 +1374,7 @@ std::vector<float> Graph::PageRankPt() {
   std::cout << "p vector:";
   for (unsigned int i=0; i<n; ++i) std::cout << " " << p[i];
   std::cout << std::endl;
-  
+
   return p
   */
 
@@ -1392,6 +1392,9 @@ std::vector<float> Graph::PageRankPt() {
   // Initialize p vector
   std::vector<float> p(nodes, 1.0/nodes);
 
+  // Create sums vector, will be used for getting average
+  std::vector<float> sums(nodes, 1.0/nodes);
+
   // Create P
   std::vector<std::vector<float>> P(nodes, std::vector<float>(nodes));
   for (unsigned int i=0; i<nodes; ++i)
@@ -1399,10 +1402,15 @@ std::vector<float> Graph::PageRankPt() {
       P[i][j] = (1-d) * matrix->getElement(i,j) / getVertexDegree(i) + (d/nodes);
 
   // Multiply P and p
-  for (unsigned int i=0; i<iterations; ++i) multiply(p, P);
+  for (unsigned int i=0; i<iterations; ++i) {
+    multiply(p, P);
+    for (unsigned int j=0; j<nodes; ++j) sums[j] += p[j]; // jeśli średnich używam
+  }
+
+  for (unsigned int j=0; j<nodes; ++j) sums[j] /= iterations;
 
   std::cout << "p vector:";
-  for (unsigned int i=0; i<nodes; ++i) std::cout << " " << p[i];
+  for (unsigned int i=0; i<nodes; ++i) std::cout << " " << sums[i]; // albo p, jak bez tych średnich
   std::cout << std::endl;
 
   return p;
